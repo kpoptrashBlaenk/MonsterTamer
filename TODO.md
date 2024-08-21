@@ -10,7 +10,7 @@ Game Project Assets:
   [2024-08-21] show links to where assets can be found
 
 Battle System:
-  [] load game assets
+  [2024-08-21] load game assets
   [] create battle scene layout
   [] create dialog menu
   [] create option menu
