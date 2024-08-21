@@ -3,3 +3,6 @@ mklink /D C:\xampp\htdocs\MonsterTamer "C:\Users\AldinMUSIC\OneDrive - MEWO\Bure
 used for letting apache always start this server (use http://localhost/MonsterTamer/ in browser)
 
 download phaser.d.ts and create jsconfig.json to see library in IDE
+
+/* ASSETS */
+initial-assets downloaded from https://github.com/devshareacademy/monster-tamer/releases/tag/assets
