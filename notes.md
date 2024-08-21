@@ -11,3 +11,7 @@ initial-assets downloaded from https://github.com/devshareacademy/monster-tamer/
 scene-keys.js has freeze to make object unchangeable
 game.scene.add(name, class) to add a scene (scene-keys.js holds all the names)
 game.scene.start(name) to start it
+
+this.load(name, url) to load into the cache
+this.texture.get(name) to get
+this.add.image(x, y, name).setOrigin(0) to create image
