@@ -4,6 +4,7 @@ import {BATTLE_ASSET_KEYS, BATTLE_BACKGROUND_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, 
 import {BattleMenu} from "../../battle/menu/battle-menu.js";
 
 export class BattleScene extends Phaser.Scene {
+    /** @type {BattleMenu} */
     #battleMenu;
 
     constructor() {

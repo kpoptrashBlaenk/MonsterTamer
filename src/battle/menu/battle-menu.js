@@ -1,3 +1,4 @@
+import Phaser from '../../lib/phaser.js'
 import {MONSTER_ASSET_KEYS} from "../../assets/asset-keys.js";
 
 const BATTLE_MENU_OPTIONS = Object.freeze({
@@ -13,12 +14,21 @@ const battleUITextStyle = {
 }
 
 export class BattleMenu {
+    /** @type {Phaser.Scene} */
     #scene;
+    /** @type {Phaser.GameObjects.Container} */
     #mainBattleMenuPhaserContainerGameObject;
+    /** @type {Phaser.GameObjects.Container} */
     #moveSelectionSubMenuPhaserContainerGameObject;
+    /** @type {Phaser.GameObjects.Text} */
     #battleTextGameObjectLine1;
+    /** @type {Phaser.GameObjects.Text} */
     #battleTextGameObjectLine2;
 
+    /**
+     *
+     * @param {Phaser.Scene} scene The scene to be added
+     */
     constructor(scene) {
         this.#scene = scene;
         this.#createMainInfoPane()
