@@ -76,6 +76,7 @@ export class BattleScene extends Phaser.Scene {
 
         // Create Battle Menu
         this.#battleMenu = new BattleMenu(this);
+        this.#battleMenu.hideMainBattleMenu()
     }
 
     #createHealthBar(x, y) {
