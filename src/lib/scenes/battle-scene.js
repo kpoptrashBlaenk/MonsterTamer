@@ -14,82 +14,64 @@ export class BattleScene extends Phaser.Scene {
 
     create() {
         // Background
-        this.add.image(0, 0, BATTLE_BACKGROUND_ASSET_KEYS.FOREST).setOrigin(0)
+        this.add.image(0, 0, BATTLE_BACKGROUND_ASSET_KEYS.FOREST)
+            .setOrigin(0)
 
         // Monsters
         this.add.image(768, 144, MONSTER_ASSET_KEYS.CARNODUSK, 0)
-        this.add.image(256, 316, MONSTER_ASSET_KEYS.IGUANIGNITE, 0).setFlipX(true)
+        this.add.image(256, 316, MONSTER_ASSET_KEYS.IGUANIGNITE, 0)
+            .setFlipX(true)
 
         // Player Health Bar
-        const playerMonsterName = this.add.text(30, 20, MONSTER_ASSET_KEYS.IGUANIGNITE,
-            {
+        const playerMonsterName = this.add.text(30, 20, MONSTER_ASSET_KEYS.IGUANIGNITE, {
                 color: '#7E3D3F',
                 fontSize: '32px'
-            }
-        )
-        this.add.container(556, 318,
-            [
-                this.add.image(0, 0,
-                    BATTLE_ASSET_KEYS.HEALTH_BAR_BACKGROUND
-                ).setOrigin(0),
+        })
+        this.add.container(556, 318, [
+                this.add.image(0, 0, BATTLE_ASSET_KEYS.HEALTH_BAR_BACKGROUND)
+                    .setOrigin(0),
                 playerMonsterName,
                 this.#createHealthBar(34, 34),
-                this.add.text(playerMonsterName.width + 35, 23, 'L5',
-                    {
+                this.add.text(playerMonsterName.width + 35, 23, 'L5', {
                         color: '#ED474B',
                         fontSize: '28px',
                         fontWeight: 'bold'
-                    }
-                ),
-                this.add.text(30, 58, 'HP',
-                    {
+                }),
+                this.add.text(30, 58, 'HP', {
                         color: '#FF6505',
                         fontSize: '24px',
                         fontStyle: 'italic',
                         fontWeight: 'bold'
-                    }
-                ),
-                this.add.text(443, 80, '25/25',
-                    {
+                }),
+                this.add.text(443, 80, '25/25', {
                         color: '#7E3D3F',
                         fontSize: '16px'
-                    }
-                )
-                .setOrigin(1, 0)
-            ]
-        )
+                }).setOrigin(1, 0)
+        ])
 
         // Enemy Health Bar
-        const enemyMonsterName = this.add.text(30, 20, MONSTER_ASSET_KEYS.CARNODUSK,
-            {
+        const enemyMonsterName = this.add.text(30, 20, MONSTER_ASSET_KEYS.CARNODUSK, {
                 color: '#7E3D3F',
                 fontSize: '32px'
-            }
-        )
-        this.add.container(0, 0,
-            [
-                this.add.image(0, 0,
-                    BATTLE_ASSET_KEYS.HEALTH_BAR_BACKGROUND
-                ).setOrigin(0).setScale(1, 0.8),
+        })
+        this.add.container(0, 0, [
+                this.add.image(0, 0, BATTLE_ASSET_KEYS.HEALTH_BAR_BACKGROUND)
+                    .setOrigin(0)
+                    .setScale(1, 0.8),
                 enemyMonsterName,
                 this.#createHealthBar(34, 34),
-                this.add.text(enemyMonsterName.width + 35, 23, 'L5',
-                    {
+                this.add.text(enemyMonsterName.width + 35, 23, 'L5', {
                         color: '#ED474B',
                         fontSize: '28px',
                         fontWeight: 'bold'
-                    }
-                ),
-                this.add.text(30, 58, 'HP',
-                    {
+                }),
+                this.add.text(30, 58, 'HP', {
                         color: '#FF6505',
                         fontSize: '24px',
                         fontStyle: 'italic',
                         fontWeight: 'bold'
-                    }
-                )
-            ]
-        )
+                })
+        ])
     }
 
     #createHealthBar(x, y) {
