@@ -6,7 +6,7 @@ import {BattleScene} from "./lib/scenes/battle-scene.js";
 // Launch game instance
 const game = new Phaser.Game({
     type: Phaser.CANVAS,
-    pixelArt: true,
+    //pixelArt: true, // Removed because it makes fonts bug
     scale: {
         parent: 'game-container',
         width: 1024,
