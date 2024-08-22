@@ -1,3 +1,5 @@
+import {MONSTER_ASSET_KEYS} from "../../assets/asset-keys.js";
+
 const BATTLE_MENU_OPTIONS = Object.freeze({
     FIGHT: 'FIGHT',
     SWITCH: 'SWITCH',
@@ -25,11 +27,16 @@ export class BattleMenu {
     }
 
     showMainBattleMenu() {
+        this.#battleTextGameObjectLine1.setText('What should')
         this.#mainBattleMenuPhaserContainerGameObject.setAlpha(1)
+        this.#battleTextGameObjectLine1.setAlpha(1)
+        this.#battleTextGameObjectLine2.setAlpha(1)
     }
 
     hideMainBattleMenu() {
         this.#mainBattleMenuPhaserContainerGameObject.setAlpha(0)
+        this.#battleTextGameObjectLine1.setAlpha(0)
+        this.#battleTextGameObjectLine2.setAlpha(0)
     }
 
     showMonsterAttackSubMenu() {
@@ -40,7 +47,10 @@ export class BattleMenu {
         this.#moveSelectionSubMenuPhaserContainerGameObject.setAlpha(0)
     }
 
+    // TODO: update to use monster data that is passed into this class instance
     #createMainBattleMenu() {
+        this.#battleTextGameObjectLine1 = this.#scene.add.text(20, 468, 'What should', battleUITextStyle)
+        this.#battleTextGameObjectLine2 = this.#scene.add.text(20, 512, `${MONSTER_ASSET_KEYS.IGUANIGNITE} do next?`, battleUITextStyle)
         this.#mainBattleMenuPhaserContainerGameObject = this.#scene.add.container(520, 448, [
             this.#createSubInfoPane(),
             this.#scene.add.text(55, 22, BATTLE_MENU_OPTIONS.FIGHT, battleUITextStyle),
