@@ -4,6 +4,18 @@ import {
     BATTLE_ASSET_KEYS, BATTLE_BACKGROUND_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, MONSTER_ASSET_KEYS
 } from "../../assets/asset-keys.js";
 
+const BATTLE_MENU_OPTIONS = Object.freeze({
+    FIGHT: 'FIGHT',
+    SWITCH: 'SWITCH',
+    ITEM: 'ITEM',
+    FLEE: 'FLEE'
+})
+
+const battleUITextStyle = {
+    color: 'black',
+    fontSize: '30px'
+}
+
 export class BattleScene extends Phaser.Scene {
     constructor() {
         super({
@@ -72,6 +84,24 @@ export class BattleScene extends Phaser.Scene {
                         fontWeight: 'bold'
                 })
         ])
+
+        // Main and Sub Info Pane
+        this.#createMainInfoPane()
+        this.add.container(520, 448, [
+            this.#createSubInfoPane(),
+            this.add.text(55, 22, BATTLE_MENU_OPTIONS.FIGHT, battleUITextStyle),
+            this.add.text(240, 22, BATTLE_MENU_OPTIONS.SWITCH, battleUITextStyle),
+            this.add.text(55, 70, BATTLE_MENU_OPTIONS.ITEM, battleUITextStyle),
+            this.add.text(240, 70, BATTLE_MENU_OPTIONS.FLEE, battleUITextStyle)
+        ])
+
+        this.add.container(0, 448, [
+            this.#createSubInfoPane(),
+            this.add.text(55, 22, 'Slash', battleUITextStyle),
+            this.add.text(240, 22, 'Growl', battleUITextStyle),
+            this.add.text(55, 70, '-', battleUITextStyle),
+            this.add.text(240, 70, '-', battleUITextStyle)
+        ])
     }
 
     #createHealthBar(x, y) {
@@ -87,5 +117,21 @@ export class BattleScene extends Phaser.Scene {
             .setOrigin(0, 0.5)
             .setScale(1, scaleY)
         return this.add.container(x, y, [leftCap, middle, rightCap])
+    }
+
+    #createMainInfoPane() {
+        const padding = 4;
+        const rectangleHeight = 124;
+        this.add.rectangle(padding, this.scale.height - rectangleHeight - padding, this.scale.width - padding * 2, rectangleHeight, 0xede4f3, 1)
+            .setOrigin(0)
+            .setStrokeStyle(8, 0xe4434a, 1)
+    }
+
+    #createSubInfoPane() {
+        const rectangleWidth = 500;
+        const rectangleHeight = 124;
+        return this.add.rectangle(0, 0, rectangleWidth, rectangleHeight, 0xede4f3, 1)
+            .setOrigin(0)
+            .setStrokeStyle(8, 0x905ac2, 1)
     }
 }
