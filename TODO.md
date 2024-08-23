@@ -11,10 +11,10 @@ Game Project Assets:
 
 Battle System:
   [2024-08-21] load game assets
-  [] create battle scene layout
-  [] create dialog menu
-  [] create option menu
-  [] create monster attack move list
+  [2024-08-22] create battle scene layout
+  [2024-08-22] create dialog menu
+  [2024-08-22] create option menu
+  [2024-08-22] create monster attack move list
   [] handle player input
   [] code optimization - move logic to components
     [] create health component
