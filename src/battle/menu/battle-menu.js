@@ -2,15 +2,15 @@ import Phaser from '../../lib/phaser.js'
 import {MONSTER_ASSET_KEYS, UI_ASSET_KEYS} from "../../assets/asset-keys.js";
 import {DIRECTION} from "../../common/direction.js";
 import {exhaustiveGuard} from "../../utils/guard.js";
-import {ATTACK_MOVE_OPTIONS, BATTLE_MENU_OPTIONS} from "../ui/battle-menu-options.js";
+import {ACTIVE_BATTLE_MENU, ATTACK_MOVE_OPTIONS, BATTLE_MENU_OPTIONS} from "../ui/battle-menu-options.js";
 import {BATTLE_UI_TEXT_STYLE} from "../ui/battle-menu-config.js";
 
-const BATTLE_MENU_CURSOR_POSITION= Object.freeze({
+const BATTLE_MENU_CURSOR_POSITION = Object.freeze({
     x: 42,
     y: 35
 })
 
-const ATTACK_MENU_CURSOR_POSITION= Object.freeze({
+const ATTACK_MENU_CURSOR_POSITION = Object.freeze({
     x: 42,
     y: 35
 })
@@ -29,11 +29,13 @@ export class BattleMenu {
     /** @type {Phaser.GameObjects.Image} */
     #mainBattleMenuCursorPhaserImageGameObject;
     /** @type {Phaser.GameObjects.Image} */
-    #attackBattleMenuCursorPhaserImageGameObject
+    #attackBattleMenuCursorPhaserImageGameObject;
     /** @type {BattleMenuOptions} */
     #selectedBattleMenuOption;
     /** @type {AttackMoveOptions} */
     #selectedAttackMoveOption;
+    /** @type {ActiveBattleMenu} */
+    #activeBattleMenu;
 
     /**
      *
@@ -41,6 +43,7 @@ export class BattleMenu {
      */
     constructor(scene) {
         this.#scene = scene;
+        this.#activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_MAIN
         this.#selectedBattleMenuOption = BATTLE_MENU_OPTIONS.FIGHT
         this.#selectedAttackMoveOption = ATTACK_MOVE_OPTIONS.MOVE_1
         this.#createMainInfoPane()
@@ -49,6 +52,7 @@ export class BattleMenu {
     }
 
     showMainBattleMenu() {
+        this.#activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_MAIN
         this.#battleTextGameObjectLine1.setText('What should')
         this.#mainBattleMenuPhaserContainerGameObject.setAlpha(1)
         this.#battleTextGameObjectLine1.setAlpha(1)
@@ -65,6 +69,7 @@ export class BattleMenu {
     }
 
     showMonsterAttackSubMenu() {
+        this.#activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_MOVE_SELECT
         this.#moveSelectionSubMenuPhaserContainerGameObject.setAlpha(1)
     }
 
@@ -78,12 +83,12 @@ export class BattleMenu {
      */
     handlePlayerInput(input) {
         console.log(input)
-        if(input === 'CANCEL') {
+        if (input === 'CANCEL') {
             this.hideMonsterAttackSubMenu()
             this.showMainBattleMenu()
             return;
         }
-        if(input === 'OK') {
+        if (input === 'OK') {
             this.hideMainBattleMenu()
             this.showMonsterAttackSubMenu()
             return;
@@ -121,7 +126,7 @@ export class BattleMenu {
             .setOrigin(0.5)
             .setScale(1.5)
 
-        this.#moveSelectionSubMenuPhaserContainerGameObject =this.#scene.add.container(0, 448, [
+        this.#moveSelectionSubMenuPhaserContainerGameObject = this.#scene.add.container(0, 448, [
             this.#scene.add.text(55, 22, 'Slash', BATTLE_UI_TEXT_STYLE),
             this.#scene.add.text(240, 22, 'Growl', BATTLE_UI_TEXT_STYLE),
             this.#scene.add.text(55, 70, '-', BATTLE_UI_TEXT_STYLE),
@@ -153,8 +158,12 @@ export class BattleMenu {
      * @param {Direction} direction
      */
     #updateSelectedBattleMenuOptionFromInput(direction) {
-        if(this.#selectedBattleMenuOption === BATTLE_MENU_OPTIONS.FIGHT) {
-            switch(direction) {
+        if (this.#activeBattleMenu !== ACTIVE_BATTLE_MENU.BATTLE_MAIN) {
+            return;
+        }
+
+        if (this.#selectedBattleMenuOption === BATTLE_MENU_OPTIONS.FIGHT) {
+            switch (direction) {
                 case DIRECTION.RIGHT:
                     this.#selectedBattleMenuOption = BATTLE_MENU_OPTIONS.SWITCH
                     return;
@@ -173,8 +182,8 @@ export class BattleMenu {
             return;
         }
 
-        if(this.#selectedBattleMenuOption === BATTLE_MENU_OPTIONS.SWITCH) {
-            switch(direction) {
+        if (this.#selectedBattleMenuOption === BATTLE_MENU_OPTIONS.SWITCH) {
+            switch (direction) {
                 case DIRECTION.DOWN:
                     this.#selectedBattleMenuOption = BATTLE_MENU_OPTIONS.FLEE
                     return;
@@ -193,8 +202,8 @@ export class BattleMenu {
             return;
         }
 
-        if(this.#selectedBattleMenuOption === BATTLE_MENU_OPTIONS.ITEM) {
-            switch(direction) {
+        if (this.#selectedBattleMenuOption === BATTLE_MENU_OPTIONS.ITEM) {
+            switch (direction) {
                 case DIRECTION.RIGHT:
                     this.#selectedBattleMenuOption = BATTLE_MENU_OPTIONS.FLEE
                     return;
@@ -213,8 +222,8 @@ export class BattleMenu {
             return;
         }
 
-        if(this.#selectedBattleMenuOption === BATTLE_MENU_OPTIONS.FLEE) {
-            switch(direction) {
+        if (this.#selectedBattleMenuOption === BATTLE_MENU_OPTIONS.FLEE) {
+            switch (direction) {
                 case DIRECTION.LEFT:
                     this.#selectedBattleMenuOption = BATTLE_MENU_OPTIONS.ITEM
                     return;
@@ -237,6 +246,9 @@ export class BattleMenu {
     }
 
     #moveMainBattleMenuCursor() {
+        if (this.#activeBattleMenu !== ACTIVE_BATTLE_MENU.BATTLE_MAIN) {
+            return;
+        }
         switch (this.#selectedBattleMenuOption) {
             case BATTLE_MENU_OPTIONS.FIGHT:
                 this.#mainBattleMenuCursorPhaserImageGameObject.setPosition(BATTLE_MENU_CURSOR_POSITION.x, BATTLE_MENU_CURSOR_POSITION.y)
@@ -260,8 +272,12 @@ export class BattleMenu {
      * @param {Direction} direction
      */
     #updateSelectedAttackMoveOptionFromInput(direction) {
-        if(this.#selectedAttackMoveOption === ATTACK_MOVE_OPTIONS.MOVE_1) {
-            switch(direction) {
+        if (this.#activeBattleMenu !== ACTIVE_BATTLE_MENU.BATTLE_MOVE_SELECT) {
+            return;
+        }
+
+        if (this.#selectedAttackMoveOption === ATTACK_MOVE_OPTIONS.MOVE_1) {
+            switch (direction) {
                 case DIRECTION.RIGHT:
                     this.#selectedAttackMoveOption = ATTACK_MOVE_OPTIONS.MOVE_2
                     return;
@@ -280,8 +296,8 @@ export class BattleMenu {
             return;
         }
 
-        if(this.#selectedAttackMoveOption === ATTACK_MOVE_OPTIONS.MOVE_2) {
-            switch(direction) {
+        if (this.#selectedAttackMoveOption === ATTACK_MOVE_OPTIONS.MOVE_2) {
+            switch (direction) {
                 case DIRECTION.LEFT:
                     this.#selectedAttackMoveOption = ATTACK_MOVE_OPTIONS.MOVE_1
                     return;
@@ -300,8 +316,8 @@ export class BattleMenu {
             return;
         }
 
-        if(this.#selectedAttackMoveOption === ATTACK_MOVE_OPTIONS.MOVE_3) {
-            switch(direction) {
+        if (this.#selectedAttackMoveOption === ATTACK_MOVE_OPTIONS.MOVE_3) {
+            switch (direction) {
                 case DIRECTION.RIGHT:
                     this.#selectedAttackMoveOption = ATTACK_MOVE_OPTIONS.MOVE_4
                     return;
@@ -320,8 +336,8 @@ export class BattleMenu {
             return;
         }
 
-        if(this.#selectedAttackMoveOption === ATTACK_MOVE_OPTIONS.MOVE_4) {
-            switch(direction) {
+        if (this.#selectedAttackMoveOption === ATTACK_MOVE_OPTIONS.MOVE_4) {
+            switch (direction) {
                 case DIRECTION.LEFT:
                     this.#selectedAttackMoveOption = ATTACK_MOVE_OPTIONS.MOVE_3
                     return;
@@ -341,6 +357,9 @@ export class BattleMenu {
     }
 
     #moveSubBattleMenuCursor() {
+        if (this.#activeBattleMenu !== ACTIVE_BATTLE_MENU.BATTLE_MOVE_SELECT) {
+            return;
+        }
         switch (this.#selectedAttackMoveOption) {
             case ATTACK_MOVE_OPTIONS.MOVE_1:
                 this.#attackBattleMenuCursorPhaserImageGameObject.setPosition(ATTACK_MENU_CURSOR_POSITION.x, ATTACK_MENU_CURSOR_POSITION.y)
