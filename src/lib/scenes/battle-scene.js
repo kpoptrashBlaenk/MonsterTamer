@@ -80,6 +80,12 @@ export class BattleScene extends Phaser.Scene {
         this.#battleMenu.showMainBattleMenu()
     }
 
+    /**
+     *
+     * @param {number} x x position of Health Bar Container
+     * @param {number} y y position of Health Bar Container
+     * @returns {Phaser.GameObjects.Container}
+     */
     #createHealthBar(x, y) {
         const scaleY = 0.7
         const leftCap = this.add.image(x, y, HEALTH_BAR_ASSET_KEYS.LEFT_CAP)
