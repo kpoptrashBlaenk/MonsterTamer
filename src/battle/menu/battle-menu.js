@@ -57,6 +57,23 @@ export class BattleMenu {
         this.#moveSelectionSubMenuPhaserContainerGameObject.setAlpha(0)
     }
 
+    /**
+     *
+     * @param {Direction | 'OK' | 'CANCEL'} input
+     */
+    handlePlayerInput(input) {
+        console.log(input)
+        if(input === 'CANCEL') {
+            this.hideMonsterAttackSubMenu()
+            this.showMainBattleMenu()
+            return;
+        }
+        if(input === 'OK') {
+            this.hideMainBattleMenu()
+            this.showMonsterAttackSubMenu()
+        }
+    }
+
     // TODO: update to use monster data that is passed into this class instance
     #createMainBattleMenu() {
         this.#battleTextGameObjectLine1 = this.#scene.add.text(20, 468, 'What should', battleUITextStyle)
