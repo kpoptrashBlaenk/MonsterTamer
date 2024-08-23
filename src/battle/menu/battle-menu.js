@@ -2,35 +2,8 @@ import Phaser from '../../lib/phaser.js'
 import {MONSTER_ASSET_KEYS, UI_ASSET_KEYS} from "../../assets/asset-keys.js";
 import {DIRECTION} from "../../common/direction.js";
 import {exhaustiveGuard} from "../../utils/guard.js";
-
-/**
- * @typedef {keyof typeof BATTLE_MENU_OPTIONS} BattleMenuOptions
- */
-
-/** @enum {BattleMenuOptions} */
-const BATTLE_MENU_OPTIONS = Object.freeze({
-    FIGHT: 'FIGHT',
-    SWITCH: 'SWITCH',
-    ITEM: 'ITEM',
-    FLEE: 'FLEE'
-})
-
-/**
- * @typedef {keyof typeof ATTACK_MOVE_OPTIONS} AttackMoveOptions
- */
-
-/** @enum {AttackMoveOptions} */
-const ATTACK_MOVE_OPTIONS = Object.freeze({
-    MOVE_1: 'MOVE_1',
-    MOVE_2: 'MOVE_2',
-    MOVE_3: 'MOVE_3',
-    MOVE_4: 'MOVE_4'
-})
-
-const battleUITextStyle = {
-    color: 'black',
-    fontSize: '30px'
-}
+import {ATTACK_MOVE_OPTIONS, BATTLE_MENU_OPTIONS} from "../ui/battle-menu-options.js";
+import {BATTLE_UI_TEXT_STYLE} from "../ui/battle-menu-config.js";
 
 const BATTLE_MENU_CURSOR_POSITION= Object.freeze({
     x: 42,
@@ -42,7 +15,6 @@ const ATTACK_MENU_CURSOR_POSITION= Object.freeze({
     y: 35
 })
 
-// noinspection JSValidateTypes
 export class BattleMenu {
     /** @type {Phaser.Scene} */
     #scene;
@@ -63,7 +35,6 @@ export class BattleMenu {
     /** @type {AttackMoveOptions} */
     #selectedAttackMoveOption;
 
-    // noinspection JSValidateTypes
     /**
      *
      * @param {Phaser.Scene} scene The scene to be added
@@ -101,7 +72,6 @@ export class BattleMenu {
         this.#moveSelectionSubMenuPhaserContainerGameObject.setAlpha(0)
     }
 
-    // noinspection JSCheckFunctionSignatures
     /**
      *
      * @param {Direction | 'OK' | 'CANCEL'} input
@@ -127,8 +97,8 @@ export class BattleMenu {
 
     // TODO: update to use monster data that is passed into this class instance
     #createMainBattleMenu() {
-        this.#battleTextGameObjectLine1 = this.#scene.add.text(20, 468, 'What should', battleUITextStyle)
-        this.#battleTextGameObjectLine2 = this.#scene.add.text(20, 512, `${MONSTER_ASSET_KEYS.IGUANIGNITE} do next?`, battleUITextStyle)
+        this.#battleTextGameObjectLine1 = this.#scene.add.text(20, 468, 'What should', BATTLE_UI_TEXT_STYLE)
+        this.#battleTextGameObjectLine2 = this.#scene.add.text(20, 512, `${MONSTER_ASSET_KEYS.IGUANIGNITE} do next?`, BATTLE_UI_TEXT_STYLE)
 
         this.#mainBattleMenuCursorPhaserImageGameObject = this.#scene.add.image(BATTLE_MENU_CURSOR_POSITION.x, BATTLE_MENU_CURSOR_POSITION.y, UI_ASSET_KEYS.CURSOR, 0)
             .setOrigin(0.5)
@@ -136,10 +106,10 @@ export class BattleMenu {
 
         this.#mainBattleMenuPhaserContainerGameObject = this.#scene.add.container(520, 448, [
             this.#createSubInfoPane(),
-            this.#scene.add.text(55, 22, BATTLE_MENU_OPTIONS.FIGHT, battleUITextStyle),
-            this.#scene.add.text(240, 22, BATTLE_MENU_OPTIONS.SWITCH, battleUITextStyle),
-            this.#scene.add.text(55, 70, BATTLE_MENU_OPTIONS.ITEM, battleUITextStyle),
-            this.#scene.add.text(240, 70, BATTLE_MENU_OPTIONS.FLEE, battleUITextStyle),
+            this.#scene.add.text(55, 22, BATTLE_MENU_OPTIONS.FIGHT, BATTLE_UI_TEXT_STYLE),
+            this.#scene.add.text(240, 22, BATTLE_MENU_OPTIONS.SWITCH, BATTLE_UI_TEXT_STYLE),
+            this.#scene.add.text(55, 70, BATTLE_MENU_OPTIONS.ITEM, BATTLE_UI_TEXT_STYLE),
+            this.#scene.add.text(240, 70, BATTLE_MENU_OPTIONS.FLEE, BATTLE_UI_TEXT_STYLE),
             this.#mainBattleMenuCursorPhaserImageGameObject
         ])
 
@@ -148,12 +118,14 @@ export class BattleMenu {
 
     #createMonsterAttackSubMenu() {
         this.#attackBattleMenuCursorPhaserImageGameObject = this.#scene.add.image(42, 35, UI_ASSET_KEYS.CURSOR, 0)
+            .setOrigin(0.5)
+            .setScale(1.5)
 
         this.#moveSelectionSubMenuPhaserContainerGameObject =this.#scene.add.container(0, 448, [
-            this.#scene.add.text(55, 22, 'Slash', battleUITextStyle),
-            this.#scene.add.text(240, 22, 'Growl', battleUITextStyle),
-            this.#scene.add.text(55, 70, '-', battleUITextStyle),
-            this.#scene.add.text(240, 70, '-', battleUITextStyle),
+            this.#scene.add.text(55, 22, 'Slash', BATTLE_UI_TEXT_STYLE),
+            this.#scene.add.text(240, 22, 'Growl', BATTLE_UI_TEXT_STYLE),
+            this.#scene.add.text(55, 70, '-', BATTLE_UI_TEXT_STYLE),
+            this.#scene.add.text(240, 70, '-', BATTLE_UI_TEXT_STYLE),
             this.#attackBattleMenuCursorPhaserImageGameObject
         ])
 
@@ -365,7 +337,6 @@ export class BattleMenu {
                 default:
                     exhaustiveGuard(direction)
             }
-            return;
         }
     }
 
