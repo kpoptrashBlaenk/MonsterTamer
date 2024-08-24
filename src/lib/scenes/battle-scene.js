@@ -2,8 +2,6 @@ import Phaser from '../phaser.js';
 import {SCENE_KEYS} from "./scene-keys.js";
 import {
     BATTLE_ASSET_KEYS,
-    BATTLE_BACKGROUND_ASSET_KEYS,
-    HEALTH_BAR_ASSET_KEYS,
     MONSTER_ASSET_KEYS
 } from "../../assets/asset-keys.js";
 import {BattleMenu} from "../../battle/menu/battle-menu.js";
