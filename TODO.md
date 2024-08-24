@@ -15,7 +15,7 @@ Battle System:
   [2024-08-22] create dialog menu
   [2024-08-22] create option menu
   [2024-08-22] create monster attack move list
-  [] handle player input
+  [2024-08-22] handle player input
   [] code optimization - move logic to components
     [] create health component
     [] create background component
