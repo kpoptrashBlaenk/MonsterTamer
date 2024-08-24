@@ -3,6 +3,7 @@ import {SCENE_KEYS} from "./scene-keys.js";
 import {BATTLE_ASSET_KEYS, BATTLE_BACKGROUND_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, MONSTER_ASSET_KEYS} from "../../assets/asset-keys.js";
 import {BattleMenu} from "../../battle/menu/battle-menu.js";
 import {DIRECTION} from "../../common/direction.js";
+import {Background} from "../../battle/background.js";
 
 export class BattleScene extends Phaser.Scene {
     /** @type {BattleMenu} */
@@ -19,8 +20,8 @@ export class BattleScene extends Phaser.Scene {
 
     create() {
         // Background
-        this.add.image(0, 0, BATTLE_BACKGROUND_ASSET_KEYS.FOREST)
-            .setOrigin(0)
+        const background = new Background(this);
+        background.showForest()
 
         // Monsters
         this.add.image(768, 144, MONSTER_ASSET_KEYS.CARNODUSK, 0)
