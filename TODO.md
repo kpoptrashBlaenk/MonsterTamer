@@ -16,10 +16,10 @@ Battle System:
   [2024-08-22] create option menu
   [2024-08-22] create monster attack move list
   [2024-08-23] handle player input
-  [] code optimization - move logic to components
+  [2024-08-24] code optimization - move logic to components
     [2024-08-24] create health component
     [2024-08-24] create background component
-    [] create monster components
+    [2024-08-24] create monster components
   [] adding basic attack logic
   [] taking damage and monster knock out
   [] battle state machine

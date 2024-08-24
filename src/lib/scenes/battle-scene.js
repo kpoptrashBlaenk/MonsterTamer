@@ -9,6 +9,7 @@ import {DIRECTION} from "../../common/direction.js";
 import {Background} from "../../battle/background.js";
 import {HealthBar} from "../../battle/ui/health-bar.js";
 import {EnemyBattleMonster} from "../../battle/monsters/enemy-battle-monster.js";
+import {PlayerBattleMonster} from "../../battle/monsters/player-battle-monster.js";
 
 export class BattleScene extends Phaser.Scene {
     /** @type {BattleMenu} */
@@ -17,6 +18,8 @@ export class BattleScene extends Phaser.Scene {
     #cursorKeys;
     /** @type {EnemyBattleMonster} */
     #activeEnemyMonster;
+    /** @type {PlayerBattleMonster} */
+    #activePlayerMonster;
 
     constructor() {
         super({
@@ -37,6 +40,7 @@ export class BattleScene extends Phaser.Scene {
                     name: MONSTER_ASSET_KEYS.CARNODUSK,
                     assetKey: MONSTER_ASSET_KEYS.CARNODUSK,
                     assetFrame: 0,
+                    currentLevel: 5,
                     currentHp: 25,
                     maxHp: 25,
                     attackIds: [],
@@ -44,61 +48,20 @@ export class BattleScene extends Phaser.Scene {
                 }
             }
         );
-        this.add.image(256, 316, MONSTER_ASSET_KEYS.IGUANIGNITE, 0)
-            .setFlipX(true)
-
-        // Player Health Bar
-        const playerHealthBar = new HealthBar(this, 34, 34);
-        const playerMonsterName = this.add.text(30, 20, MONSTER_ASSET_KEYS.IGUANIGNITE, {
-            color: '#7E3D3F',
-            fontSize: '32px'
-        })
-        this.add.container(556, 318, [
-            this.add.image(0, 0, BATTLE_ASSET_KEYS.HEALTH_BAR_BACKGROUND)
-                .setOrigin(0),
-            playerMonsterName,
-            playerHealthBar.container,
-            this.add.text(playerMonsterName.width + 35, 23, 'L5', {
-                color: '#ED474B',
-                fontSize: '28px',
-                fontWeight: 'bold'
-            }),
-            this.add.text(30, 58, 'HP', {
-                color: '#FF6505',
-                fontSize: '24px',
-                fontStyle: 'italic',
-                fontWeight: 'bold'
-            }),
-            this.add.text(443, 80, '25/25', {
-                color: '#7E3D3F',
-                fontSize: '16px'
-            }).setOrigin(1, 0)
-        ])
-
-        // Enemy Health Bar
-        const enemyHealthBar = this.#activeEnemyMonster._healthBar;
-        const enemyMonsterName = this.add.text(30, 20, MONSTER_ASSET_KEYS.CARNODUSK, {
-            color: '#7E3D3F',
-            fontSize: '32px'
-        })
-        this.add.container(0, 0, [
-            this.add.image(0, 0, BATTLE_ASSET_KEYS.HEALTH_BAR_BACKGROUND)
-                .setOrigin(0)
-                .setScale(1, 0.8),
-            enemyMonsterName,
-            enemyHealthBar.container,
-            this.add.text(enemyMonsterName.width + 35, 23, 'L5', {
-                color: '#ED474B',
-                fontSize: '28px',
-                fontWeight: 'bold'
-            }),
-            this.add.text(30, 58, 'HP', {
-                color: '#FF6505',
-                fontSize: '24px',
-                fontStyle: 'italic',
-                fontWeight: 'bold'
-            })
-        ])
+        this.#activePlayerMonster = new PlayerBattleMonster({
+                scene: this,
+                monsterDetails: {
+                    name: MONSTER_ASSET_KEYS.IGUANIGNITE,
+                    assetKey: MONSTER_ASSET_KEYS.IGUANIGNITE,
+                    assetFrame: 0,
+                    currentLevel: 5,
+                    currentHp: 25,
+                    maxHp: 25,
+                    attackIds: [],
+                    baseAttack: 5
+                }
+            }
+        );
 
         // Create Battle Menu
         this.#battleMenu = new BattleMenu(this);
@@ -106,7 +69,10 @@ export class BattleScene extends Phaser.Scene {
 
         this.#cursorKeys = this.input.keyboard.createCursorKeys();
 
-        this.#activeEnemyMonster.takeDamage(50)
+        // REMOVE THIS
+        this.#activeEnemyMonster.takeDamage(20, () => {
+            this.#activePlayerMonster.takeDamage(15)
+        })
     }
 
     update() {
