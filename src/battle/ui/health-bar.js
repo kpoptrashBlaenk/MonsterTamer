@@ -31,7 +31,7 @@ export class HealthBar {
 
         this.#healthBarContainer = this.#scene.add.container(x, y, []);
         this.#createHealthBarImages(x, y)
-        this.#setMeterPercentage(1)
+        this.setMeterPercentage(1)
     }
 
     get container() {
@@ -59,8 +59,29 @@ export class HealthBar {
         this.#healthBarContainer.add([this.#leftCap, this.#middle, this.#rightCap])
     }
 
-    #setMeterPercentage(percent = 1) {
-        this.#middle.displayWidth = this.#fullWidth * percent;
-        this.#rightCap.x = this.#middle.x + this.#middle.displayWidth
+    setMeterPercentage(percent = 1) {
+        // noinspection UnnecessaryLocalVariableJS
+        const width = this.#fullWidth * percent;
+
+        this.#middle.displayWidth = width;
+        this.#rightCap.x = this.#middle.x + this.#middle.displayWidth;
+    }
+
+    setMeterPercentageAnimated(percent = 1, options) {
+        const width = this.#fullWidth * percent;
+
+        this.#scene.tweens.add({
+            targets: this.#middle,
+            displayWidth: width,
+            duration: options?.duration || 1000,
+            ease: Phaser.Math.Easing.Sine.Out,
+            onUpdate: () => {
+                this.#rightCap.x = this.#middle.x + this.#middle.displayWidth;
+                const isVisible = this.#middle.displayWidth > 0;
+                this.#leftCap.visible = isVisible;
+                this.#rightCap.visible = isVisible;
+            },
+            onComplete: options?.callback
+        })
     }
 }
