@@ -44,13 +44,17 @@ export class BattleMenu {
     #waitingForPlayerInput;
     /** @type {number | undefined} */
     #selectedAttackIndex;
+    /** @type {BattleMonster} */
+    #activePlayerMonster
 
     /**
      *
      * @param {Phaser.Scene} scene The scene to be added
+     * @param {BattleMonster} activePlayerMonster
      */
-    constructor(scene) {
+    constructor(scene, activePlayerMonster) {
         this.#scene = scene;
+        this.#activePlayerMonster = activePlayerMonster;
         this.#activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_MAIN;
         this.#selectedBattleMenuOption = BATTLE_MENU_OPTIONS.FIGHT;
         this.#selectedAttackMoveOption = ATTACK_MOVE_OPTIONS.MOVE_1;
@@ -159,10 +163,9 @@ export class BattleMenu {
         this.#waitingForPlayerInput = true;
     }
 
-    // TODO: update to use monster data that is passed into this class instance
     #createMainBattleMenu() {
         this.#battleTextGameObjectLine1 = this.#scene.add.text(20, 468, 'What should', BATTLE_UI_TEXT_STYLE)
-        this.#battleTextGameObjectLine2 = this.#scene.add.text(20, 512, `${MONSTER_ASSET_KEYS.IGUANIGNITE} do next?`, BATTLE_UI_TEXT_STYLE)
+        this.#battleTextGameObjectLine2 = this.#scene.add.text(20, 512, `${this.#activePlayerMonster.name} do next?`, BATTLE_UI_TEXT_STYLE)
 
         this.#mainBattleMenuCursorPhaserImageGameObject = this.#scene.add.image(BATTLE_MENU_CURSOR_POSITION.x, BATTLE_MENU_CURSOR_POSITION.y, UI_ASSET_KEYS.CURSOR, 0)
             .setOrigin(0.5)
@@ -185,11 +188,17 @@ export class BattleMenu {
             .setOrigin(0.5)
             .setScale(1.5)
 
+        /** @type {string[]} */
+        const attackNames = [];
+        for (let i = 0; i < 4; i++) {
+            attackNames.push(this.#activePlayerMonster.attacks[i]?.name || '-')
+        }
+
         this.#moveSelectionSubMenuPhaserContainerGameObject = this.#scene.add.container(0, 448, [
-            this.#scene.add.text(55, 22, 'Slash', BATTLE_UI_TEXT_STYLE),
-            this.#scene.add.text(240, 22, 'Growl', BATTLE_UI_TEXT_STYLE),
-            this.#scene.add.text(55, 70, '-', BATTLE_UI_TEXT_STYLE),
-            this.#scene.add.text(240, 70, '-', BATTLE_UI_TEXT_STYLE),
+            this.#scene.add.text(55, 22, attackNames[0], BATTLE_UI_TEXT_STYLE),
+            this.#scene.add.text(240, 22, attackNames[1], BATTLE_UI_TEXT_STYLE),
+            this.#scene.add.text(55, 70, attackNames[2], BATTLE_UI_TEXT_STYLE),
+            this.#scene.add.text(240, 70, attackNames[3], BATTLE_UI_TEXT_STYLE),
             this.#attackBattleMenuCursorPhaserImageGameObject
         ])
 

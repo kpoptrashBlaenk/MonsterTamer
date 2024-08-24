@@ -1,13 +1,11 @@
 import Phaser from '../phaser.js';
 import {SCENE_KEYS} from "./scene-keys.js";
 import {
-    BATTLE_ASSET_KEYS,
     MONSTER_ASSET_KEYS
 } from "../../assets/asset-keys.js";
 import {BattleMenu} from "../../battle/menu/battle-menu.js";
 import {DIRECTION} from "../../common/direction.js";
 import {Background} from "../../battle/background.js";
-import {HealthBar} from "../../battle/ui/health-bar.js";
 import {EnemyBattleMonster} from "../../battle/monsters/enemy-battle-monster.js";
 import {PlayerBattleMonster} from "../../battle/monsters/player-battle-monster.js";
 
@@ -43,7 +41,7 @@ export class BattleScene extends Phaser.Scene {
                     currentLevel: 5,
                     currentHp: 25,
                     maxHp: 25,
-                    attackIds: [],
+                    attackIds: [1, 2],
                     baseAttack: 5
                 }
             }
@@ -57,14 +55,14 @@ export class BattleScene extends Phaser.Scene {
                     currentLevel: 5,
                     currentHp: 25,
                     maxHp: 25,
-                    attackIds: [],
+                    attackIds: [1, 2],
                     baseAttack: 5
                 }
             }
         );
 
         // Create Battle Menu
-        this.#battleMenu = new BattleMenu(this);
+        this.#battleMenu = new BattleMenu(this, this.#activePlayerMonster);
         //this.#battleMenu.showMainBattleMenu() // Commented out because kinda useless because add already shows it
 
         this.#cursorKeys = this.input.keyboard.createCursorKeys();

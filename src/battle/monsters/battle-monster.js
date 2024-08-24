@@ -1,6 +1,6 @@
 import Phaser from '../../lib/phaser.js'
 import {HealthBar} from "../ui/health-bar.js";
-import {BATTLE_ASSET_KEYS, MONSTER_ASSET_KEYS} from "../../assets/asset-keys.js";
+import {BATTLE_ASSET_KEYS, DATA_ASSET_KEYS, MONSTER_ASSET_KEYS} from "../../assets/asset-keys.js";
 
 export class BattleMonster {
     /** @type {Phaser.Scene} */
@@ -34,14 +34,24 @@ export class BattleMonster {
         this._maxHealth = this._monsterDetails.maxHp;
         this._monsterAttacks = [];
 
-        this.#createHealthBarComponent(config.scaleHealthBarBackgroundImageByY)
-
         this._phaserGameObject = this._scene.add.image(
             position.x,
             position.y,
             this._monsterDetails.assetKey,
             this._monsterDetails.assetFrame || 0
         );
+
+        this.#createHealthBarComponent(config.scaleHealthBarBackgroundImageByY)
+
+        /** @type {Attack[]} */
+        const data = this._scene.cache.json.get(DATA_ASSET_KEYS.ATTACKS)
+
+        this._monsterDetails.attackIds.forEach(attackId => {
+            const monsterAttack = data.find(attack => attack.id === attackId);
+            if(monsterAttack !== undefined) {
+                this._monsterAttacks.push(monsterAttack)
+            }
+        })
     }
 
     /** @type {boolean} */
