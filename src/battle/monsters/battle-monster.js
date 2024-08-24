@@ -96,7 +96,7 @@ export class BattleMonster {
     #createHealthBarComponent(scaleHealthBarByBackgroundImageByY = 1) {
         this._healthBar = new HealthBar(this._scene, 34, 34);
 
-        const monsterNameGameText = this._scene.add.text(30, 20, MONSTER_ASSET_KEYS.CARNODUSK, {
+        const monsterNameGameText = this._scene.add.text(30, 20, this._monsterDetails.name, {
             color: '#7E3D3F',
             fontSize: '32px'
         });
