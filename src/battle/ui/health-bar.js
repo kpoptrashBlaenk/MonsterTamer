@@ -39,7 +39,6 @@ export class HealthBar {
         this.#createHealthBarShadowImages(x, y)
         this.#createHealthBarImages(x, y)
         this.setMeterPercentage(1)
-        this.setMeterPercentageAnimated(0.5)
     }
 
     get container() {

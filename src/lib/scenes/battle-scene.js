@@ -8,12 +8,15 @@ import {BattleMenu} from "../../battle/menu/battle-menu.js";
 import {DIRECTION} from "../../common/direction.js";
 import {Background} from "../../battle/background.js";
 import {HealthBar} from "../../battle/ui/health-bar.js";
+import {EnemyBattleMonster} from "../../battle/monsters/enemy-battle-monster.js";
 
 export class BattleScene extends Phaser.Scene {
     /** @type {BattleMenu} */
     #battleMenu;
     /** @type {Phaser.Types.Input.Keyboard.CursorKeys} */
     #cursorKeys;
+    /** @type {EnemyBattleMonster} */
+    #activeEnemyMonster;
 
     constructor() {
         super({
@@ -28,7 +31,19 @@ export class BattleScene extends Phaser.Scene {
         background.showForest()
 
         // Monsters
-        this.add.image(768, 144, MONSTER_ASSET_KEYS.CARNODUSK, 0)
+        this.#activeEnemyMonster = new EnemyBattleMonster({
+                scene: this,
+                monsterDetails: {
+                    name: MONSTER_ASSET_KEYS.CARNODUSK,
+                    assetKey: MONSTER_ASSET_KEYS.CARNODUSK,
+                    assetFrame: 0,
+                    currentHp: 25,
+                    maxHp: 25,
+                    attackIds: [],
+                    baseAttack: 5
+                }
+            }
+        );
         this.add.image(256, 316, MONSTER_ASSET_KEYS.IGUANIGNITE, 0)
             .setFlipX(true)
 
@@ -61,7 +76,7 @@ export class BattleScene extends Phaser.Scene {
         ])
 
         // Enemy Health Bar
-        const enemyHealthBar = new HealthBar(this, 34, 34);
+        const enemyHealthBar = this.#activeEnemyMonster._healthBar;
         const enemyMonsterName = this.add.text(30, 20, MONSTER_ASSET_KEYS.CARNODUSK, {
             color: '#7E3D3F',
             fontSize: '32px'
@@ -90,6 +105,8 @@ export class BattleScene extends Phaser.Scene {
         //this.#battleMenu.showMainBattleMenu() // Commented out because kinda useless because add already shows it
 
         this.#cursorKeys = this.input.keyboard.createCursorKeys();
+
+        this.#activeEnemyMonster.takeDamage(50)
     }
 
     update() {
