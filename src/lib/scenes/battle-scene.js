@@ -18,12 +18,18 @@ export class BattleScene extends Phaser.Scene {
     #activeEnemyMonster;
     /** @type {PlayerBattleMonster} */
     #activePlayerMonster;
+    /** @type {number} */
+    #activePlayerAttackIndex;
 
     constructor() {
         super({
             key: SCENE_KEYS.BATTLE_SCENE,
         });
         console.log(SCENE_KEYS.BATTLE_SCENE)
+    }
+
+    init() {
+        this.#activePlayerAttackIndex = -1;
     }
 
     create() {
@@ -55,7 +61,7 @@ export class BattleScene extends Phaser.Scene {
                     currentLevel: 5,
                     currentHp: 25,
                     maxHp: 25,
-                    attackIds: [1, 2],
+                    attackIds: [1],
                     baseAttack: 5
                 }
             }
@@ -66,11 +72,6 @@ export class BattleScene extends Phaser.Scene {
         //this.#battleMenu.showMainBattleMenu() // Commented out because kinda useless because add already shows it
 
         this.#cursorKeys = this.input.keyboard.createCursorKeys();
-
-        // REMOVE THIS
-        this.#activeEnemyMonster.takeDamage(20, () => {
-            this.#activePlayerMonster.takeDamage(15)
-        })
     }
 
     update() {
@@ -82,11 +83,16 @@ export class BattleScene extends Phaser.Scene {
             if (this.#battleMenu.selectedAttack === undefined) {
                 return;
             }
-            console.log(this.#battleMenu.selectedAttack)
+            this.#activePlayerAttackIndex = this.#battleMenu.selectedAttack
+
+            // Check if selected attack exists
+            if (!this.#activePlayerMonster.attacks[this.#activePlayerAttackIndex]) {
+                return;
+            }
+
+            console.log('attack selected: ' + this.#battleMenu.selectedAttack)
             this.#battleMenu.hideMonsterAttackSubMenu()
-            this.#battleMenu.updateInfoPaneMessagesAndWaitForInput([`Your monster attacks the enemy with ${this.#battleMenu.selectedAttack}`], () => {
-                this.#battleMenu.showMainBattleMenu()
-            })
+            this.#handleBattleSequence()
         }
         if (Phaser.Input.Keyboard.JustDown(this.#cursorKeys.shift)) {
             this.#battleMenu.handlePlayerInput('CANCEL')
@@ -108,5 +114,39 @@ export class BattleScene extends Phaser.Scene {
         if (selectedDirection !== DIRECTION.NONE) {
             this.#battleMenu.handlePlayerInput(selectedDirection)
         }
+    }
+
+    #handleBattleSequence() {
+        // show attack used then pause
+        // show attack animation then pause
+        // show damage animation then pause
+        // show health bar animation then pause
+        // repeat for other monster
+
+        this.#playerAttack()
+    }
+
+    #playerAttack() {
+        this.#battleMenu.updateInfoPaneMessagesAndWaitForInput(
+            [
+                `${this.#activePlayerMonster.name} used ${this.#activePlayerMonster.attacks[this.#activePlayerAttackIndex].name}`
+            ],
+            () => {
+                this.time.delayedCall(500, () => {
+                    this.#activeEnemyMonster.takeDamage(5, () => {
+                        this.#enemyAttack()
+                    })
+                })
+            })
+    }
+
+    #enemyAttack() {
+        this.#battleMenu.updateInfoPaneMessagesAndWaitForInput([`${this.#activeEnemyMonster.name} used ${this.#activeEnemyMonster.attacks[0].name}`], () => {
+            this.time.delayedCall(500, () => {
+                this.#activePlayerMonster.takeDamage(20, () => {
+                    this.#battleMenu.showMainBattleMenu()
+                })
+            })
+        })
     }
 }

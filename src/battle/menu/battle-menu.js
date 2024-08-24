@@ -99,6 +99,7 @@ export class BattleMenu {
     }
 
     hideMonsterAttackSubMenu() {
+        this.#activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_MAIN;
         this.#moveSelectionSubMenuPhaserContainerGameObject.setAlpha(0)
     }
 
@@ -121,6 +122,7 @@ export class BattleMenu {
                 this.#handlePlayerChooseMainBattleOption()
                 return;
             }
+
             if (this.#activeBattleMenu === ACTIVE_BATTLE_MENU.BATTLE_MOVE_SELECT) {
                 this.#handlePlayerChooseAttack()
                 return;
@@ -488,19 +490,19 @@ export class BattleMenu {
     }
 
     #handlePlayerChooseAttack() {
-        let selectedAttackMoveIndex = 0;
+        let selectedAttackMoveIndex;
         switch (this.#selectedAttackMoveOption) {
             case ATTACK_MOVE_OPTIONS.MOVE_1:
-                selectedAttackMoveIndex = 1;
+                selectedAttackMoveIndex = 0;
                 break;
             case ATTACK_MOVE_OPTIONS.MOVE_2:
-                selectedAttackMoveIndex = 2;
+                selectedAttackMoveIndex = 1;
                 break;
             case ATTACK_MOVE_OPTIONS.MOVE_3:
-                selectedAttackMoveIndex = 3;
+                selectedAttackMoveIndex = 2;
                 break;
             case ATTACK_MOVE_OPTIONS.MOVE_4:
-                selectedAttackMoveIndex = 4;
+                selectedAttackMoveIndex = 3;
                 break;
             default:
                 exhaustiveGuard(this.#selectedAttackMoveOption)

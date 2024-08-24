@@ -20,7 +20,7 @@ Battle System:
     [2024-08-24] create health component
     [2024-08-24] create background component
     [2024-08-24] create monster components
-  [] adding basic attack logic
+  [2024-08-24] adding basic attack logic
   [] taking damage and monster knock out
   [] battle state machine
     [] what is a finite state machine

@@ -105,7 +105,7 @@ export class HealthBar {
      * @param {number} [options.duration=1000]
      * @param {() => void} [options.callback]
      */
-    setMeterPercentageAnimated(options, percent = 1) {
+    setMeterPercentageAnimated(percent = 1 ,options) {
         const width = this.#fullWidth * percent;
 
         this.#scene.tweens.add({
