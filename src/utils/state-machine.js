@@ -70,7 +70,7 @@ export class StateMachine {
 
         this.#currentState = this.#states.get(name);
 
-        if(this.#currentState.onEnter) {
+        if (this.#currentState.onEnter) {
             console.log(`[${StateMachine.name}-${this.#id}:${methodName}] ${this.#currentState.name} onEnter invoked`);
             this.#currentState.onEnter()
         }
@@ -95,7 +95,7 @@ export class StateMachine {
      * @returns {boolean}
      */
     #isCurrentState(name) {
-        if(!this.#currentState) {
+        if (!this.#currentState) {
             return false;
         }
         return this.#currentState.name === name;
