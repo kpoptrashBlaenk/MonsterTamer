@@ -21,7 +21,7 @@ Battle System:
     [2024-08-24] create background component
     [2024-08-24] create monster components
   [2024-08-24] adding basic attack logic
-  [] taking damage and monster knock out
+  [2024-08-24] taking damage and monster knock out
   [] battle state machine
     [] what is a finite state machine
     [] review the battle states and what each one represents
