@@ -29,7 +29,7 @@ Battle System:
     [2024-08-25] add item, flee, and monster states
     [2024-08-25] player input improvements
   [] battle scene polish
-    [] text animations
+    [2024-08-26] text animations
     [] monster animations
     [] skip animations
     [] attack animations
