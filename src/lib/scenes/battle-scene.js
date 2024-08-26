@@ -97,6 +97,21 @@ export class BattleScene extends Phaser.Scene {
         this.#battleStateMachine.update()
 
         const wasSpaceKeyPressed = Phaser.Input.Keyboard.JustDown(this.#cursorKeys.space)
+
+        if(wasSpaceKeyPressed && (
+            this.#battleStateMachine.currentStateName === BATTLE_STATES.PRE_BATTLE_INFO ||
+            this.#battleStateMachine.currentStateName === BATTLE_STATES.POST_ATTACK_CHECK ||
+            this.#battleStateMachine.currentStateName === BATTLE_STATES.BRING_OUT_MONSTER ||
+            this.#battleStateMachine.currentStateName === BATTLE_STATES.FLEE_ATTEMPT
+        )) {
+            this.#battleMenu.handlePlayerInput('OK')
+            return;
+        }
+
+        if(this.#battleStateMachine.currentStateName !== BATTLE_STATES.PLAYER_INPUT) {
+            return;
+        }
+
         if (wasSpaceKeyPressed) {
             this.#battleMenu.handlePlayerInput('OK')
 
@@ -142,12 +157,10 @@ export class BattleScene extends Phaser.Scene {
             return;
         }
 
-        this.#battleMenu.updateInfoPaneMessagesAndWaitForInput(
-            [
-                `${this.#activePlayerMonster.name} used ${this.#activePlayerMonster.attacks[this.#activePlayerAttackIndex].name}`
-            ],
+        this.#battleMenu.updateInfoPaneMessagesNoInputRequired(
+            `${this.#activePlayerMonster.name} used ${this.#activePlayerMonster.attacks[this.#activePlayerAttackIndex].name}`,
             () => {
-                this.time.delayedCall(500, () => {
+                this.time.delayedCall(1200, () => {
                     this.#activeEnemyMonster.takeDamage(this.#activePlayerMonster.baseAttack, () => {
                         this.#enemyAttack()
                     })
@@ -161,13 +174,15 @@ export class BattleScene extends Phaser.Scene {
             return;
         }
 
-        this.#battleMenu.updateInfoPaneMessagesAndWaitForInput([`${this.#activeEnemyMonster.name} used ${this.#activeEnemyMonster.attacks[0].name}`], () => {
-            this.time.delayedCall(500, () => {
-                this.#activePlayerMonster.takeDamage(this.#activeEnemyMonster.baseAttack, () => {
-                    this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_CHECK)
+        this.#battleMenu.updateInfoPaneMessagesNoInputRequired(
+            `${this.#activeEnemyMonster.name} used ${this.#activeEnemyMonster.attacks[0].name}`,
+            () => {
+                this.time.delayedCall(1200, () => {
+                    this.#activePlayerMonster.takeDamage(this.#activeEnemyMonster.baseAttack, () => {
+                        this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_CHECK)
+                    })
                 })
             })
-        })
     }
 
     #postBattleSequenceCheck() {
