@@ -98,7 +98,7 @@ export class BattleScene extends Phaser.Scene {
 
         const wasSpaceKeyPressed = Phaser.Input.Keyboard.JustDown(this.#cursorKeys.space)
 
-        if(wasSpaceKeyPressed && (
+        if (wasSpaceKeyPressed && (
             this.#battleStateMachine.currentStateName === BATTLE_STATES.PRE_BATTLE_INFO ||
             this.#battleStateMachine.currentStateName === BATTLE_STATES.POST_ATTACK_CHECK ||
             this.#battleStateMachine.currentStateName === BATTLE_STATES.BRING_OUT_MONSTER ||
@@ -108,7 +108,7 @@ export class BattleScene extends Phaser.Scene {
             return;
         }
 
-        if(this.#battleStateMachine.currentStateName !== BATTLE_STATES.PLAYER_INPUT) {
+        if (this.#battleStateMachine.currentStateName !== BATTLE_STATES.PLAYER_INPUT) {
             return;
         }
 
@@ -231,12 +231,16 @@ export class BattleScene extends Phaser.Scene {
             name: BATTLE_STATES.PRE_BATTLE_INFO,
             onEnter: () => {
                 // Wait for enemy monster to appear on the screen and notify player about the wild monster
-                this.#battleMenu.updateInfoPaneMessagesAndWaitForInput(
-                    [`Wild ${this.#activeEnemyMonster.name} appeared`], () => {
-                        this.time.delayedCall(500, () => {
-                            this.#battleStateMachine.setState(BATTLE_STATES.BRING_OUT_MONSTER)
-                        })
+                this.#activeEnemyMonster.playMonsterAppearAnimation(() => {
+                    this.#activeEnemyMonster.playMonsterHealthBarAppearAnimation(() => {
+                        this.#battleMenu.updateInfoPaneMessagesAndWaitForInput(
+                            [`Wild ${this.#activeEnemyMonster.name} appeared`], () => {
+                                this.time.delayedCall(500, () => {
+                                    this.#battleStateMachine.setState(BATTLE_STATES.BRING_OUT_MONSTER)
+                                })
+                            })
                     })
+                })
             }
         })
 
@@ -246,9 +250,13 @@ export class BattleScene extends Phaser.Scene {
                 // Wait for player monster to appear on the screen and notify player about the monster
                 this.#battleMenu.updateInfoPaneMessagesAndWaitForInput(
                     [`Go ${this.#activePlayerMonster.name}`], () => {
-                        // After animation switch state
-                        this.time.delayedCall(500, () => {
-                            this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_INPUT)
+                        this.#activePlayerMonster.playMonsterAppearAnimation(() => {
+                            this.#activePlayerMonster.playMonsterHealthBarAppearAnimation(() => {
+                                // After animation switch state
+                                this.time.delayedCall(500, () => {
+                                    this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_INPUT)
+                                })
+                            })
                         })
                     })
             }

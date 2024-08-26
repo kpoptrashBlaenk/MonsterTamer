@@ -25,6 +25,70 @@ export class PlayerBattleMonster extends BattleMonster {
         this.#addHealthBarComponent()
     }
 
+    /**
+     *
+     * @param {() => void} callback
+     * @returns {void}
+     */
+    playMonsterAppearAnimation(callback) {
+        const startXPosition = 600;
+        const endXPosition = PLAYER_POSITION.x;
+        this._phaserGameObject.setPosition(startXPosition, PLAYER_POSITION.y)
+        this._phaserGameObject.setAlpha(1)
+        this._scene.tweens.add({
+            delay: 0,
+            duration: 1000,
+            targets: this._phaserGameObject,
+            // Note: For some reason x can't be an Object with {from, start, end}
+            x: endXPosition,
+            onComplete: () => {
+                console.log(this._phaserGameObject.x)
+                callback()
+            }
+        })
+    }
+
+    /**
+     *
+     * @param {() => void} callback
+     * @returns {void}
+     */
+    playMonsterHealthBarAppearAnimation(callback) {
+        const startXPosition = 800;
+        const endXPosition = this._phaserHealthBarGameContainer.x;
+        this._phaserHealthBarGameContainer.setPosition(startXPosition, this._phaserHealthBarGameContainer.y)
+        this._phaserHealthBarGameContainer.setAlpha(1)
+        this._scene.tweens.add({
+            delay: 0,
+            duration: 500,
+            targets: this._phaserHealthBarGameContainer,
+            // Note: For some reason x can't be an Object with {from, start, end}
+            x: endXPosition,
+            onComplete: () => {
+                console.log(this._phaserHealthBarGameContainer.x)
+                callback()
+            }
+        })
+    }
+
+    /**
+     *
+     * @param {() => void} callback
+     * @returns {void}
+     */
+    playMonsterTakeDamageAnimation(callback) {
+        throw new Error('playMonsterTakeDamageAnimation is not implemented.')
+    }
+
+    /**
+     *
+     * @param {() => void} callback
+     * @returns {void}
+     */
+    playMonsterDeathAnimation(callback) {
+        throw new Error('playMonsterDeathAnimation is not implemented.')
+    }
+
     #setHealthBarText() {
         this.#healthBarTextGameObject.setText(`${this._currentHealth}/${this._maxHealth}`)
     }

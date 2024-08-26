@@ -26,6 +26,6 @@ export function animateText(scene, target, text, config) {
             }
         },
         repeat: length - 1,
-        delay: config.delay || 100,
+        delay: config.delay || 50,
     })
 }
