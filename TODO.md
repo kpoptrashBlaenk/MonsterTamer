@@ -22,12 +22,12 @@ Battle System:
     [2024-08-24] create monster components
   [2024-08-24] adding basic attack logic
   [2024-08-24] taking damage and monster knock out
-  [] battle state machine
-    [] what is a finite state machine
-    [] review the battle states and what each one represents
-    [] implement each state
-    [] add item, flee, and monster states
-    [] player input improvements
+  [2024-08-25] battle state machine
+    [2024-08-25] what is a finite state machine
+    [2024-08-25] review the battle states and what each one represents
+    [2024-08-25] implement each state
+    [2024-08-25] add item, flee, and monster states
+    [2024-08-25] player input improvements
   [] battle scene polish
     [] text animations
     [] monster animations
