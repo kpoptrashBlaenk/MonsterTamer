@@ -35,7 +35,6 @@ export class EnemyBattleMonster extends BattleMonster {
             // Note: For some reason x can't be an Object with {from, start, end}
             x: endXPosition,
             onComplete: () => {
-                console.log(this._phaserGameObject.x)
                 callback()
             }
         })
@@ -68,16 +67,17 @@ export class EnemyBattleMonster extends BattleMonster {
      * @param {() => void} callback
      * @returns {void}
      */
-    playMonsterTakeDamageAnimation(callback) {
-        throw new Error('playMonsterTakeDamageAnimation is not implemented.')
-    }
-
-    /**
-     *
-     * @param {() => void} callback
-     * @returns {void}
-     */
     playMonsterDeathAnimation(callback) {
-        throw new Error('playMonsterDeathAnimation is not implemented.')
+        const endYPosition = this._phaserGameObject.y - 400;
+        this._scene.tweens.add({
+            delay: 0,
+            duration: 1000,
+            targets: this._phaserGameObject,
+            // Note: For some reason y can't be an Object with {from, start, end}
+            y: endYPosition,
+            onComplete: () => {
+                callback()
+            }
+        })
     }
 }

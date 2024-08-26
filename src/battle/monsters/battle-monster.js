@@ -96,26 +96,18 @@ export class BattleMonster {
      * @param {() => void} callback
      * @returns {void}
      */
-    playMonsterAppearAnimation(callback) {
-        throw new Error('playerMonsterAppearAnimation is not implemented.')
-    }
-
-    /**
-     *
-     * @param {() => void} callback
-     * @returns {void}
-     */
-    playMonsterHealthBarAppearAnimation(callback) {
-        throw new Error('playMonsterHealthBarAppearAnimation is not implemented.')
-    }
-
-    /**
-     *
-     * @param {() => void} callback
-     * @returns {void}
-     */
     playMonsterTakeDamageAnimation(callback) {
-        throw new Error('playMonsterTakeDamageAnimation is not implemented.')
+        this._scene.tweens.add({
+            delay: 0,
+            duration: 150,
+            targets: this._phaserGameObject,
+            alpha: 0,
+            repeat: 10,
+            onComplete: () => {
+                this._phaserGameObject.setAlpha(1)
+                callback()
+            }
+        })
     }
 
     /**

@@ -63,7 +63,7 @@ export class BattleScene extends Phaser.Scene {
                     currentHp: 25,
                     maxHp: 25,
                     attackIds: [1, 2],
-                    baseAttack: 5
+                    baseAttack: 25
                 }
             }
         );
@@ -77,7 +77,7 @@ export class BattleScene extends Phaser.Scene {
                     currentHp: 25,
                     maxHp: 25,
                     attackIds: [1, 2],
-                    baseAttack: 5
+                    baseAttack: 15
                 }
             }
         );
@@ -161,8 +161,10 @@ export class BattleScene extends Phaser.Scene {
             `${this.#activePlayerMonster.name} used ${this.#activePlayerMonster.attacks[this.#activePlayerAttackIndex].name}`,
             () => {
                 this.time.delayedCall(1200, () => {
-                    this.#activeEnemyMonster.takeDamage(this.#activePlayerMonster.baseAttack, () => {
-                        this.#enemyAttack()
+                    this.#activeEnemyMonster.playMonsterTakeDamageAnimation(() => {
+                        this.#activeEnemyMonster.takeDamage(this.#activePlayerMonster.baseAttack, () => {
+                            this.#enemyAttack()
+                        })
                     })
                 })
             })
@@ -178,8 +180,10 @@ export class BattleScene extends Phaser.Scene {
             `${this.#activeEnemyMonster.name} used ${this.#activeEnemyMonster.attacks[0].name}`,
             () => {
                 this.time.delayedCall(1200, () => {
-                    this.#activePlayerMonster.takeDamage(this.#activeEnemyMonster.baseAttack, () => {
-                        this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_CHECK)
+                    this.#activePlayerMonster.playMonsterTakeDamageAnimation(() => {
+                        this.#activePlayerMonster.takeDamage(this.#activeEnemyMonster.baseAttack, () => {
+                            this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_CHECK)
+                        })
                     })
                 })
             })
@@ -187,9 +191,11 @@ export class BattleScene extends Phaser.Scene {
 
     #postBattleSequenceCheck() {
         if (this.#activeEnemyMonster.isFainted) {
-            this.#battleMenu.updateInfoPaneMessagesAndWaitForInput([`Wild ${this.#activeEnemyMonster.name} fainted`, `${this.#activeEnemyMonster.name} gained experience`], () => {
+            this.#battleMenu.updateInfoPaneMessagesAndWaitForInput([`Wild ${this.#activeEnemyMonster.name} fucking died.`, `${this.#activeEnemyMonster.name} gained experience`], () => {
                 this.time.delayedCall(500, () => {
-                    this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
+                    this.#activeEnemyMonster.playMonsterDeathAnimation(() => {
+                        this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
+                    })
                 })
             })
             return;
@@ -197,8 +203,10 @@ export class BattleScene extends Phaser.Scene {
 
         if (this.#activePlayerMonster.isFainted) {
             this.#battleMenu.updateInfoPaneMessagesAndWaitForInput([`${this.#activePlayerMonster.name} fainted`, 'You have no more monsters, escaping to safety...'], () => {
-                this.time.delayedCall(500, () => {
-                    this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
+                this.#activePlayerMonster.playMonsterDeathAnimation(() => {
+                    this.time.delayedCall(500, () => {
+                        this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
+                    })
                 })
             })
             return;
@@ -232,14 +240,13 @@ export class BattleScene extends Phaser.Scene {
             onEnter: () => {
                 // Wait for enemy monster to appear on the screen and notify player about the wild monster
                 this.#activeEnemyMonster.playMonsterAppearAnimation(() => {
-                    this.#activeEnemyMonster.playMonsterHealthBarAppearAnimation(() => {
-                        this.#battleMenu.updateInfoPaneMessagesAndWaitForInput(
-                            [`Wild ${this.#activeEnemyMonster.name} appeared`], () => {
-                                this.time.delayedCall(500, () => {
-                                    this.#battleStateMachine.setState(BATTLE_STATES.BRING_OUT_MONSTER)
-                                })
+                    this.#activeEnemyMonster.playMonsterHealthBarAppearAnimation(() => undefined)
+                    this.#battleMenu.updateInfoPaneMessagesAndWaitForInput(
+                        [`Wild ${this.#activeEnemyMonster.name} appeared`], () => {
+                            this.time.delayedCall(500, () => {
+                                this.#battleStateMachine.setState(BATTLE_STATES.BRING_OUT_MONSTER)
                             })
-                    })
+                        })
                 })
             }
         })
@@ -249,16 +256,15 @@ export class BattleScene extends Phaser.Scene {
             onEnter: () => {
                 // Wait for player monster to appear on the screen and notify player about the monster
                 this.#battleMenu.updateInfoPaneMessagesAndWaitForInput(
-                    [`Go ${this.#activePlayerMonster.name}`], () => {
-                        this.#activePlayerMonster.playMonsterAppearAnimation(() => {
-                            this.#activePlayerMonster.playMonsterHealthBarAppearAnimation(() => {
-                                // After animation switch state
-                                this.time.delayedCall(500, () => {
-                                    this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_INPUT)
-                                })
-                            })
+                    [`Go ${this.#activePlayerMonster.name}`], () => undefined)
+                this.#activePlayerMonster.playMonsterAppearAnimation(() => {
+                    this.#activePlayerMonster.playMonsterHealthBarAppearAnimation(() => {
+                        // After animation switch state
+                        this.time.delayedCall(500, () => {
+                            this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_INPUT)
                         })
                     })
+                })
             }
         })
 
