@@ -563,7 +563,7 @@ export class BattleMenu {
 
         this.#userInputCursorPhaserTween = this.#scene.add.tween({
             delay: 0,
-            duration: 1000,
+            duration: 800,
             repeat: -1,
             y: {
                 from: PLAYER_INPUT_CURSOR_POSITION.y,
