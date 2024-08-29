@@ -5,6 +5,7 @@ import {exhaustiveGuard} from "../../utils/guard.js";
 import {ACTIVE_BATTLE_MENU, ATTACK_MOVE_OPTIONS, BATTLE_MENU_OPTIONS} from "../ui/battle-menu-options.js";
 import {BATTLE_UI_TEXT_STYLE} from "../ui/battle-menu-config.js";
 import {animateText} from "../../utils/text-utils.js";
+import {SKIP_BATTLE_ANIMATIONS} from "../../config.js";
 
 const BATTLE_MENU_CURSOR_POSITION = Object.freeze({
     x: 42,
@@ -225,11 +226,7 @@ export class BattleMenu {
             this.#battleTextGameObjectLine1.setText(messageToDisplay)
             this.#queuedMessageAnimationPlaying = false;
             this.#waitingForPlayerInput = true;
-
-            if (this.#queuedInfoPanelCallback) {
-                this.#queuedInfoPanelCallback()
-                this.#queuedInfoPanelCallback = undefined;
-            }
+            this.playInputCursorAnimation()
             return;
         }
 
@@ -546,7 +543,7 @@ export class BattleMenu {
         if (this.#selectedBattleMenuOption === BATTLE_MENU_OPTIONS.SWITCH) {
             this.updateInfoPaneMessagesAndWaitForInput(['You have no other monsters...'], () => {
                 this.#switchToMainBattleMenu()
-            })
+            }, SKIP_BATTLE_ANIMATIONS)
             this.#activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_SWITCH;
             return;
         }
@@ -554,7 +551,7 @@ export class BattleMenu {
         if (this.#selectedBattleMenuOption === BATTLE_MENU_OPTIONS.ITEM) {
             this.updateInfoPaneMessagesAndWaitForInput(['Your bag is empty...'], () => {
                 this.#switchToMainBattleMenu()
-            })
+            }, SKIP_BATTLE_ANIMATIONS)
             this.#activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_ITEM;
             return;
         }
@@ -562,7 +559,7 @@ export class BattleMenu {
         if (this.#selectedBattleMenuOption === BATTLE_MENU_OPTIONS.FLEE) {
             this.updateInfoPaneMessagesAndWaitForInput(["You can't flee..."], () => {
                 this.#switchToMainBattleMenu()
-            })
+            }, SKIP_BATTLE_ANIMATIONS)
             this.#activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_FLEE;
             return;
         }

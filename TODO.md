@@ -30,8 +30,8 @@ Battle System:
     [2024-08-25] player input improvements
   [] battle scene polish
     [2024-08-26] text animations
-    [] monster animations
-    [] skip animations
+    [2024-08-26] monster animations
+    [2024-08-29] skip animations
     [] attack animations
     [] scene transitions
     [] custom fonts

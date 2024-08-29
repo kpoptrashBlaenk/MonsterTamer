@@ -9,6 +9,7 @@ import {Background} from "../../battle/background.js";
 import {EnemyBattleMonster} from "../../battle/monsters/enemy-battle-monster.js";
 import {PlayerBattleMonster} from "../../battle/monsters/player-battle-monster.js";
 import {StateMachine} from "../../utils/state-machine.js";
+import {SKIP_BATTLE_ANIMATIONS} from "../../config.js";
 
 const BATTLE_STATES = Object.freeze({
     INTRO: 'INTRO',
@@ -64,7 +65,7 @@ export class BattleScene extends Phaser.Scene {
                     maxHp: 25,
                     attackIds: [1, 2],
                     baseAttack: 25
-                }
+                }, skipBattleAnimations: SKIP_BATTLE_ANIMATIONS
             }
         );
         this.#activePlayerMonster = new PlayerBattleMonster({
@@ -78,7 +79,7 @@ export class BattleScene extends Phaser.Scene {
                     maxHp: 25,
                     attackIds: [1, 2],
                     baseAttack: 15
-                }
+                }, skipBattleAnimations: SKIP_BATTLE_ANIMATIONS
             }
         );
 
@@ -167,7 +168,7 @@ export class BattleScene extends Phaser.Scene {
                         })
                     })
                 })
-            })
+            }, SKIP_BATTLE_ANIMATIONS)
     }
 
     #enemyAttack() {
@@ -186,7 +187,7 @@ export class BattleScene extends Phaser.Scene {
                         })
                     })
                 })
-            })
+            }, SKIP_BATTLE_ANIMATIONS)
     }
 
     #postBattleSequenceCheck() {
@@ -197,7 +198,7 @@ export class BattleScene extends Phaser.Scene {
                         this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
                     })
                 })
-            })
+            }, SKIP_BATTLE_ANIMATIONS)
             return;
         }
 
@@ -208,7 +209,7 @@ export class BattleScene extends Phaser.Scene {
                         this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
                     })
                 })
-            })
+            }, SKIP_BATTLE_ANIMATIONS)
             return;
         }
 
@@ -246,7 +247,7 @@ export class BattleScene extends Phaser.Scene {
                             this.time.delayedCall(500, () => {
                                 this.#battleStateMachine.setState(BATTLE_STATES.BRING_OUT_MONSTER)
                             })
-                        })
+                        }, SKIP_BATTLE_ANIMATIONS)
                 })
             }
         })
@@ -256,14 +257,14 @@ export class BattleScene extends Phaser.Scene {
             onEnter: () => {
                 // Wait for player monster to appear on the screen and notify player about the monster
                 this.#battleMenu.updateInfoPaneMessagesAndWaitForInput(
-                    [`Go ${this.#activePlayerMonster.name}`], () => undefined)
-                this.#activePlayerMonster.playMonsterAppearAnimation(() => {
-                    this.#activePlayerMonster.playMonsterHealthBarAppearAnimation(() => {
+                    [`Go ${this.#activePlayerMonster.name}`], () => {
                         // After animation switch state
                         this.time.delayedCall(500, () => {
                             this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_INPUT)
                         })
-                    })
+                    }, SKIP_BATTLE_ANIMATIONS)
+                this.#activePlayerMonster.playMonsterAppearAnimation(() => {
+                    this.#activePlayerMonster.playMonsterHealthBarAppearAnimation(() => undefined)
                 })
             }
         })
@@ -315,7 +316,7 @@ export class BattleScene extends Phaser.Scene {
             onEnter: () => {
                 this.#battleMenu.updateInfoPaneMessagesAndWaitForInput(['You got away safely'], () => {
                     this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
-                })
+                }, SKIP_BATTLE_ANIMATIONS)
             }
         })
 
