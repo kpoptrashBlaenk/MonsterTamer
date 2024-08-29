@@ -31,7 +31,7 @@ export class PlayerBattleMonster extends BattleMonster {
      * @returns {void}
      */
     playMonsterAppearAnimation(callback) {
-        const startXPosition = 600;
+        const startXPosition = 1024;
         const endXPosition = PLAYER_POSITION.x;
         this._phaserGameObject.setPosition(startXPosition, PLAYER_POSITION.y)
         this._phaserGameObject.setAlpha(1)
@@ -53,7 +53,7 @@ export class PlayerBattleMonster extends BattleMonster {
      * @returns {void}
      */
     playMonsterHealthBarAppearAnimation(callback) {
-        const startXPosition = 800;
+        const startXPosition = 1024;
         const endXPosition = this._phaserHealthBarGameContainer.x;
         this._phaserHealthBarGameContainer.setPosition(startXPosition, this._phaserHealthBarGameContainer.y)
         this._phaserHealthBarGameContainer.setAlpha(1)
