@@ -1,6 +1,7 @@
 import Phaser from '../phaser.js';
 import {SCENE_KEYS} from "./scene-keys.js";
 import {
+    ATTACK_ASSET_KEYS,
     BATTLE_ASSET_KEYS,
     BATTLE_BACKGROUND_ASSET_KEYS, DATA_ASSET_KEYS,
     HEALTH_BAR_ASSET_KEYS,
@@ -20,6 +21,7 @@ export class PreloadScene extends Phaser.Scene {
     preload() {
         const monsterTamerAssetPath = 'http://localhost/MonsterTamer/assets/images/monster-tamer';
         const kenneysAssetPath = 'http://localhost/MonsterTamer/assets/images/kenneys-assets';
+        const pimenAssetPath = 'http://localhost/MonsterTamer/assets/images/pimen';
 
         // Battle Backgrounds
         this.load.image(
@@ -81,13 +83,27 @@ export class PreloadScene extends Phaser.Scene {
             'assets/data/attacks.json'
         )
 
-        // Load Fonts then start battle scene
+        // Load Fonts
         this.load.addFile(
             new WebFontFileLoader(
                 this.load,
                 [CUSTOM_FONTS.POKEROGUE]
             )
         )
+
+        // Load Attack Animations
+        this.load.spritesheet(ATTACK_ASSET_KEYS.ICE_SHARD, `${pimenAssetPath}/ice-attack/active.png`, {
+            frameWidth: 32,
+            frameHeight: 32
+        })
+        this.load.spritesheet(ATTACK_ASSET_KEYS.ICE_SHARD_START, `${pimenAssetPath}/ice-attack/start.png`, {
+            frameWidth: 32,
+            frameHeight: 32
+        })
+        this.load.spritesheet(ATTACK_ASSET_KEYS.SLASH, `${pimenAssetPath}/slash.png`, {
+            frameWidth: 48,
+            frameHeight: 48
+        })
     }
 
     create() {
