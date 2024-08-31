@@ -148,7 +148,7 @@ export class BattleMonster {
             fontSize: '28px',
             fontWeight: 'bold'
         });
-        const monsterHpText = this._scene.add.text(30, 58, 'HP', {
+        const monsterHpText = this._scene.add.text(30, 54, 'HP', {
             fontFamily: CUSTOM_FONTS.POKEROGUE,
             color: '#FF6505',
             fontSize: '24px',
