@@ -2,6 +2,7 @@ import Phaser from '../../lib/phaser.js'
 import {HealthBar} from "../ui/health-bar.js";
 import {BATTLE_ASSET_KEYS} from "../../assets/asset-keys.js";
 import {DataUtils} from "../../utils/data-utils.js";
+import {CUSTOM_FONTS} from "../../assets/font-keys.js";
 
 export class BattleMonster {
     /** @type {Phaser.Scene} */
@@ -132,6 +133,7 @@ export class BattleMonster {
         this._healthBar = new HealthBar(this._scene, 34, 34);
 
         const monsterNameGameText = this._scene.add.text(30, 20, this._monsterDetails.name, {
+            fontFamily: CUSTOM_FONTS.POKEROGUE,
             color: '#7E3D3F',
             fontSize: '32px'
         });
@@ -141,11 +143,13 @@ export class BattleMonster {
             .setScale(1, scaleHealthBarByBackgroundImageByY);
 
         const monsterHealthBarLevelText = this._scene.add.text(monsterNameGameText.width + 35, 23, `L${this.level}`, {
+            fontFamily: CUSTOM_FONTS.POKEROGUE,
             color: '#ED474B',
             fontSize: '28px',
             fontWeight: 'bold'
         });
         const monsterHpText = this._scene.add.text(30, 58, 'HP', {
+            fontFamily: CUSTOM_FONTS.POKEROGUE,
             color: '#FF6505',
             fontSize: '24px',
             fontStyle: 'italic',

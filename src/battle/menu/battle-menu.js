@@ -9,12 +9,12 @@ import {SKIP_BATTLE_ANIMATIONS} from "../../config.js";
 
 const BATTLE_MENU_CURSOR_POSITION = Object.freeze({
     x: 42,
-    y: 35
+    y: 42
 })
 
 const ATTACK_MENU_CURSOR_POSITION = Object.freeze({
     x: 42,
-    y: 35
+    y: 42
 })
 
 const PLAYER_INPUT_CURSOR_POSITION = Object.freeze({
@@ -261,7 +261,7 @@ export class BattleMenu {
     }
 
     #createMonsterAttackSubMenu() {
-        this.#attackBattleMenuCursorPhaserImageGameObject = this.#scene.add.image(42, 35, UI_ASSET_KEYS.CURSOR, 0)
+        this.#attackBattleMenuCursorPhaserImageGameObject = this.#scene.add.image(42, 42, UI_ASSET_KEYS.CURSOR, 0)
             .setOrigin(0.5)
             .setScale(1.5)
 
@@ -402,10 +402,10 @@ export class BattleMenu {
                 this.#mainBattleMenuCursorPhaserImageGameObject.setPosition(228, BATTLE_MENU_CURSOR_POSITION.y)
                 return;
             case BATTLE_MENU_OPTIONS.ITEM:
-                this.#mainBattleMenuCursorPhaserImageGameObject.setPosition(BATTLE_MENU_CURSOR_POSITION.x, 83)
+                this.#mainBattleMenuCursorPhaserImageGameObject.setPosition(BATTLE_MENU_CURSOR_POSITION.x, 90)
                 return;
             case BATTLE_MENU_OPTIONS.FLEE:
-                this.#mainBattleMenuCursorPhaserImageGameObject.setPosition(228, 83)
+                this.#mainBattleMenuCursorPhaserImageGameObject.setPosition(228, 90)
                 return;
             default:
                 exhaustiveGuard(this.#selectedBattleMenuOption)
@@ -513,10 +513,10 @@ export class BattleMenu {
                 this.#attackBattleMenuCursorPhaserImageGameObject.setPosition(228, ATTACK_MENU_CURSOR_POSITION.y)
                 return;
             case ATTACK_MOVE_OPTIONS.MOVE_3:
-                this.#attackBattleMenuCursorPhaserImageGameObject.setPosition(ATTACK_MENU_CURSOR_POSITION.x, 83)
+                this.#attackBattleMenuCursorPhaserImageGameObject.setPosition(ATTACK_MENU_CURSOR_POSITION.x, 90)
                 return;
             case ATTACK_MOVE_OPTIONS.MOVE_4:
-                this.#attackBattleMenuCursorPhaserImageGameObject.setPosition(228, 83)
+                this.#attackBattleMenuCursorPhaserImageGameObject.setPosition(228, 90)
                 return;
             default:
                 exhaustiveGuard(this.#selectedAttackMoveOption)
@@ -590,9 +590,9 @@ export class BattleMenu {
     }
 
     #createPlayerInputCursor() {
-        this.#userInputCursorPhaserImageObject = this.#scene.add.image(0, 0, UI_ASSET_KEYS.CURSOR)
+        this.#userInputCursorPhaserImageObject = this.#scene.add.image(390, 0, UI_ASSET_KEYS.CURSOR)
             .setAngle(90)
-            .setScale(2.5, 1.25)
+            .setScale(2.0, 1.5)
             .setAlpha(0)
 
         this.#userInputCursorPhaserTween = this.#scene.add.tween({
@@ -600,9 +600,9 @@ export class BattleMenu {
             duration: 800,
             repeat: -1,
             y: {
-                from: PLAYER_INPUT_CURSOR_POSITION.y,
-                start: PLAYER_INPUT_CURSOR_POSITION.y,
-                to: PLAYER_INPUT_CURSOR_POSITION.y + 6
+                from: PLAYER_INPUT_CURSOR_POSITION.y+7,
+                start: PLAYER_INPUT_CURSOR_POSITION.y+7,
+                to: PLAYER_INPUT_CURSOR_POSITION.y + 12
             },
             targets: this.#userInputCursorPhaserImageObject
         })

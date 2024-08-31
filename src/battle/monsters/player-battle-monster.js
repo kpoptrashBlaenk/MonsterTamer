@@ -1,4 +1,5 @@
 import {BattleMonster} from "./battle-monster.js";
+import {CUSTOM_FONTS} from "../../assets/font-keys.js";
 
 /**
  *
@@ -115,6 +116,7 @@ export class PlayerBattleMonster extends BattleMonster {
 
     #addHealthBarComponent() {
         this.#healthBarTextGameObject = this._scene.add.text(443, 80, '', {
+            fontFamily: CUSTOM_FONTS.POKEROGUE,
             color: '#7E3D3F',
             fontSize: '16px'
         }).setOrigin(1, 0);

@@ -6,6 +6,8 @@ import {
     HEALTH_BAR_ASSET_KEYS,
     MONSTER_ASSET_KEYS, UI_ASSET_KEYS
 } from "../../assets/asset-keys.js";
+import * as WebFontLoader from "../webfontloader.js";
+import {CUSTOM_FONTS} from "../../assets/font-keys.js";
 
 export class PreloadScene extends Phaser.Scene {
     constructor() {
@@ -81,6 +83,15 @@ export class PreloadScene extends Phaser.Scene {
     }
 
     create() {
-        this.scene.start(SCENE_KEYS.BATTLE_SCENE)
+        // Load Fonts then start battle scene
+        WebFontLoader.default.load({
+            custom: {
+                families: [CUSTOM_FONTS.POKEROGUE]
+            },
+            active: () => {
+                console.log('Font loaded')
+                this.scene.start(SCENE_KEYS.BATTLE_SCENE)
+            }
+        })
     }
 }
