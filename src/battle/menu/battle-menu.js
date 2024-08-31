@@ -83,6 +83,9 @@ export class BattleMenu {
         this.#createMainBattleMenu()
         this.#createMonsterAttackSubMenu()
         this.#createPlayerInputCursor()
+
+        this.hideMonsterAttackSubMenu()
+        this.hideMainBattleMenu()
     }
 
     /** @type {number | undefined} */

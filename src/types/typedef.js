@@ -34,5 +34,5 @@ import Phaser from '../lib/Phaser.js';
  * @type {Object}
  * @property {number} id
  * @property {string} name
- * @property {string} animationName
+ * @property {AttackKeys} animationName
  */

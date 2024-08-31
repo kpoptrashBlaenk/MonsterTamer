@@ -112,7 +112,7 @@ export class BattleMonster {
             duration: 150,
             targets: this._phaserGameObject,
             alpha: 0,
-            repeat: 10,
+            repeat: 5,
             onComplete: () => {
                 this._phaserGameObject.setAlpha(1)
                 callback()

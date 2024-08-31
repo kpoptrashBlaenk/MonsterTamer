@@ -32,7 +32,7 @@ Battle System:
     [2024-08-26] text animations
     [2024-08-26] monster animations
     [2024-08-29] skip animations
-    [] attack animations
+    [2024-08-31] attack animations
     [] scene transitions
     [2024-08-31] custom fonts
 
