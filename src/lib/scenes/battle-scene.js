@@ -11,6 +11,7 @@ import {PlayerBattleMonster} from "../../battle/monsters/player-battle-monster.j
 import {StateMachine} from "../../utils/state-machine.js";
 import {SKIP_BATTLE_ANIMATIONS} from "../../config.js";
 import {ATTACK_TARGET, AttackManager} from "../../battle/attacks/attack-manager.js";
+import {sceneTransition} from "../../utils/scene-transition.js";
 
 const BATTLE_STATES = Object.freeze({
     INTRO: 'INTRO',
@@ -237,9 +238,11 @@ export class BattleScene extends Phaser.Scene {
         this.#battleStateMachine.addState({
             name: BATTLE_STATES.INTRO,
             onEnter: () => {
-                // Wait for any scene setup and transitions to complete
-                this.time.delayedCall(500, () => {
-                    this.#battleStateMachine.setState(BATTLE_STATES.PRE_BATTLE_INFO)
+                sceneTransition(this, {
+                    skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
+                    callback: () => {
+                        this.#battleStateMachine.setState(BATTLE_STATES.PRE_BATTLE_INFO)
+                    }
                 })
             }
         })
