@@ -46,7 +46,6 @@ export class BattleScene extends Phaser.Scene {
         super({
             key: SCENE_KEYS.BATTLE_SCENE,
         });
-        console.log(SCENE_KEYS.BATTLE_SCENE)
     }
 
     init() {
@@ -134,7 +133,6 @@ export class BattleScene extends Phaser.Scene {
                 return;
             }
 
-            console.log('Attack selected: ' + this.#battleMenu.selectedAttack)
             this.#battleMenu.hideMonsterAttackSubMenu()
             this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_INPUT)
         }

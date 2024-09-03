@@ -16,7 +16,6 @@ export class PreloadScene extends Phaser.Scene {
         super({
             key: SCENE_KEYS.PRELOAD_SCENE,
         });
-        console.log(SCENE_KEYS.PRELOAD_SCENE)
     }
 
     preload() {

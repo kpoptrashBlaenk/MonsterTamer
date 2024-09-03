@@ -66,12 +66,10 @@ export class StateMachine {
         }
 
         this.#isChangingState = true;
-        console.log(`[${StateMachine.name}-${this.#id}:${methodName}] changes from ${this.#currentState?.name ?? 'none'} to ${name}`);
 
         this.#currentState = this.#states.get(name);
 
         if (this.#currentState.onEnter) {
-            console.log(`[${StateMachine.name}-${this.#id}:${methodName}] ${this.#currentState.name} onEnter invoked`);
             this.#currentState.onEnter()
         }
 
