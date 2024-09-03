@@ -36,3 +36,14 @@ import Phaser from '../lib/Phaser.js';
  * @property {string} name
  * @property {AttackKeys} animationName
  */
+
+/**
+ * @typedef CustomAnimation
+ * @type {Object}
+ * @property {string} key
+ * @property {number[]} [frames]
+ * @property {number} frameRate
+ * @property {number} repeat
+ * @property {number} delay
+ * @property {string} assetKey
+ */

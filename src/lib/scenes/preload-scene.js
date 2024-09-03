@@ -9,6 +9,7 @@ import {
 } from "../../assets/asset-keys.js";
 import {CUSTOM_FONTS} from "../../assets/font-keys.js";
 import {WebFontFileLoader} from "../../assets/web-font-file-loader.js";
+import {DataUtils} from "../../utils/data-utils.js";
 
 export class PreloadScene extends Phaser.Scene {
     constructor() {
@@ -82,6 +83,10 @@ export class PreloadScene extends Phaser.Scene {
             DATA_ASSET_KEYS.ATTACKS,
             'assets/data/attacks.json'
         )
+        this.load.json(
+            DATA_ASSET_KEYS.ANIMATIONS,
+            'assets/data/animations.json'
+        )
 
         // Load Fonts
         this.load.addFile(
@@ -107,6 +112,26 @@ export class PreloadScene extends Phaser.Scene {
     }
 
     create() {
+        this.#createAnimations()
         this.scene.start(SCENE_KEYS.BATTLE_SCENE)
+    }
+
+    #createAnimations() {
+
+        const animations = DataUtils.getAnimations(this);
+        animations.forEach((animation) => {
+            const frames = animation.frames
+                ? this.anims.generateFrameNumbers(animation.assetKey, {frames: animation.frames})
+                : this.anims.generateFrameNumbers(animation.assetKey)
+
+            this.anims.create({
+                key: animation.key,
+                frames: frames,
+                frameRate: animation.frameRate,
+                repeat: animation.repeat,
+                delay: animation.delay,
+                yoyo: animation.yoyo
+            })
+        })
     }
 }
