@@ -5,7 +5,7 @@ import {
     BATTLE_ASSET_KEYS,
     BATTLE_BACKGROUND_ASSET_KEYS, DATA_ASSET_KEYS,
     HEALTH_BAR_ASSET_KEYS,
-    MONSTER_ASSET_KEYS, UI_ASSET_KEYS
+    MONSTER_ASSET_KEYS, TITLE_ASSET_KEYS, UI_ASSET_KEYS
 } from "../../assets/asset-keys.js";
 import {CUSTOM_FONTS} from "../../assets/font-keys.js";
 import {WebFontFileLoader} from "../../assets/web-font-file-loader.js";
@@ -22,6 +22,22 @@ export class PreloadScene extends Phaser.Scene {
         const monsterTamerAssetPath = 'http://localhost/MonsterTamer/assets/images/monster-tamer';
         const kenneysAssetPath = 'http://localhost/MonsterTamer/assets/images/kenneys-assets';
         const pimenAssetPath = 'http://localhost/MonsterTamer/assets/images/pimen';
+
+        // Load UI Components
+        this.load.image(
+            TITLE_ASSET_KEYS.BACKGROUND,
+            `${monsterTamerAssetPath}/ui/title/background.png`
+        )
+
+        this.load.image(
+            TITLE_ASSET_KEYS.PANEL,
+            `${monsterTamerAssetPath}/ui/title/title_background.png`
+        )
+
+        this.load.image(
+            TITLE_ASSET_KEYS.TITLE,
+            `${monsterTamerAssetPath}/ui/title/title_text.png`
+        )
 
         // Battle Backgrounds
         this.load.image(
@@ -76,6 +92,10 @@ export class PreloadScene extends Phaser.Scene {
             UI_ASSET_KEYS.CURSOR,
             `${monsterTamerAssetPath}/ui/cursor.png`
         )
+        this.load.image(
+            UI_ASSET_KEYS.MENU_BACKGROUND,
+            `${kenneysAssetPath}/ui-space-expansion/glassPanel.png`
+        )
 
         // Load JSON Data
         this.load.json(
@@ -112,7 +132,7 @@ export class PreloadScene extends Phaser.Scene {
 
     create() {
         this.#createAnimations()
-        this.scene.start(SCENE_KEYS.BATTLE_SCENE)
+        this.scene.start(SCENE_KEYS.TITLE_SCENE)
     }
 
     #createAnimations() {
