@@ -1,101 +1,74 @@
-/**
- * @typedef State
- * @type {Object}
- * @property {string} name
- * @property {() => void} [onEnter]
- */
+interface State {
+    name: string;
+    onEnter?: () => void;
+}
 
 export class StateMachine {
-    /** @type {Map<string, State>} */
-    #states;
-    /** @type {State | undefined} */
-    #currentState;
-    /** @type {string} */
-    #id;
-    /** @type {Object | undefined} */
-    #context;
-    /** @type {boolean} */
-    #isChangingState;
-    /** @type {string[]} */
-    #ChangingStateQueue;
+    private states: Map<string, State>;
+    private currentState: State | undefined;
+    private readonly id: string;
+    private readonly context: Object | undefined;
+    private isChangingState: boolean;
+    private ChangingStateQueue: string[];
 
-    /**
-     *
-     * @param {string} id
-     * @param {Object | undefined} context
-     */
-    constructor(id, context) {
-        this.#id = id;
-        this.#context = context;
-        this.#isChangingState = false;
-        this.#ChangingStateQueue = [];
-        this.#currentState = undefined;
-        this.#states = new Map();
+    constructor(id: string, context: Object | undefined) {
+        this.id = id;
+        this.context = context;
+        this.isChangingState = false;
+        this.ChangingStateQueue = [];
+        this.currentState = undefined;
+        this.states = new Map();
     }
 
-    /** @type {string | undefined} */
-    get currentStateName() {
-        return this.#currentState?.name;
+    get currentStateName(): string | undefined {
+        return this.currentState?.name;
     }
 
     update() {
-        if (this.#ChangingStateQueue.length > 0) {
-            this.setState(this.#ChangingStateQueue.shift())
+        if (this.ChangingStateQueue.length > 0) {
+            this.setState(this.ChangingStateQueue.shift())
         }
     }
 
-    /**
-     *
-     * @param {string} name
-     */
-    setState(name) {
+    setState(name: string | undefined): void {
         const methodName = 'setState';
 
-        if (!this.#states.has(name)) {
-            console.warn(`[${StateMachine.name}-${this.#id}:${methodName}] tried to change to unknown state: ${name}`);
+        if (!this.states.has(name as string)) {
+            console.warn(`[${StateMachine.name}-${this.id}:${methodName}] tried to change to unknown state: ${name}`);
             return;
         }
 
-        if (this.#isCurrentState(name)) {
+        if (this.isCurrentState(name as string)) {
             return;
         }
 
-        if (this.#isChangingState) {
-            this.#ChangingStateQueue.push(name);
+        if (this.isChangingState) {
+            this.ChangingStateQueue.push(name as string);
             return;
         }
 
-        this.#isChangingState = true;
+        this.isChangingState = true;
 
-        this.#currentState = this.#states.get(name);
+        this.currentState = this.states.get(name as string);
 
-        if (this.#currentState.onEnter) {
-            this.#currentState.onEnter()
+        if(this.currentState) {
+            this.currentState.onEnter?.();
         }
 
-        this.#isChangingState = false;
+        this.isChangingState = false;
     }
 
-    /**
-     *
-     * @param {Object} state
-     */
-    addState(state) {
-        this.#states.set(state.name, {
+    addState(state: State): void {
+        this.states.set(state.name, {
             name: state.name,
-            onEnter: this.#context ? state.onEnter?.bind(this.#context) : state.onEnter
+            onEnter: this.context ? state.onEnter?.bind(this.context) : state.onEnter
         })
     }
 
-    /**
-     *
-     * @param {string} name
-     * @returns {boolean}
-     */
-    #isCurrentState(name) {
-        if (!this.#currentState) {
+    private isCurrentState(name: string): boolean {
+        if (!this.currentState) {
             return false;
         }
-        return this.#currentState.name === name;
+        return this.currentState.name === name;
     }
 }
