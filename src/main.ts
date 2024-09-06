@@ -1,9 +1,8 @@
 import Phaser from 'phaser';
-import {SCENE_KEYS} from "../src/lib/scenes/scene-keys.js";
-//import {PreloadScene} from "./lib/scenes/preload-scene.js";
+import {SCENE_KEYS} from "./lib/scenes/scene-keys.ts";
+//import {PreloadScene} from "./lib/scenes/preload-scene.ts";
 //import {BattleScene} from "./lib/scenes/battle-scene.js";
 //import {TitleScene} from "./lib/scenes/title-scene.js";
-console.log(SCENE_KEYS.BATTLE_SCENE)
 // Launch game instance
 const game = new Phaser.Game({
     type: Phaser.CANVAS,

@@ -1,8 +1,8 @@
-import Phaser from '../../lib/phaser.js'
-import {HealthBar} from "../ui/health-bar.js";
-import {BATTLE_ASSET_KEYS} from "../../assets/asset-keys.js";
-import {DataUtils} from "../../utils/data-utils.js";
-import {CUSTOM_FONTS} from "../../assets/font-keys.js";
+import Phaser from '../../lib/phaser.ts'
+import {HealthBar} from "../ui/health-bar.ts";
+import {BATTLE_ASSET_KEYS} from "../../assets/asset-keys.ts";
+import {DataUtils} from "../../utils/data-utils.ts";
+import {CUSTOM_FONTS} from "../../assets/font-keys.ts";
 
 export class BattleMonster {
     /** @type {Phaser.Scene} */

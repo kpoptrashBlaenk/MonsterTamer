@@ -1,4 +1,4 @@
-import {DATA_ASSET_KEYS} from "../assets/asset-keys.js";
+import {DATA_ASSET_KEYS} from "../assets/asset-keys.ts";
 
 export class DataUtils {
 

@@ -1,11 +1,11 @@
-import Phaser from '../../lib/phaser.js'
-import {UI_ASSET_KEYS} from "../../assets/asset-keys.js";
-import {DIRECTION} from "../../common/direction.js";
-import {exhaustiveGuard} from "../../utils/guard.js";
-import {ACTIVE_BATTLE_MENU, ATTACK_MOVE_OPTIONS, BATTLE_MENU_OPTIONS} from "../ui/battle-menu-options.js";
-import {BATTLE_UI_TEXT_STYLE} from "../ui/battle-menu-config.js";
-import {animateText} from "../../utils/text-utils.js";
-import {SKIP_BATTLE_ANIMATIONS} from "../../config.js";
+import Phaser from '../../lib/phaser.ts'
+import {UI_ASSET_KEYS} from "../../assets/asset-keys.ts";
+import {DIRECTION} from "../../common/direction.ts";
+import {exhaustiveGuard} from "../../utils/guard.ts";
+import {ACTIVE_BATTLE_MENU, ATTACK_MOVE_OPTIONS, BATTLE_MENU_OPTIONS} from "../ui/battle-menu-options.ts";
+import {BATTLE_UI_TEXT_STYLE} from "../ui/battle-menu-config.ts";
+import {animateText} from "../../utils/text-utils.ts";
+import {SKIP_BATTLE_ANIMATIONS} from "../../config.ts";
 
 const BATTLE_MENU_CURSOR_POSITION = Object.freeze({
     x: 42,

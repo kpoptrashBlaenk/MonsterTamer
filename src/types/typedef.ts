@@ -1,4 +1,4 @@
-import Phaser from '../lib/Phaser.js';
+import Phaser from '../lib/phaser.ts';
 
 /**
  * @typedef BattleMonsterConfig

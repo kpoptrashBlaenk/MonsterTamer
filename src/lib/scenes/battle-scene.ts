@@ -1,18 +1,18 @@
-import Phaser from '../phaser.js';
-import {SCENE_KEYS} from "./scene-keys.js";
+import Phaser from '../phaser.ts';
+import {SCENE_KEYS} from "./scene-keys.ts";
 import {
     MONSTER_ASSET_KEYS
-} from "../../assets/asset-keys.js";
-import {BattleMenu} from "../../battle/menu/battle-menu.js";
-import {DIRECTION} from "../../common/direction.js";
-import {Background} from "../../battle/background.js";
-import {EnemyBattleMonster} from "../../battle/monsters/enemy-battle-monster.js";
-import {PlayerBattleMonster} from "../../battle/monsters/player-battle-monster.js";
-import {StateMachine} from "../../utils/state-machine.js";
-import {SKIP_BATTLE_ANIMATIONS} from "../../config.js";
-import {ATTACK_TARGET, AttackManager} from "../../battle/attacks/attack-manager.js";
-import {sceneTransition} from "../../utils/scene-transition.js";
-import {Controls} from "../../utils/controls.js";
+} from "../../assets/asset-keys.ts";
+import {BattleMenu} from "../../battle/menu/battle-menu.ts";
+import {DIRECTION} from "../../common/direction.ts";
+import {Background} from "../../battle/background.ts";
+import {EnemyBattleMonster} from "../../battle/monsters/enemy-battle-monster.ts";
+import {PlayerBattleMonster} from "../../battle/monsters/player-battle-monster.ts";
+import {StateMachine} from "../../utils/state-machine.ts";
+import {SKIP_BATTLE_ANIMATIONS} from "../../config.ts";
+import {ATTACK_TARGET, AttackManager} from "../../battle/attacks/attack-manager.ts";
+import {sceneTransition} from "../../utils/scene-transition.ts";
+import {Controls} from "../../utils/controls.ts";
 
 const BATTLE_STATES = Object.freeze({
     INTRO: 'INTRO',

@@ -1,4 +1,4 @@
-import {BattleMonster} from "./battle-monster.js";
+import {BattleMonster} from "./battle-monster.ts";
 
 /** @type {Coordinate} */
 const ENEMY_POSITION = Object.freeze({

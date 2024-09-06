@@ -1,10 +1,10 @@
-import Phaser from "../phaser.js";
-import {SCENE_KEYS} from "./scene-keys.js";
-import {TITLE_ASSET_KEYS, UI_ASSET_KEYS} from "../../assets/asset-keys.js";
-import {CUSTOM_FONTS} from "../../assets/font-keys.js";
-import {Controls} from "../../utils/controls.js";
-import {DIRECTION} from "../../common/direction.js";
-import {exhaustiveGuard} from "../../utils/guard.js";
+import Phaser from "../phaser.ts";
+import {SCENE_KEYS} from "./scene-keys.ts";
+import {TITLE_ASSET_KEYS, UI_ASSET_KEYS} from "../../assets/asset-keys.ts";
+import {CUSTOM_FONTS} from "../../assets/font-keys.ts";
+import {Controls} from "../../utils/controls.ts";
+import {DIRECTION} from "../../common/direction.ts";
+import {exhaustiveGuard} from "../../utils/guard.ts";
 
 /** @type {Phaser.Types.GameObjects.Text.TextStyle} */
 export const MENU_TEXT_STYLE = Object.freeze({

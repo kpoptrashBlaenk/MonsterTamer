@@ -1,4 +1,4 @@
-import Phaser from "../lib/phaser.js";
+import Phaser from "../lib/phaser.ts";
 
 // Unfinished class because i don't need it yet that's why placeholders
 

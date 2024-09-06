@@ -1,7 +1,7 @@
-import {ATTACK_KEYS} from "./attack-keys.js";
-import {exhaustiveGuard} from "../../utils/guard.js";
-import {IceShard} from "./ice-shard.js";
-import {Slash} from "./slash.js";
+import {ATTACK_KEYS} from "./attack-keys.ts";
+import {exhaustiveGuard} from "../../utils/guard.ts";
+import {IceShard} from "./ice-shard.ts";
+import {Slash} from "./slash.ts";
 
 /**
  * @typedef {keyof typeof ATTACK_TARGET} AttackTarget

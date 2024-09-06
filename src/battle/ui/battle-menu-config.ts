@@ -1,5 +1,5 @@
-import Phaser from '../../lib/phaser.js'
-import {CUSTOM_FONTS} from "../../assets/font-keys.js";
+import Phaser from '../../lib/phaser.ts'
+import {CUSTOM_FONTS} from "../../assets/font-keys.ts";
 
 /** @type {Phaser.Types.GameObjects.Text.TextStyle} */
 export const BATTLE_UI_TEXT_STYLE = Object.freeze({

@@ -1,15 +1,15 @@
-import Phaser from '../phaser.js';
-import {SCENE_KEYS} from "./scene-keys.js";
+import Phaser from 'phaser';
+import {SCENE_KEYS} from "./scene-keys.ts";
 import {
     ATTACK_ASSET_KEYS,
     BATTLE_ASSET_KEYS,
     BATTLE_BACKGROUND_ASSET_KEYS, DATA_ASSET_KEYS,
     HEALTH_BAR_ASSET_KEYS,
     MONSTER_ASSET_KEYS, TITLE_ASSET_KEYS, UI_ASSET_KEYS
-} from "../../assets/asset-keys.js";
-import {CUSTOM_FONTS} from "../../assets/font-keys.js";
-import {WebFontFileLoader} from "../../assets/web-font-file-loader.js";
-import {DataUtils} from "../../utils/data-utils.js";
+} from "../../assets/asset-keys.ts";
+import {CUSTOM_FONTS} from "../../assets/font-keys.ts";
+import {WebFontFileLoader} from "../../assets/web-font-file-loader.ts";
+import {DataUtils} from "../../utils/data-utils.ts";
 
 export class PreloadScene extends Phaser.Scene {
     constructor() {

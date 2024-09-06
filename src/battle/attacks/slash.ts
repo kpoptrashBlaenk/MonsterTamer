@@ -1,5 +1,5 @@
-import {Attack} from "./attack.js";
-import {ATTACK_ASSET_KEYS} from "../../assets/asset-keys.js";
+import {Attack} from "./attack.ts";
+import {ATTACK_ASSET_KEYS} from "../../assets/asset-keys.ts";
 
 export class Slash extends Attack {
     /** @type {Phaser.GameObjects.Container} */

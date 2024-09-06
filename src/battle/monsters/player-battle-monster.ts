@@ -1,5 +1,5 @@
-import {BattleMonster} from "./battle-monster.js";
-import {CUSTOM_FONTS} from "../../assets/font-keys.js";
+import {BattleMonster} from "./battle-monster.ts";
+import {CUSTOM_FONTS} from "../../assets/font-keys.ts";
 
 /**
  *
