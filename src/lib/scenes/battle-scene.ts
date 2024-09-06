@@ -27,20 +27,13 @@ const BATTLE_STATES = Object.freeze({
 })
 
 export class BattleScene extends Phaser.Scene {
-    /** @type {BattleMenu} */
-    #battleMenu;
-    /** @type {EnemyBattleMonster} */
-    #activeEnemyMonster;
-    /** @type {PlayerBattleMonster} */
-    #activePlayerMonster;
-    /** @type {number} */
-    #activePlayerAttackIndex;
-    /** @type {StateMachine} */
-    #battleStateMachine
-    /** @type {AttackManager} */
-    #attackManager;
-    /** @type {Controls} */
-    #controls
+    private battleMenu: BattleMenu;
+    private activeEnemyMonster: EnemyBattleMonster;
+    private activePlayerMonster: PlayerBattleMonster;
+    private activePlayerAttackIndex: 0 | 1 | 2 | 3;
+    private battleStateMachine: StateMachine
+    private attackManager: AttackManager;
+    private controls: Controls;
 
     constructor() {
         super({

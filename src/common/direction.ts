@@ -1,8 +1,3 @@
-/**
- * @typedef {keyof typeof DIRECTION} Direction
- */
-
-/** @enum {Direction} */
 export const DIRECTION = Object.freeze({
     LEFT: 'LEFT',
     RIGHT: 'RIGHT',
@@ -10,3 +5,4 @@ export const DIRECTION = Object.freeze({
     DOWN: 'DOWN',
     NONE: 'NONE'
 })
+export type Direction = keyof typeof DIRECTION
