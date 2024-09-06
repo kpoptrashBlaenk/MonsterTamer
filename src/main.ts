@@ -1,8 +1,9 @@
-import Phaser from 'phaser';
+import Phaser from './lib/phaser.js';
 import {SCENE_KEYS} from "./lib/scenes/scene-keys.ts";
-//import {PreloadScene} from "./lib/scenes/preload-scene.ts";
+import {PreloadScene} from "./lib/scenes/preload-scene.ts";
 //import {BattleScene} from "./lib/scenes/battle-scene.js";
 //import {TitleScene} from "./lib/scenes/title-scene.js";
+
 // Launch game instance
 const game = new Phaser.Game({
     type: Phaser.CANVAS,
@@ -17,7 +18,7 @@ const game = new Phaser.Game({
     backgroundColor: '#000000'
 })
 
-//game.scene.add(SCENE_KEYS.PRELOAD_SCENE, PreloadScene)
+game.scene.add(SCENE_KEYS.PRELOAD_SCENE, PreloadScene)
 //game.scene.add(SCENE_KEYS.BATTLE_SCENE, TitleScene)
 //game.scene.add(SCENE_KEYS.BATTLE_SCENE, BattleScene)
-//game.scene.start(SCENE_KEYS.PRELOAD_SCENE)
+game.scene.start(SCENE_KEYS.PRELOAD_SCENE)

@@ -1,5 +1,3 @@
-import Phaser from '../lib/phaser.ts';
-
 /**
  * @typedef BattleMonsterConfig
  * @type {Object}

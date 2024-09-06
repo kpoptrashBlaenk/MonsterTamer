@@ -1,4 +1,4 @@
-import Phaser from 'phaser';
+import Phaser from '../../lib/phaser.ts';
 import {SCENE_KEYS} from "./scene-keys.ts";
 import {
     ATTACK_ASSET_KEYS,
@@ -10,6 +10,7 @@ import {
 import {CUSTOM_FONTS} from "../../assets/font-keys.ts";
 import {WebFontFileLoader} from "../../assets/web-font-file-loader.ts";
 import {DataUtils} from "../../utils/data-utils.ts";
+import {Animations} from "../../types/global.ts";
 
 export class PreloadScene extends Phaser.Scene {
     constructor() {
@@ -19,9 +20,9 @@ export class PreloadScene extends Phaser.Scene {
     }
 
     preload() {
-        const monsterTamerAssetPath = 'http://localhost/MonsterTamer/public/assets/images/monster-tamer';
-        const kenneysAssetPath = 'http://localhost/MonsterTamer/public/assets/images/kenneys-assets';
-        const pimenAssetPath = 'http://localhost/MonsterTamer/public/assets/images/pimen';
+        const monsterTamerAssetPath: string = '../assets/images/monster-tamer';
+        const kenneysAssetPath: string = '../assets/images/kenneys-assets';
+        const pimenAssetPath: string = '../assets/images/pimen';
 
         // Load UI Components
         this.load.image(
@@ -138,7 +139,7 @@ export class PreloadScene extends Phaser.Scene {
     #createAnimations() {
 
         const animations = DataUtils.getAnimations(this);
-        animations.forEach((animation) => {
+        animations.forEach((animation: Animations) => {
             const frames = animation.frames
                 ? this.anims.generateFrameNumbers(animation.assetKey, {frames: animation.frames})
                 : this.anims.generateFrameNumbers(animation.assetKey)

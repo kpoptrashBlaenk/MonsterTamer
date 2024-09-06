@@ -14,12 +14,7 @@ export class DataUtils {
         return data.find(attack => attack.id === attackId);
     }
 
-    /**
-     *
-     * @param {Phaser.Scene} scene
-     * @returns {CustomAnimation}
-     */
-    static getAnimations(scene) {
+    static getAnimations(scene: Phaser.Scene): Animations {
         return scene.cache.json.get(DATA_ASSET_KEYS.ANIMATIONS);
     }
 }
