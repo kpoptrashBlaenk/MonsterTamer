@@ -1,0 +1,24 @@
+import Phaser from 'phaser';
+import {SCENE_KEYS} from "../src/lib/scenes/scene-keys.js";
+//import {PreloadScene} from "./lib/scenes/preload-scene.js";
+//import {BattleScene} from "./lib/scenes/battle-scene.js";
+//import {TitleScene} from "./lib/scenes/title-scene.js";
+console.log(SCENE_KEYS.BATTLE_SCENE)
+// Launch game instance
+const game = new Phaser.Game({
+    type: Phaser.CANVAS,
+    //pixelArt: true, // Removed because it makes fonts bug
+    scale: {
+        parent: 'game-container',
+        width: 1024,
+        height: 576,
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH
+    },
+    backgroundColor: '#000000'
+})
+
+//game.scene.add(SCENE_KEYS.PRELOAD_SCENE, PreloadScene)
+//game.scene.add(SCENE_KEYS.BATTLE_SCENE, TitleScene)
+//game.scene.add(SCENE_KEYS.BATTLE_SCENE, BattleScene)
+//game.scene.start(SCENE_KEYS.PRELOAD_SCENE)
