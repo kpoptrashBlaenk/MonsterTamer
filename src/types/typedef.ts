@@ -1,47 +1,31 @@
-/**
- * @typedef BattleMonsterConfig
- * @type {Object}
- * @property {Phaser.Scene} scene
- * @property {Monster} monsterDetails
- * @property {number} [scaleHealthBarBackgroundImageByY=1]
- * @property {boolean} [skipBattleAnimations=false]
- */
+import {MonsterAssetKeys} from "../assets/asset-keys.ts";
+import {AttackKeys} from "../battle/attacks/attack-keys.ts";
 
-/**
- * @typedef Monster
- * @type {Object}
- * @property {string} name
- * @property {string} assetKey
- * @property {number} [assetFrame=0]
- * @property {number} currentLevel
- * @property {number} maxHp
- * @property {number} currentHp
- * @property {number} baseAttack
- * @property {number[]} attackIds
- */
+export interface BattleMonsterConfig {
+    scene: Phaser.Scene,
+    monsterDetails: Monster,
+    scaleHealthBarBackgroundImageByY?: number,
+    skipBattleAnimations?: boolean
+}
 
-/**
- * @typedef Coordinate
- * @type {Object}
- * @property {number} x
- * @property {number} y
- */
+export interface Monster{
+    name: string,
+    assetKey: MonsterAssetKeys,
+    assetFrame?: number[],
+    currentLevel: number,
+    maxHp: number,
+    currentHp: number,
+    baseAttack: number,
+    attackIds: number[]
+}
 
-/**
- * @typedef Attack
- * @type {Object}
- * @property {number} id
- * @property {string} name
- * @property {AttackKeys} animationName
- */
+export interface Coordinate {
+    x: number,
+    y: number
+}
 
-/**
- * @typedef CustomAnimation
- * @type {Object}
- * @property {string} key
- * @property {number[]} [frames]
- * @property {number} frameRate
- * @property {number} repeat
- * @property {number} delay
- * @property {string} assetKey
- */
+export interface Attack {
+    id: number,
+    name: string,
+    animationName: AttackKeys
+}

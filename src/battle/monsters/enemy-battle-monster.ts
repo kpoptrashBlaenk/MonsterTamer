@@ -1,28 +1,20 @@
 import {BattleMonster} from "./battle-monster.ts";
+import {BattleMonsterConfig, Coordinate} from "../../types/typedef.ts";
 
-/** @type {Coordinate} */
-const ENEMY_POSITION = Object.freeze({
+const ENEMY_POSITION: Coordinate = Object.freeze({
     x: 769,
     y: 144
 })
 
 export class EnemyBattleMonster extends BattleMonster {
-    /**
-     *
-     * @param {BattleMonsterConfig} config
-     */
-    constructor(config) {
+
+    constructor(config: BattleMonsterConfig) {
         super({...config, scaleHealthBarBackgroundImageByY: 0.8}, ENEMY_POSITION);
     }
 
-    /**
-     *
-     * @param {() => void} callback
-     * @returns {void}
-     */
-    playMonsterAppearAnimation(callback) {
-        const startXPosition = -100;
-        const endXPosition = ENEMY_POSITION.x;
+    playMonsterAppearAnimation(callback: () => void): void {
+        const startXPosition: number = -100;
+        const endXPosition: number = ENEMY_POSITION.x;
         this._phaserGameObject.setPosition(startXPosition, ENEMY_POSITION.y)
         this._phaserGameObject.setAlpha(1)
 
@@ -44,14 +36,9 @@ export class EnemyBattleMonster extends BattleMonster {
         })
     }
 
-    /**
-     *
-     * @param {() => void} callback
-     * @returns {void}
-     */
-    playMonsterHealthBarAppearAnimation(callback) {
+    playMonsterHealthBarAppearAnimation(callback: () => void): void {
         const startXPosition = -600;
-        const endXPosition = this._phaserHealthBarGameContainer.x;
+        const endXPosition: number = this._phaserHealthBarGameContainer.x;
         this._phaserHealthBarGameContainer.setPosition(startXPosition, this._phaserHealthBarGameContainer.y)
         this._phaserHealthBarGameContainer.setAlpha(1)
 
@@ -73,13 +60,8 @@ export class EnemyBattleMonster extends BattleMonster {
         })
     }
 
-    /**
-     *
-     * @param {() => void} callback
-     * @returns {void}
-     */
-    playMonsterDeathAnimation(callback) {
-        const endYPosition = this._phaserGameObject.y - 400;
+    playMonsterDeathAnimation(callback: () => void): void {
+        const endYPosition: number = this._phaserGameObject.y - 400;
 
         if (this._skipBattleAnimations) {
             this._phaserGameObject.setY(endYPosition)

@@ -42,7 +42,7 @@ export class BattleScene extends Phaser.Scene {
     }
 
     init() {
-        this.#activePlayerAttackIndex = -1;
+        this.activePlayerAttackIndex = -1;
     }
 
     create() {
@@ -51,7 +51,7 @@ export class BattleScene extends Phaser.Scene {
         background.showForest()
 
         // Monsters
-        this.#activeEnemyMonster = new EnemyBattleMonster({
+        this.activeEnemyMonster = new EnemyBattleMonster({
                 scene: this,
                 monsterDetails: {
                     name: MONSTER_ASSET_KEYS.CARNODUSK,
@@ -65,7 +65,7 @@ export class BattleScene extends Phaser.Scene {
                 }, skipBattleAnimations: SKIP_BATTLE_ANIMATIONS
             }
         );
-        this.#activePlayerMonster = new PlayerBattleMonster({
+        this.activePlayerMonster = new PlayerBattleMonster({
                 scene: this,
                 monsterDetails: {
                     name: MONSTER_ASSET_KEYS.IGUANIGNITE,
@@ -81,78 +81,78 @@ export class BattleScene extends Phaser.Scene {
         );
 
         // Create Battle Menu
-        this.#battleMenu = new BattleMenu(this, this.#activePlayerMonster);
+        this.battleMenu = new BattleMenu(this, this.activePlayerMonster);
 
         // Add and then Set State Machine
-        this.#createBattleStateMachine()
+        this.createBattleStateMachine()
 
         // Create Attack Manager
-        this.#attackManager = new AttackManager(this, SKIP_BATTLE_ANIMATIONS)
+        this.attackManager = new AttackManager(this, SKIP_BATTLE_ANIMATIONS)
 
         // Create Controls
-        this.#controls = new Controls(this);
+        this.controls = new Controls(this);
     }
 
     update() {
-        this.#battleStateMachine.update()
+        this.battleStateMachine.update()
 
-        const wasSpaceKeyPressed =  this.#controls.wasSpaceKeyPressed()
+        const wasSpaceKeyPressed =  this.controls.wasSpaceKeyPressed()
 
         if (wasSpaceKeyPressed && (
-            this.#battleStateMachine.currentStateName === BATTLE_STATES.PRE_BATTLE_INFO ||
-            this.#battleStateMachine.currentStateName === BATTLE_STATES.POST_ATTACK_CHECK ||
-            this.#battleStateMachine.currentStateName === BATTLE_STATES.BRING_OUT_MONSTER ||
-            this.#battleStateMachine.currentStateName === BATTLE_STATES.FLEE_ATTEMPT
+            this.battleStateMachine.currentStateName === BATTLE_STATES.PRE_BATTLE_INFO ||
+            this.battleStateMachine.currentStateName === BATTLE_STATES.POST_ATTACK_CHECK ||
+            this.battleStateMachine.currentStateName === BATTLE_STATES.BRING_OUT_MONSTER ||
+            this.battleStateMachine.currentStateName === BATTLE_STATES.FLEE_ATTEMPT
         )) {
-            this.#battleMenu.handlePlayerInput('OK')
+            this.battleMenu.handlePlayerInput('OK')
             return;
         }
 
-        if (this.#battleStateMachine.currentStateName !== BATTLE_STATES.PLAYER_INPUT) {
+        if (this.battleStateMachine.currentStateName !== BATTLE_STATES.PLAYER_INPUT) {
             return;
         }
 
         if (wasSpaceKeyPressed) {
-            this.#battleMenu.handlePlayerInput('OK')
+            this.battleMenu.handlePlayerInput('OK')
 
             // Check if player selected an attack, then update display text
-            if (this.#battleMenu.selectedAttack === undefined) {
+            if (this.battleMenu.selectedAttack === undefined) {
                 return;
             }
-            this.#activePlayerAttackIndex = this.#battleMenu.selectedAttack
+            this.activePlayerAttackIndex = this.battleMenu.selectedAttack
 
             // Check if selected attack exists
-            if (!this.#activePlayerMonster.attacks[this.#activePlayerAttackIndex]) {
+            if (!this.activePlayerMonster.attacks[this.activePlayerAttackIndex]) {
                 return;
             }
 
-            this.#battleMenu.hideMonsterAttackSubMenu()
-            this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_INPUT)
+            this.battleMenu.hideMonsterAttackSubMenu()
+            this.battleStateMachine.setState(BATTLE_STATES.ENEMY_INPUT)
         }
-        if ( this.#controls.wasBackKeyPressed()) {
-            this.#battleMenu.handlePlayerInput('CANCEL')
+        if ( this.controls.wasBackKeyPressed()) {
+            this.battleMenu.handlePlayerInput('CANCEL')
             return;
         }
 
-        let selectedDirection = this.#controls.getDirectionKeyPressedDown()
+        let selectedDirection = this.controls.getDirectionKeyPressedDown()
         if (selectedDirection !== DIRECTION.NONE) {
-            this.#battleMenu.handlePlayerInput(selectedDirection)
+            this.battleMenu.handlePlayerInput(selectedDirection)
         }
     }
 
-    #playerAttack() {
-        if (this.#activePlayerMonster.isFainted) {
+    private playerAttack() {
+        if (this.activePlayerMonster.isFainted) {
             return;
         }
 
-        this.#battleMenu.updateInfoPaneMessagesNoInputRequired(
-            `${this.#activePlayerMonster.name} used ${this.#activePlayerMonster.attacks[this.#activePlayerAttackIndex].name}`,
+        this.battleMenu.updateInfoPaneMessagesNoInputRequired(
+            `${this.activePlayerMonster.name} used ${this.activePlayerMonster.attacks[this.activePlayerAttackIndex].name}`,
             () => {
                 this.time.delayedCall(1200, () => {
-                    this.#attackManager.playAttackAnimation(this.#activePlayerMonster.attacks[this.#activePlayerAttackIndex].animationName, ATTACK_TARGET.ENEMY, () => {
-                        this.#activeEnemyMonster.playMonsterTakeDamageAnimation(() => {
-                            this.#activeEnemyMonster.takeDamage(this.#activePlayerMonster.baseAttack, () => {
-                                this.#enemyAttack()
+                    this.attackManager.playAttackAnimation(this.activePlayerMonster.attacks[this.activePlayerAttackIndex].animationName, ATTACK_TARGET.ENEMY, () => {
+                        this.activeEnemyMonster.playMonsterTakeDamageAnimation(() => {
+                            this.activeEnemyMonster.takeDamage(this.activePlayerMonster.baseAttack, () => {
+                                this.enemyAttack()
                             })
                         })
                     })
@@ -160,20 +160,20 @@ export class BattleScene extends Phaser.Scene {
             }, SKIP_BATTLE_ANIMATIONS)
     }
 
-    #enemyAttack() {
-        if (this.#activeEnemyMonster.isFainted) {
-            this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_CHECK)
+    private enemyAttack() {
+        if (this.activeEnemyMonster.isFainted) {
+            this.battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_CHECK)
             return;
         }
 
-        this.#battleMenu.updateInfoPaneMessagesNoInputRequired(
-            `${this.#activeEnemyMonster.name} used ${this.#activeEnemyMonster.attacks[0].name}`,
+        this.battleMenu.updateInfoPaneMessagesNoInputRequired(
+            `${this.activeEnemyMonster.name} used ${this.activeEnemyMonster.attacks[0].name}`,
             () => {
                 this.time.delayedCall(1200, () => {
-                    this.#attackManager.playAttackAnimation(this.#activeEnemyMonster.attacks[0].animationName, ATTACK_TARGET.PLAYER, () => {
-                        this.#activePlayerMonster.playMonsterTakeDamageAnimation(() => {
-                            this.#activePlayerMonster.takeDamage(this.#activeEnemyMonster.baseAttack, () => {
-                                this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_CHECK)
+                    this.attackManager.playAttackAnimation(this.activeEnemyMonster.attacks[0].animationName, ATTACK_TARGET.PLAYER, () => {
+                        this.activePlayerMonster.playMonsterTakeDamageAnimation(() => {
+                            this.activePlayerMonster.takeDamage(this.activeEnemyMonster.baseAttack, () => {
+                                this.battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_CHECK)
                             })
                         })
                     })
@@ -181,103 +181,103 @@ export class BattleScene extends Phaser.Scene {
             }, SKIP_BATTLE_ANIMATIONS)
     }
 
-    #postBattleSequenceCheck() {
-        if (this.#activeEnemyMonster.isFainted) {
-            this.#battleMenu.updateInfoPaneMessagesAndWaitForInput([`Wild ${this.#activeEnemyMonster.name} fucking died.`, `${this.#activeEnemyMonster.name} gained experience`], () => {
+    private postBattleSequenceCheck() {
+        if (this.activeEnemyMonster.isFainted) {
+            this.battleMenu.updateInfoPaneMessagesAndWaitForInput([`Wild ${this.activeEnemyMonster.name} fucking died.`, `${this.activeEnemyMonster.name} gained experience`], () => {
                 this.time.delayedCall(500, () => {
-                    this.#activeEnemyMonster.playMonsterDeathAnimation(() => {
-                        this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
+                    this.activeEnemyMonster.playMonsterDeathAnimation(() => {
+                        this.battleStateMachine.setState(BATTLE_STATES.FINISHED)
                     })
                 })
             }, SKIP_BATTLE_ANIMATIONS)
             return;
         }
 
-        if (this.#activePlayerMonster.isFainted) {
-            this.#battleMenu.updateInfoPaneMessagesAndWaitForInput([`${this.#activePlayerMonster.name} fainted`, 'You have no more monsters, escaping to safety...'], () => {
-                this.#activePlayerMonster.playMonsterDeathAnimation(() => {
+        if (this.activePlayerMonster.isFainted) {
+            this.battleMenu.updateInfoPaneMessagesAndWaitForInput([`${this.activePlayerMonster.name} fainted`, 'You have no more monsters, escaping to safety...'], () => {
+                this.activePlayerMonster.playMonsterDeathAnimation(() => {
                     this.time.delayedCall(500, () => {
-                        this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
+                        this.battleStateMachine.setState(BATTLE_STATES.FINISHED)
                     })
                 })
             }, SKIP_BATTLE_ANIMATIONS)
             return;
         }
 
-        this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_INPUT)
+        this.battleStateMachine.setState(BATTLE_STATES.PLAYER_INPUT)
     }
 
-    #transitionToNextScene() {
+    private transitionToNextScene() {
         this.cameras.main.fadeOut(600, 0, 0, 0)
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
             this.scene.start(SCENE_KEYS.BATTLE_SCENE)
         })
     }
 
-    #createBattleStateMachine() {
-        this.#battleStateMachine = new StateMachine('battle', this);
+    private createBattleStateMachine() {
+        this.battleStateMachine = new StateMachine('battle', this);
 
-        this.#battleStateMachine.addState({
+        this.battleStateMachine.addState({
             name: BATTLE_STATES.INTRO,
             onEnter: () => {
                 sceneTransition(this, {
                     skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
                     callback: () => {
-                        this.#battleStateMachine.setState(BATTLE_STATES.PRE_BATTLE_INFO)
+                        this.battleStateMachine.setState(BATTLE_STATES.PRE_BATTLE_INFO)
                     }
                 })
             }
         })
 
-        this.#battleStateMachine.addState({
+        this.battleStateMachine.addState({
             name: BATTLE_STATES.PRE_BATTLE_INFO,
             onEnter: () => {
                 // Wait for enemy monster to appear on the screen and notify player about the wild monster
-                this.#activeEnemyMonster.playMonsterAppearAnimation(() => {
-                    this.#activeEnemyMonster.playMonsterHealthBarAppearAnimation(() => undefined)
-                    this.#battleMenu.updateInfoPaneMessagesAndWaitForInput(
-                        [`Wild ${this.#activeEnemyMonster.name} appeared`], () => {
+                this.activeEnemyMonster.playMonsterAppearAnimation(() => {
+                    this.activeEnemyMonster.playMonsterHealthBarAppearAnimation(() => undefined)
+                    this.battleMenu.updateInfoPaneMessagesAndWaitForInput(
+                        [`Wild ${this.activeEnemyMonster.name} appeared`], () => {
                             this.time.delayedCall(500, () => {
-                                this.#battleStateMachine.setState(BATTLE_STATES.BRING_OUT_MONSTER)
+                                this.battleStateMachine.setState(BATTLE_STATES.BRING_OUT_MONSTER)
                             })
                         }, SKIP_BATTLE_ANIMATIONS)
                 })
             }
         })
 
-        this.#battleStateMachine.addState({
+        this.battleStateMachine.addState({
             name: BATTLE_STATES.BRING_OUT_MONSTER,
             onEnter: () => {
                 // Wait for player monster to appear on the screen and notify player about the monster
-                this.#battleMenu.updateInfoPaneMessagesAndWaitForInput(
-                    [`Go ${this.#activePlayerMonster.name}`], () => {
+                this.battleMenu.updateInfoPaneMessagesAndWaitForInput(
+                    [`Go ${this.activePlayerMonster.name}`], () => {
                         // After animation switch state
                         this.time.delayedCall(500, () => {
-                            this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_INPUT)
+                            this.battleStateMachine.setState(BATTLE_STATES.PLAYER_INPUT)
                         })
                     }, SKIP_BATTLE_ANIMATIONS)
-                this.#activePlayerMonster.playMonsterAppearAnimation(() => {
-                    this.#activePlayerMonster.playMonsterHealthBarAppearAnimation(() => undefined)
+                this.activePlayerMonster.playMonsterAppearAnimation(() => {
+                    this.activePlayerMonster.playMonsterHealthBarAppearAnimation(() => undefined)
                 })
             }
         })
 
-        this.#battleStateMachine.addState({
+        this.battleStateMachine.addState({
             name: BATTLE_STATES.PLAYER_INPUT,
             onEnter: () => {
-                this.#battleMenu.showMainBattleMenu()
+                this.battleMenu.showMainBattleMenu()
             }
         })
 
-        this.#battleStateMachine.addState({
+        this.battleStateMachine.addState({
             name: BATTLE_STATES.ENEMY_INPUT,
             onEnter: () => {
                 //TODO: Pick a random move for the enemy monster and have an AI in the future
-                this.#battleStateMachine.setState(BATTLE_STATES.BATTLE)
+                this.battleStateMachine.setState(BATTLE_STATES.BATTLE)
             }
         })
 
-        this.#battleStateMachine.addState({
+        this.battleStateMachine.addState({
             name: BATTLE_STATES.BATTLE,
             onEnter: () => {
                 // show attack used then pause
@@ -286,34 +286,34 @@ export class BattleScene extends Phaser.Scene {
                 // show health bar animation then pause
                 // repeat for other monster
 
-                this.#playerAttack()
+                this.playerAttack()
             }
         })
 
-        this.#battleStateMachine.addState({
+        this.battleStateMachine.addState({
             name: BATTLE_STATES.POST_ATTACK_CHECK,
             onEnter: () => {
-                this.#postBattleSequenceCheck()
+                this.postBattleSequenceCheck()
             }
         })
 
-        this.#battleStateMachine.addState({
+        this.battleStateMachine.addState({
             name: BATTLE_STATES.FINISHED,
             onEnter: () => {
-                this.#transitionToNextScene()
+                this.transitionToNextScene()
             }
         })
 
-        this.#battleStateMachine.addState({
+        this.battleStateMachine.addState({
             name: BATTLE_STATES.FLEE_ATTEMPT,
             onEnter: () => {
-                this.#battleMenu.updateInfoPaneMessagesAndWaitForInput(['You got away safely'], () => {
-                    this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
+                this.battleMenu.updateInfoPaneMessagesAndWaitForInput(['You got away safely'], () => {
+                    this.battleStateMachine.setState(BATTLE_STATES.FINISHED)
                 }, SKIP_BATTLE_ANIMATIONS)
             }
         })
 
         // Start State Machine
-        this.#battleStateMachine.setState('INTRO')
+        this.battleStateMachine.setState('INTRO')
     }
 }
