@@ -19,9 +19,9 @@ export class PreloadScene extends Phaser.Scene {
     }
 
     preload() {
-        const monsterTamerAssetPath = 'http://localhost/MonsterTamer/assets/images/monster-tamer';
-        const kenneysAssetPath = 'http://localhost/MonsterTamer/assets/images/kenneys-assets';
-        const pimenAssetPath = 'http://localhost/MonsterTamer/assets/images/pimen';
+        const monsterTamerAssetPath = 'http://localhost/MonsterTamer/public/assets/images/monster-tamer';
+        const kenneysAssetPath = 'http://localhost/MonsterTamer/public/assets/images/kenneys-assets';
+        const pimenAssetPath = 'http://localhost/MonsterTamer/public/assets/images/pimen';
 
         // Load UI Components
         this.load.image(
