@@ -1,21 +1,17 @@
-/**
- *
- * @param {Phaser.Scene} scene
- * @param {Object} options
- * @param {() => void} [options.callback]
- * @param {boolean} [options.skipSceneTransition=false]
- */
-export function sceneTransition(scene, options) {
-    const skipSceneTransition = options.skipSceneTransition || false;
+interface Options {
+    callback?: () => void;
+    skipSceneTransition?: boolean;
+}
+
+export function sceneTransition(scene: Phaser.Scene, options: Options): void {
+    const skipSceneTransition: boolean = options.skipSceneTransition || false;
     if (skipSceneTransition) {
-        if (options.callback) {
-            options.callback()
-        }
+        options.callback?.()
         return;
     }
 
-    const {width, height} = scene.scale;
-    const rectShape = new Phaser.Geom.Rectangle(0, height/2, width, 0);
+    const {width, height}: {width: number; height: number} = scene.scale;
+    const rectShape: Phaser.Geom.Rectangle = new Phaser.Geom.Rectangle(0, height/2, width, 0);
     const g = scene.add.graphics().fillRectShape(rectShape).setDepth(-1);
     const mask = g.createGeometryMask();
     scene.cameras.main.setMask(mask)
@@ -34,19 +30,17 @@ export function sceneTransition(scene, options) {
         },
         y: {
             ease: Phaser.Math.Easing.Expo.InOut,
-            from: height/2,
-            start: height/2,
+            from: height / 2,
+            start: height / 2,
             to: 0
         },
         targets: rectShape,
         onComplete: () => {
             mask.destroy()
             scene.cameras.main.clearMask()
-            if (options.callback) {
-                options.callback()
-            }
+            options.callback?.()
         }
     })
 
-    options.callback()
+    options.callback?.()
 }

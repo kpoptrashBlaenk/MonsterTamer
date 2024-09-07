@@ -30,7 +30,7 @@ const PLAYER_INPUT_CURSOR_POSITION = Object.freeze({
 })
 
 export class BattleMenu {
-    private readonly scene: Phaser.Scene ;
+    private readonly scene: Phaser.Scene;
     private mainBattleMenuPhaserContainerGameObject: Phaser.GameObjects.Container;
     private moveSelectionSubMenuPhaserContainerGameObject: Phaser.GameObjects.Container;
     private battleTextGameObjectLine1: Phaser.GameObjects.Text;
@@ -43,13 +43,13 @@ export class BattleMenu {
     private queuedInfoPanelMessages: string[];
     private queuedInfoPanelCallback: (() => void) | undefined;
     private waitingForPlayerInput: boolean;
-    private selectedAttackIndex: 0 | 1 | 2 | 3 | undefined;
+    private selectedAttackIndex: number | undefined;
     private activePlayerMonster: BattleMonster;
     private userInputCursorPhaserImageObject: Phaser.GameObjects.Image;
     private userInputCursorPhaserTween: Phaser.Tweens.Tween;
     private queuedMessagesSkipAnimation: boolean;
     private queuedMessageAnimationPlaying: boolean;
-    
+
     constructor(scene: Phaser.Scene, activePlayerMonster: BattleMonster) {
         this.scene = scene;
         this.activePlayerMonster = activePlayerMonster;
@@ -119,9 +119,9 @@ export class BattleMenu {
         this.userInputCursorPhaserImageObject.setAlpha(0)
         this.userInputCursorPhaserTween.pause()
     }
-    
+
     handlePlayerInput(input: Direction | 'OK' | 'CANCEL'): void {
-        if(this.queuedMessageAnimationPlaying && input === 'OK') {
+        if (this.queuedMessageAnimationPlaying && input === 'OK') {
             return;
         }
 
@@ -530,7 +530,7 @@ export class BattleMenu {
     }
 
     private handlePlayerChooseAttack() {
-        let selectedAttackMoveIndex: 0 | 1 | 2 | 3;
+        let selectedAttackMoveIndex: number;
         switch (this.selectedAttackMoveOption) {
             case ATTACK_MOVE_OPTIONS.MOVE_1:
                 selectedAttackMoveIndex = 0;
@@ -546,7 +546,7 @@ export class BattleMenu {
                 break;
             default:
                 exhaustiveGuard(this.selectedAttackMoveOption)
-                selectedAttackMoveIndex = -1 as any;
+                selectedAttackMoveIndex = -1;
         }
 
         this.selectedAttackIndex = selectedAttackMoveIndex;
@@ -563,8 +563,8 @@ export class BattleMenu {
             duration: 800,
             repeat: -1,
             y: {
-                from: PLAYER_INPUT_CURSOR_POSITION.y+7,
-                start: PLAYER_INPUT_CURSOR_POSITION.y+7,
+                from: PLAYER_INPUT_CURSOR_POSITION.y + 7,
+                start: PLAYER_INPUT_CURSOR_POSITION.y + 7,
                 to: PLAYER_INPUT_CURSOR_POSITION.y + 12
             },
             targets: this.userInputCursorPhaserImageObject

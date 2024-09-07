@@ -2,32 +2,26 @@ import Phaser from '../lib/phaser.ts'
 import * as WebFontLoader from "../lib/webfontloader.ts";
 
 export class WebFontFileLoader extends Phaser.Loader.File {
-    /** @type {string[]} */
-    #fontNames;
+    private readonly fontNames: string[];
 
-    /**
-     *
-     * @param {Phaser.Loader.LoaderPlugin} loader
-     * @param {string[]} fontNames
-     */
-    constructor(loader, fontNames) {
+    constructor(loader: Phaser.Loader.LoaderPlugin, fontNames: string[]) {
         super(loader, {
             type: 'webfont',
             key: fontNames.toString()
         });
-        this.#fontNames = fontNames;
+        this.fontNames = fontNames;
     }
 
-    load(){
+    load() {
         WebFontLoader.default.load({
             custom: {
-                families: this.#fontNames
+                families: this.fontNames
             },
             active: () => {
                 this.loader.nextFile(this, true)
             },
             inactive: () => {
-                console.error(`Failed to load custom fonts ${JSON.stringify(this.#fontNames)}`)
+                console.error(`Failed to load custom fonts ${JSON.stringify(this.fontNames)}`)
                 this.loader.nextFile(this, false)
             }
         })

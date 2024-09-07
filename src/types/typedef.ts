@@ -11,7 +11,7 @@ export interface BattleMonsterConfig {
 export interface Monster{
     name: string,
     assetKey: MonsterAssetKeys,
-    assetFrame?: number[],
+    assetFrame?: string | number,
     currentLevel: number,
     maxHp: number,
     currentHp: number,

@@ -1,22 +1,11 @@
-import Phaser from '../lib/phaser.ts'
+interface AnimateTextConfig {
+    callback?: () => void,
+    delay?: number
+}
 
-/**
- * @typedef AnimateTextConfig
- * @type {Object}
- * @property {() => void} [callback]
- * @property {number} [delay=100]
- */
-
-/**
- *
- * @param {Phaser.Scene} scene Scene to pass on
- * @param {Phaser.GameObjects.Text} target Where to put the text
- * @param {string} text The text to animate
- * @param {AnimateTextConfig} [config]
- */
-export function animateText(scene, target, text, config) {
-    const length = text.length;
-    let i = 0;
+export function animateText(scene: Phaser.Scene, target: Phaser.GameObjects.Text, text: string | string[], config?: AnimateTextConfig): void {
+    const length: number = text.length;
+    let i: number = 0;
     scene.time.addEvent({
         callback: () => {
             target.text += text[i];
@@ -26,6 +15,6 @@ export function animateText(scene, target, text, config) {
             }
         },
         repeat: length - 1,
-        delay: config.delay || 50,
+        delay: config?.delay || 50,
     })
 }

@@ -15,19 +15,19 @@ export class EnemyBattleMonster extends BattleMonster {
     playMonsterAppearAnimation(callback: () => void): void {
         const startXPosition: number = -100;
         const endXPosition: number = ENEMY_POSITION.x;
-        this._phaserGameObject.setPosition(startXPosition, ENEMY_POSITION.y)
-        this._phaserGameObject.setAlpha(1)
+        this.phaserGameObject.setPosition(startXPosition, ENEMY_POSITION.y)
+        this.phaserGameObject.setAlpha(1)
 
-        if (this._skipBattleAnimations) {
-            this._phaserGameObject.setX(endXPosition)
+        if (this.skipBattleAnimations) {
+            this.phaserGameObject.setX(endXPosition)
             callback()
             return;
         }
 
-        this._scene.tweens.add({
+        this.scene.tweens.add({
             delay: 0,
             duration: 1000,
-            targets: this._phaserGameObject,
+            targets: this.phaserGameObject,
             // Note: For some reason x can't be an Object with {from, start, end}
             x: endXPosition,
             onComplete: () => {
@@ -38,20 +38,20 @@ export class EnemyBattleMonster extends BattleMonster {
 
     playMonsterHealthBarAppearAnimation(callback: () => void): void {
         const startXPosition = -600;
-        const endXPosition: number = this._phaserHealthBarGameContainer.x;
-        this._phaserHealthBarGameContainer.setPosition(startXPosition, this._phaserHealthBarGameContainer.y)
-        this._phaserHealthBarGameContainer.setAlpha(1)
+        const endXPosition: number = this.phaserHealthBarGameContainer.x;
+        this.phaserHealthBarGameContainer.setPosition(startXPosition, this.phaserHealthBarGameContainer.y)
+        this.phaserHealthBarGameContainer.setAlpha(1)
 
-        if (this._skipBattleAnimations) {
-            this._phaserHealthBarGameContainer.setX(endXPosition)
+        if (this.skipBattleAnimations) {
+            this.phaserHealthBarGameContainer.setX(endXPosition)
             callback()
             return;
         }
 
-        this._scene.tweens.add({
+        this.scene.tweens.add({
             delay: 0,
             duration: 500,
-            targets: this._phaserHealthBarGameContainer,
+            targets: this.phaserHealthBarGameContainer,
             // Note: For some reason x can't be an Object with {from, start, end}
             x: endXPosition,
             onComplete: () => {
@@ -61,18 +61,18 @@ export class EnemyBattleMonster extends BattleMonster {
     }
 
     playMonsterDeathAnimation(callback: () => void): void {
-        const endYPosition: number = this._phaserGameObject.y - 400;
+        const endYPosition: number = this.phaserGameObject.y - 400;
 
-        if (this._skipBattleAnimations) {
-            this._phaserGameObject.setY(endYPosition)
+        if (this.skipBattleAnimations) {
+            this.phaserGameObject.setY(endYPosition)
             callback()
             return;
         }
 
-        this._scene.tweens.add({
+        this.scene.tweens.add({
             delay: 0,
             duration: 1000,
-            targets: this._phaserGameObject,
+            targets: this.phaserGameObject,
             // Note: For some reason y can't be an Object with {from, start, end}
             y: endYPosition,
             onComplete: () => {

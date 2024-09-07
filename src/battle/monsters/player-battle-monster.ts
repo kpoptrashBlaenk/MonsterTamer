@@ -12,8 +12,8 @@ export class PlayerBattleMonster extends BattleMonster {
 
     constructor(config: BattleMonsterConfig) {
         super(config, PLAYER_POSITION);
-        this._phaserGameObject.setFlipX(true)
-        this._phaserHealthBarGameContainer.setPosition(556, 318)
+        this.phaserGameObject.setFlipX(true)
+        this.phaserHealthBarGameContainer.setPosition(556, 318)
 
         this.addHealthBarComponent()
     }
@@ -21,19 +21,19 @@ export class PlayerBattleMonster extends BattleMonster {
     playMonsterAppearAnimation(callback: () => void): void {
         const startXPosition: number = 1024;
         const endXPosition: number = PLAYER_POSITION.x;
-        this._phaserGameObject.setPosition(startXPosition, PLAYER_POSITION.y)
-        this._phaserGameObject.setAlpha(1)
+        this.phaserGameObject.setPosition(startXPosition, PLAYER_POSITION.y)
+        this.phaserGameObject.setAlpha(1)
 
-        if (this._skipBattleAnimations) {
-            this._phaserGameObject.setX(endXPosition)
+        if (this.skipBattleAnimations) {
+            this.phaserGameObject.setX(endXPosition)
             callback()
             return;
         }
 
-        this._scene.tweens.add({
+        this.scene.tweens.add({
             delay: 0,
             duration: 1000,
-            targets: this._phaserGameObject,
+            targets: this.phaserGameObject,
             // Note: For some reason x can't be an Object with {from, start, end}
             x: endXPosition,
             onComplete: () => {
@@ -44,20 +44,20 @@ export class PlayerBattleMonster extends BattleMonster {
 
     playMonsterHealthBarAppearAnimation(callback: () => void): void {
         const startXPosition: number = 1024;
-        const endXPosition: number = this._phaserHealthBarGameContainer.x;
-        this._phaserHealthBarGameContainer.setPosition(startXPosition, this._phaserHealthBarGameContainer.y)
-        this._phaserHealthBarGameContainer.setAlpha(1)
+        const endXPosition: number = this.phaserHealthBarGameContainer.x;
+        this.phaserHealthBarGameContainer.setPosition(startXPosition, this.phaserHealthBarGameContainer.y)
+        this.phaserHealthBarGameContainer.setAlpha(1)
 
-        if (this._skipBattleAnimations) {
-            this._phaserHealthBarGameContainer.setX(endXPosition)
+        if (this.skipBattleAnimations) {
+            this.phaserHealthBarGameContainer.setX(endXPosition)
             callback()
             return;
         }
 
-        this._scene.tweens.add({
+        this.scene.tweens.add({
             delay: 0,
             duration: 500,
-            targets: this._phaserHealthBarGameContainer,
+            targets: this.phaserHealthBarGameContainer,
             // Note: For some reason x can't be an Object with {from, start, end}
             x: endXPosition,
             onComplete: () => {
@@ -67,18 +67,18 @@ export class PlayerBattleMonster extends BattleMonster {
     }
 
     playMonsterDeathAnimation(callback: () => void): void {
-        const endYPosition: number = this._phaserGameObject.y + 400;
+        const endYPosition: number = this.phaserGameObject.y + 400;
 
-        if (this._skipBattleAnimations) {
-            this._phaserGameObject.setY(endYPosition)
+        if (this.skipBattleAnimations) {
+            this.phaserGameObject.setY(endYPosition)
             callback()
             return;
         }
 
-        this._scene.tweens.add({
+        this.scene.tweens.add({
             delay: 0,
             duration: 1000,
-            targets: this._phaserGameObject,
+            targets: this.phaserGameObject,
             // Note: For some reason y can't be an Object with {from, start, end}
             y: endYPosition,
             onComplete: () => {
@@ -88,18 +88,18 @@ export class PlayerBattleMonster extends BattleMonster {
     }
 
     private setHealthBarText(): void {
-        this.healthBarTextGameObject.setText(`${this._currentHealth}/${this._maxHealth}`)
+        this.healthBarTextGameObject.setText(`${this.currentHealth}/${this.maxHealth}`)
     }
 
     private addHealthBarComponent(): void {
-        this.healthBarTextGameObject = this._scene.add.text(443, 80, '', {
+        this.healthBarTextGameObject = this.scene.add.text(443, 80, '', {
             fontFamily: CUSTOM_FONTS.POKEROGUE,
             color: '7E3D3F',
             fontSize: '16px'
         }).setOrigin(1, 0);
         this.setHealthBarText()
 
-        this._phaserHealthBarGameContainer.add(this.healthBarTextGameObject)
+        this.phaserHealthBarGameContainer.add(this.healthBarTextGameObject)
     }
 
     takeDamage(damage: number, callback: () => void): void {

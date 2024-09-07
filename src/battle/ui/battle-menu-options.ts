@@ -12,7 +12,7 @@ export const ATTACK_MOVE_OPTIONS = Object.freeze({
     MOVE_3: 'MOVE_3',
     MOVE_4: 'MOVE_4'
 })
-export type AttackMoveOptions =  keyof typeof ATTACK_MOVE_OPTIONS
+export type AttackMoveOptions = keyof typeof ATTACK_MOVE_OPTIONS
 
 export const ACTIVE_BATTLE_MENU = Object.freeze({
     BATTLE_MAIN: 'BATTLE_MAIN',

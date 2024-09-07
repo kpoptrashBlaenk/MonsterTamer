@@ -4,7 +4,7 @@ import {
     MONSTER_ASSET_KEYS
 } from "../../assets/asset-keys.ts";
 import {BattleMenu} from "../../battle/menu/battle-menu.ts";
-import {DIRECTION} from "../../common/direction.ts";
+import {Direction, DIRECTION} from "../../common/direction.ts";
 import {Background} from "../../battle/background.ts";
 import {EnemyBattleMonster} from "../../battle/monsters/enemy-battle-monster.ts";
 import {PlayerBattleMonster} from "../../battle/monsters/player-battle-monster.ts";
@@ -30,7 +30,7 @@ export class BattleScene extends Phaser.Scene {
     private battleMenu: BattleMenu;
     private activeEnemyMonster: EnemyBattleMonster;
     private activePlayerMonster: PlayerBattleMonster;
-    private activePlayerAttackIndex: 0 | 1 | 2 | 3;
+    private activePlayerAttackIndex: number;
     private battleStateMachine: StateMachine
     private attackManager: AttackManager;
     private controls: Controls;
@@ -87,7 +87,7 @@ export class BattleScene extends Phaser.Scene {
         this.createBattleStateMachine()
 
         // Create Attack Manager
-        this.attackManager = new AttackManager(this, SKIP_BATTLE_ANIMATIONS)
+        this.attackManager = new AttackManager(this, SKIP_BATTLE_ANIMATIONS);
 
         // Create Controls
         this.controls = new Controls(this);
@@ -96,7 +96,7 @@ export class BattleScene extends Phaser.Scene {
     update() {
         this.battleStateMachine.update()
 
-        const wasSpaceKeyPressed =  this.controls.wasSpaceKeyPressed()
+        const wasSpaceKeyPressed: boolean =  this.controls.wasSpaceKeyPressed();
 
         if (wasSpaceKeyPressed && (
             this.battleStateMachine.currentStateName === BATTLE_STATES.PRE_BATTLE_INFO ||
@@ -134,7 +134,7 @@ export class BattleScene extends Phaser.Scene {
             return;
         }
 
-        let selectedDirection = this.controls.getDirectionKeyPressedDown()
+        let selectedDirection: Direction = this.controls.getDirectionKeyPressedDown()
         if (selectedDirection !== DIRECTION.NONE) {
             this.battleMenu.handlePlayerInput(selectedDirection)
         }

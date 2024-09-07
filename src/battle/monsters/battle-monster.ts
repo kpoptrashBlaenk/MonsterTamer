@@ -1,165 +1,132 @@
-import Phaser from '../../lib/phaser.ts'
 import {HealthBar} from "../ui/health-bar.ts";
 import {BATTLE_ASSET_KEYS} from "../../assets/asset-keys.ts";
 import {DataUtils} from "../../utils/data-utils.ts";
 import {CUSTOM_FONTS} from "../../assets/font-keys.ts";
+import {BattleMonsterConfig, Coordinate, Monster, Attack} from "../../types/typedef.ts";
 
 export class BattleMonster {
-    /** @type {Phaser.Scene} */
-    _scene;
-    /** @type {Monster} */
-    _monsterDetails;
-    /** @type {HealthBar} */
-    _healthBar;
-    /** @type {Phaser.GameObjects.Image} */
-    _phaserGameObject;
-    /** @type {number} */
-    _currentHealth;
-    /** @type {number} */
-    _maxHealth;
-    /** @type {Attack[]} */
-    _monsterAttacks;
-    /** @type {number} */
-    _baseAttack;
-    /** @type {Phaser.GameObjects.Container} */
-    _phaserHealthBarGameContainer;
-    /** @type {boolean} */
-    _skipBattleAnimations;
+    protected scene: Phaser.Scene;
+    protected monsterDetails: Monster;
+    protected healthBar: HealthBar;
+    protected phaserGameObject: Phaser.GameObjects.Image;
+    protected currentHealth: number;
+    protected maxHealth: number;
+    protected monsterAttacks: Attack[];
+    //protected baseAttackPro: number;
+    protected phaserHealthBarGameContainer: Phaser.GameObjects.Container;
+    protected skipBattleAnimations: boolean;
 
-    /**
-     *
-     * @param {BattleMonsterConfig} config
-     * @param {Coordinate} position
-     */
-    constructor(config, position) {
-        this._scene = config.scene;
-        this._monsterDetails = config.monsterDetails;
-        this._currentHealth = this._monsterDetails.currentHp;
-        this._maxHealth = this._monsterDetails.maxHp;
-        this._monsterAttacks = [];
-        this._skipBattleAnimations = config.skipBattleAnimations || false;
+    constructor(config: BattleMonsterConfig, position: Coordinate) {
+        this.scene = config.scene;
+        this.monsterDetails = config.monsterDetails;
+        this.currentHealth = this.monsterDetails.currentHp;
+        this.maxHealth = this.monsterDetails.maxHp;
+        this.monsterAttacks = [];
+        this.skipBattleAnimations = config.skipBattleAnimations || false;
 
-        this._phaserGameObject = this._scene.add.image(
+        this.phaserGameObject = this.scene.add.image(
             position.x,
             position.y,
-            this._monsterDetails.assetKey,
-            this._monsterDetails.assetFrame || 0
+            this.monsterDetails.assetKey,
+            this.monsterDetails.assetFrame ?? 0
         ).setAlpha(0);
 
-        this.#createHealthBarComponent(config.scaleHealthBarBackgroundImageByY)
+        this.createHealthBarComponent(config.scaleHealthBarBackgroundImageByY)
 
-        this._monsterDetails.attackIds.forEach(attackId => {
-            const monsterAttack = DataUtils.getMonsterAttack(this._scene, attackId);
-            if(monsterAttack !== undefined) {
-                this._monsterAttacks.push(monsterAttack)
+        this.monsterDetails.attackIds.forEach(attackId => {
+            const monsterAttack = DataUtils.getMonsterAttack(this.scene, attackId);
+            if (monsterAttack !== undefined) {
+                this.monsterAttacks.push(monsterAttack)
             }
         })
     }
 
-    /** @type {boolean} */
-    get isFainted() {
-        return this._currentHealth <= 0;
+    get isFainted(): boolean {
+        return this.currentHealth <= 0;
     }
 
-    /** @type {string} */
-    get name() {
-        return this._monsterDetails.name;
+    get name(): string {
+        return this.monsterDetails.name;
     }
 
-    /** @type {Attack[]} */
-    get attacks() {
-        return [...this._monsterAttacks];
+    get attacks(): Attack[] {
+        return [...this.monsterAttacks];
     }
 
-    /** @type {number} */
-    get baseAttack() {
-        return this._monsterDetails.baseAttack;
+    get baseAttack(): number {
+        return this.monsterDetails.baseAttack;
     }
 
-    /** @type {number} */
-    get level() {
-        return this._monsterDetails.currentLevel;
+    get level(): number {
+        return this.monsterDetails.currentLevel;
     }
 
-    /**
-     *
-     * @param {number} damage
-     * @param {() => void} [callback]
-     */
-    takeDamage(damage, callback) {
+    takeDamage(damage: number, callback: () => void): void {
         // Avoid negative health
-        this._currentHealth -= damage;
-        if (this._currentHealth < 0) {
-            this._currentHealth = 0;
+        this.currentHealth -= damage;
+        if (this.currentHealth < 0) {
+            this.currentHealth = 0;
         }
-        this._healthBar.setMeterPercentageAnimated(this._currentHealth / this._maxHealth, {callback})
+        this.healthBar.setMeterPercentageAnimated(this.currentHealth / this.maxHealth, {callback})
     }
 
-    /**
-     *
-     * @param {() => void} callback
-     * @returns {void}
-     */
-    playMonsterTakeDamageAnimation(callback) {
-        if(this._skipBattleAnimations) {
-            this._phaserGameObject.setAlpha(1)
+    playMonsterTakeDamageAnimation(callback: () => void): void {
+        if (this.skipBattleAnimations) {
+            this.phaserGameObject.setAlpha(1)
             callback()
             return;
         }
 
-        this._scene.tweens.add({
+        this.scene.tweens.add({
             delay: 0,
             duration: 150,
-            targets: this._phaserGameObject,
+            targets: this.phaserGameObject,
             alpha: 0,
             repeat: 5,
             onComplete: () => {
-                this._phaserGameObject.setAlpha(1)
+                this.phaserGameObject.setAlpha(1)
                 callback()
             }
         })
     }
 
-    /**
-     *
-     * @param {() => void} callback
-     * @returns {void}
-     */
-    playMonsterDeathAnimation(callback) {
+    playMonsterDeathAnimation(callback: () => void): void {
+        // probably going to do a fade out
+        console.log(callback)
         throw new Error('playMonsterDeathAnimation is not implemented.')
     }
 
-    #createHealthBarComponent(scaleHealthBarByBackgroundImageByY = 1) {
-        this._healthBar = new HealthBar(this._scene, 34, 34);
+    createHealthBarComponent(scaleHealthBarByBackgroundImageByY: number = 1): void {
+        this.healthBar = new HealthBar(this.scene, 34, 34);
 
-        const monsterNameGameText = this._scene.add.text(30, 20, this._monsterDetails.name, {
+        const monsterNameGameText = this.scene.add.text(30, 20, this.monsterDetails.name, {
             fontFamily: CUSTOM_FONTS.POKEROGUE,
             color: '#7E3D3F',
             fontSize: '32px'
         });
 
-        const healthBarBackgroundImage = this._scene.add.image(0, 0, BATTLE_ASSET_KEYS.HEALTH_BAR_BACKGROUND)
+        const healthBarBackgroundImage = this.scene.add.image(0, 0, BATTLE_ASSET_KEYS.HEALTH_BAR_BACKGROUND)
             .setOrigin(0)
             .setScale(1, scaleHealthBarByBackgroundImageByY);
 
-        const monsterHealthBarLevelText = this._scene.add.text(monsterNameGameText.width + 35, 23, `L${this.level}`, {
+        const monsterHealthBarLevelText = this.scene.add.text(monsterNameGameText.width + 35, 23, `L${this.level}`, {
             fontFamily: CUSTOM_FONTS.POKEROGUE,
             color: '#ED474B',
             fontSize: '28px',
-            fontWeight: 'bold'
+            //fontWeight: 'bold' TODO
         });
-        const monsterHpText = this._scene.add.text(30, 54, 'HP', {
+        const monsterHpText = this.scene.add.text(30, 54, 'HP', {
             fontFamily: CUSTOM_FONTS.POKEROGUE,
             color: '#FF6505',
             fontSize: '24px',
             fontStyle: 'italic',
-            fontWeight: 'bold'
+            //fontWeight: 'bold' TODO
         });
 
-        this._phaserHealthBarGameContainer = this._scene.add.container(0, 0, [
+        this.phaserHealthBarGameContainer = this.scene.add.container(0, 0, [
             healthBarBackgroundImage,
             monsterNameGameText,
-            this._healthBar.container,
+            this.healthBar.container,
             monsterHealthBarLevelText,
             monsterHpText
         ]).setAlpha(0);

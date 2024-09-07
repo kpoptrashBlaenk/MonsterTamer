@@ -3,41 +3,33 @@ import {SCENE_KEYS} from "./scene-keys.ts";
 import {TITLE_ASSET_KEYS, UI_ASSET_KEYS} from "../../assets/asset-keys.ts";
 import {CUSTOM_FONTS} from "../../assets/font-keys.ts";
 import {Controls} from "../../utils/controls.ts";
-import {DIRECTION} from "../../common/direction.ts";
+import {Direction, DIRECTION} from "../../common/direction.ts";
 import {exhaustiveGuard} from "../../utils/guard.ts";
+import {Coordinate} from "../../types/typedef.ts";
 
-/** @type {Phaser.Types.GameObjects.Text.TextStyle} */
-export const MENU_TEXT_STYLE = Object.freeze({
+export const MENU_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
     fontFamily: CUSTOM_FONTS.POKEROGUE,
-    color: '#4D4A49',
+    color: '4D4A49',
     fontSize: '35px'
 })
 
-const PLAYER_INPUT_CURSOR_POSITION = Object.freeze({
+const PLAYER_INPUT_CURSOR_POSITION: Coordinate = Object.freeze({
     x: 170,
     y: 41
 })
 
-/**
- * @typedef {keyof typeof MAIN_MENU_OPTIONS} MainMenuOptions
- */
-
-/** @enum {MainMenuOptions} */
 const MAIN_MENU_OPTIONS = Object.freeze({
     NEW_GAME: 'NEW_GAME',
     CONTINUE: 'CONTINUE',
     OPTIONS: 'OPTIONS',
 })
+export type MainMenuOptions = keyof typeof MAIN_MENU_OPTIONS
 
 export class TitleScene extends Phaser.Scene {
-    /** @type {Phaser.Types.GameObjects.Image} */
-    #mainMenuCursorPhaserImageGameObject;
-    /** @type {Controls} */
-    #controls;
-    /** @type {MainMenuOptions} */
-    #selectedMenuOption;
-    /** @type {boolean} */
-    #isContinueButtonEnabled
+    private mainMenuCursorPhaserImageGameObject: Phaser.GameObjects.Image;
+    private controls: Controls;
+    private selectedMenuOption: MainMenuOptions;
+    private isContinueButtonEnabled: boolean;
 
     constructor() {
         super({
@@ -46,8 +38,8 @@ export class TitleScene extends Phaser.Scene {
     }
 
     create() {
-        this.#selectedMenuOption = MAIN_MENU_OPTIONS.NEW_GAME;
-        this.#isContinueButtonEnabled = false;
+        this.selectedMenuOption = MAIN_MENU_OPTIONS.NEW_GAME;
+        this.isContinueButtonEnabled = false;
 
         // Create Images
         this.add.image(0, 0, TITLE_ASSET_KEYS.BACKGROUND).setOrigin(0).setScale(0.58)
@@ -55,21 +47,21 @@ export class TitleScene extends Phaser.Scene {
         this.add.image(this.scale.width / 2, 150, TITLE_ASSET_KEYS.TITLE).setScale(0.55).setAlpha(0.5)
 
         // Create Menu
-        const menuBgWidth = 500;
-        const menuBg = this.add.image(125, 0, UI_ASSET_KEYS.MENU_BACKGROUND).setOrigin(0).setScale(2.4, 2);
-        const menuBgContainer = this.add.container(0, 0, [menuBg]);
-        const newGameText = this.add.text(menuBgWidth / 2, 40, 'New Game', MENU_TEXT_STYLE).setOrigin(0.5);
-        const continueText = this.add.text(menuBgWidth / 2, 90, 'Continue', MENU_TEXT_STYLE).setOrigin(0.5);
-        if(!this.#isContinueButtonEnabled) {
+        const menuBgWidth: number = 500;
+        const menuBg: Phaser.GameObjects.Image = this.add.image(125, 0, UI_ASSET_KEYS.MENU_BACKGROUND).setOrigin(0).setScale(2.4, 2);
+        const menuBgContainer: Phaser.GameObjects.Container = this.add.container(0, 0, [menuBg]);
+        const newGameText: Phaser.GameObjects.Text = this.add.text(menuBgWidth / 2, 40, 'New Game', MENU_TEXT_STYLE).setOrigin(0.5);
+        const continueText: Phaser.GameObjects.Text = this.add.text(menuBgWidth / 2, 90, 'Continue', MENU_TEXT_STYLE).setOrigin(0.5);
+        if(!this.isContinueButtonEnabled) {
             continueText.setAlpha(0.5)
         }
-        const optionsText = this.add.text(menuBgWidth / 2, 140, 'Options', MENU_TEXT_STYLE).setOrigin(0.5);
-        const menuContainer = this.add.container(0, 0, [menuBgContainer, newGameText, continueText, optionsText]);
+        const optionsText: Phaser.GameObjects.Text = this.add.text(menuBgWidth / 2, 140, 'Options', MENU_TEXT_STYLE).setOrigin(0.5);
+        const menuContainer: Phaser.GameObjects.Container = this.add.container(0, 0, [menuBgContainer, newGameText, continueText, optionsText]);
         menuContainer.setPosition(this.scale.width / 2 - menuBgWidth / 2, 300)
 
         // Create Cursor
-        this.#mainMenuCursorPhaserImageGameObject = this.add.image(PLAYER_INPUT_CURSOR_POSITION.x, PLAYER_INPUT_CURSOR_POSITION.y, UI_ASSET_KEYS.CURSOR).setOrigin(0.5).setScale(2.5);
-        menuContainer.add(this.#mainMenuCursorPhaserImageGameObject)
+        this.mainMenuCursorPhaserImageGameObject = this.add.image(PLAYER_INPUT_CURSOR_POSITION.x, PLAYER_INPUT_CURSOR_POSITION.y, UI_ASSET_KEYS.CURSOR).setOrigin(0.5).setScale(2.5);
+        menuContainer.add(this.mainMenuCursorPhaserImageGameObject)
         this.add.tween({
             delay: 0,
             duration: 500,
@@ -79,105 +71,97 @@ export class TitleScene extends Phaser.Scene {
                 start: PLAYER_INPUT_CURSOR_POSITION.x,
                 to: PLAYER_INPUT_CURSOR_POSITION.x + 3
             },
-            targets: this.#mainMenuCursorPhaserImageGameObject
+            targets: this.mainMenuCursorPhaserImageGameObject
         })
 
         // Fade Effects
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-            if (this.#selectedMenuOption === MAIN_MENU_OPTIONS.NEW_GAME) {
+            if (this.selectedMenuOption === MAIN_MENU_OPTIONS.NEW_GAME) {
                 this.scene.start(SCENE_KEYS.BATTLE_SCENE)
                 return;
             }
-            if (this.#selectedMenuOption === MAIN_MENU_OPTIONS.CONTINUE) {
+            if (this.selectedMenuOption === MAIN_MENU_OPTIONS.CONTINUE) {
                 this.scene.start(SCENE_KEYS.BATTLE_SCENE)
                 return;
             }
-            if (this.#selectedMenuOption === MAIN_MENU_OPTIONS.OPTIONS) {
+            if (this.selectedMenuOption === MAIN_MENU_OPTIONS.OPTIONS) {
                 this.scene.start(SCENE_KEYS.BATTLE_SCENE)
-                return;
+                //return;
             }
         })
 
         // Create Controls
-        this.#controls = new Controls(this);
+        this.controls = new Controls(this);
     }
 
     update() {
-        if (this.#controls.getIsInputLocked()) {
+        if (this.controls.getIsInputLocked()) {
             return;
         }
 
-        const wasSpaceKeyPressed = this.#controls.wasSpaceKeyPressed()
+        const wasSpaceKeyPressed = this.controls.wasSpaceKeyPressed()
         if (wasSpaceKeyPressed) {
             this.cameras.main.fadeOut(500,0,0,0)
-            this.#controls.setLockInput(true)
+            this.controls.setLockInput(true)
             return;
         }
 
-        let selectedDirection = this.#controls.getDirectionKeyJustDown()
+        let selectedDirection: Direction = this.controls.getDirectionKeyJustDown()
         if (selectedDirection !== DIRECTION.NONE) {
-            this.#moveMenuSelectCursor(selectedDirection)
+            this.moveMenuSelectCursor(selectedDirection)
         }
     }
 
-    /**
-     *
-     * @param {DIRECTION} direction
-     */
-    #moveMenuSelectCursor(direction) {
-        this.#updateSelectedOptionFromInput(direction)
-        switch (this.#selectedMenuOption) {
+    moveMenuSelectCursor(direction: Direction): void {
+        this.updateSelectedOptionFromInput(direction)
+        switch (this.selectedMenuOption) {
             case MAIN_MENU_OPTIONS.NEW_GAME:
-                this.#mainMenuCursorPhaserImageGameObject.setY(PLAYER_INPUT_CURSOR_POSITION.y)
+                this.mainMenuCursorPhaserImageGameObject.setY(PLAYER_INPUT_CURSOR_POSITION.y)
                 break;
             case MAIN_MENU_OPTIONS.CONTINUE:
-                this.#mainMenuCursorPhaserImageGameObject.setY(91)
+                this.mainMenuCursorPhaserImageGameObject.setY(91)
                 break;
             case MAIN_MENU_OPTIONS.OPTIONS:
-                this.#mainMenuCursorPhaserImageGameObject.setY(141)
+                this.mainMenuCursorPhaserImageGameObject.setY(141)
                 break;
             default:
-                exhaustiveGuard(this.#selectedMenuOption)
+                exhaustiveGuard(this.selectedMenuOption)
         }
     }
 
-    /**
-     *
-     * @param {DIRECTION} direction
-     */
-    #updateSelectedOptionFromInput(direction) {
+    updateSelectedOptionFromInput(direction: Direction): void {
         switch (direction) {
             case DIRECTION.UP:
-                if (this.#selectedMenuOption === MAIN_MENU_OPTIONS.NEW_GAME) {
+                if (this.selectedMenuOption === MAIN_MENU_OPTIONS.NEW_GAME) {
                     return;
                 }
-                if (this.#selectedMenuOption === MAIN_MENU_OPTIONS.CONTINUE) {
-                    this.#selectedMenuOption = MAIN_MENU_OPTIONS.NEW_GAME
+                if (this.selectedMenuOption === MAIN_MENU_OPTIONS.CONTINUE) {
+                    this.selectedMenuOption = MAIN_MENU_OPTIONS.NEW_GAME
                     return;
                 }
-                if (this.#selectedMenuOption === MAIN_MENU_OPTIONS.OPTIONS && !this.#isContinueButtonEnabled) {
-                    this.#selectedMenuOption = MAIN_MENU_OPTIONS.NEW_GAME
+                if (this.selectedMenuOption === MAIN_MENU_OPTIONS.OPTIONS && !this.isContinueButtonEnabled) {
+                    this.selectedMenuOption = MAIN_MENU_OPTIONS.NEW_GAME
                     return;
                 }
-                if (this.#selectedMenuOption === MAIN_MENU_OPTIONS.OPTIONS) {
-                    this.#selectedMenuOption = MAIN_MENU_OPTIONS.CONTINUE
+                if (this.selectedMenuOption === MAIN_MENU_OPTIONS.OPTIONS) {
+                    this.selectedMenuOption = MAIN_MENU_OPTIONS.CONTINUE
                     return;
                 }
                 return;
             case DIRECTION.DOWN:
-                if (this.#selectedMenuOption === MAIN_MENU_OPTIONS.NEW_GAME && !this.#isContinueButtonEnabled) {
-                    this.#selectedMenuOption = MAIN_MENU_OPTIONS.OPTIONS
+                if (this.selectedMenuOption === MAIN_MENU_OPTIONS.NEW_GAME && !this.isContinueButtonEnabled) {
+                    this.selectedMenuOption = MAIN_MENU_OPTIONS.OPTIONS
                     return;
                 }
-                if (this.#selectedMenuOption === MAIN_MENU_OPTIONS.NEW_GAME) {
-                    this.#selectedMenuOption = MAIN_MENU_OPTIONS.CONTINUE
+                if (this.selectedMenuOption === MAIN_MENU_OPTIONS.NEW_GAME) {
+                    this.selectedMenuOption = MAIN_MENU_OPTIONS.CONTINUE
                     return;
                 }
-                if (this.#selectedMenuOption === MAIN_MENU_OPTIONS.CONTINUE) {
-                    this.#selectedMenuOption = MAIN_MENU_OPTIONS.OPTIONS
+                if (this.selectedMenuOption === MAIN_MENU_OPTIONS.CONTINUE) {
+                    this.selectedMenuOption = MAIN_MENU_OPTIONS.OPTIONS
                     return;
                 }
-                if (this.#selectedMenuOption === MAIN_MENU_OPTIONS.OPTIONS) {
+                if (this.selectedMenuOption === MAIN_MENU_OPTIONS.OPTIONS) {
                     return;
                 }
                 return;

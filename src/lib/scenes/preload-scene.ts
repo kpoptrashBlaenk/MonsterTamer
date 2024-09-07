@@ -10,7 +10,7 @@ import {
 import {CUSTOM_FONTS} from "../../assets/font-keys.ts";
 import {WebFontFileLoader} from "../../assets/web-font-file-loader.ts";
 import {DataUtils} from "../../utils/data-utils.ts";
-import {Animations} from "../../types/global.ts";
+import {Animations} from "../../types/global";
 
 export class PreloadScene extends Phaser.Scene {
     constructor() {
@@ -132,13 +132,13 @@ export class PreloadScene extends Phaser.Scene {
     }
 
     create() {
-        this.#createAnimations()
+        this.createAnimations()
         this.scene.start(SCENE_KEYS.TITLE_SCENE)
     }
 
-    #createAnimations() {
+    createAnimations() {
 
-        const animations = DataUtils.getAnimations(this);
+        const animations: Animations[] = DataUtils.getAnimations(this);
         animations.forEach((animation: Animations) => {
             const frames = animation.frames
                 ? this.anims.generateFrameNumbers(animation.assetKey, {frames: animation.frames})
