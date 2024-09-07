@@ -1,4 +1,10 @@
+/esbuild
+/node_modules
+log.js
+
+
 .idea
-assets/images
-assets/.gitkeep
-/assets
+
+public/assets/images
+public/assets/.gitkeep
+/public/assets
