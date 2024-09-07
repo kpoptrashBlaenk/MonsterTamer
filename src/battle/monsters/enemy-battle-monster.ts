@@ -12,7 +12,7 @@ export class EnemyBattleMonster extends BattleMonster {
         super({...config, scaleHealthBarBackgroundImageByY: 0.8}, ENEMY_POSITION);
     }
 
-    playMonsterAppearAnimation(callback: () => void): void {
+    public playMonsterAppearAnimation(callback: () => void): void {
         const startXPosition: number = -100;
         const endXPosition: number = ENEMY_POSITION.x;
         this.phaserGameObject.setPosition(startXPosition, ENEMY_POSITION.y)
@@ -36,7 +36,7 @@ export class EnemyBattleMonster extends BattleMonster {
         })
     }
 
-    playMonsterHealthBarAppearAnimation(callback: () => void): void {
+    public playMonsterHealthBarAppearAnimation(callback: () => void): void {
         const startXPosition = -600;
         const endXPosition: number = this.phaserHealthBarGameContainer.x;
         this.phaserHealthBarGameContainer.setPosition(startXPosition, this.phaserHealthBarGameContainer.y)
@@ -60,7 +60,7 @@ export class EnemyBattleMonster extends BattleMonster {
         })
     }
 
-    playMonsterDeathAnimation(callback: () => void): void {
+    public playMonsterDeathAnimation(callback: () => void): void {
         const endYPosition: number = this.phaserGameObject.y - 400;
 
         if (this.skipBattleAnimations) {

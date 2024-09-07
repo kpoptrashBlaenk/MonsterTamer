@@ -13,11 +13,11 @@ export class Attack {
         this.attackGameObject = undefined;
     }
 
-    getGameObject(): Phaser.GameObjects.Sprite | Phaser.GameObjects.Container | undefined {
+    public getGameObject(): Phaser.GameObjects.Sprite | Phaser.GameObjects.Container | undefined {
         return this.attackGameObject;
     }
 
-    playAnimation(callback: () => void): void {
+    public playAnimation(callback: () => void): void {
         console.log(callback)
         throw new Error("Parent class can't have animations")
     }

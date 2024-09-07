@@ -22,21 +22,22 @@ export const DATA_MANAGER_STORE_KEYS = Object.freeze({
     PLACEHOLDER: 'PLACEHOLDER'
 })
 
-class DataManager extends Phaser.Events.EventEmitter{
+class DataManager extends Phaser.Events.EventEmitter {
     private readonly store: Phaser.Data.DataManager;
+
     constructor() {
         super();
         this.store = new Phaser.Data.DataManager(this);
         this.updateDataManager(initialState)
     }
 
-    get getStore(): Phaser.Data.DataManager {
+    public get getStore(): Phaser.Data.DataManager {
         return this.store;
     }
 
-    updateDataManager(data: GlobalState): void {
+    private updateDataManager(data: GlobalState): void {
         this.store.set({
-            [DATA_MANAGER_STORE_KEYS.PLACEHOLDER] : data.placeholder
+            [DATA_MANAGER_STORE_KEYS.PLACEHOLDER]: data.placeholder
         })
     }
 }

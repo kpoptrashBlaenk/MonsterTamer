@@ -20,7 +20,7 @@ export class StateMachine {
         this.states = new Map();
     }
 
-    get currentStateName(): string | undefined {
+    public get currentStateName(): string | undefined {
         return this.currentState?.name;
     }
 
@@ -30,7 +30,7 @@ export class StateMachine {
         }
     }
 
-    setState(name: string | undefined): void {
+    public setState(name: string | undefined): void {
         const methodName = 'setState';
 
         if (!this.states.has(name as string)) {
@@ -58,7 +58,7 @@ export class StateMachine {
         this.isChangingState = false;
     }
 
-    addState(state: State): void {
+    public addState(state: State): void {
         this.states.set(state.name, {
             name: state.name,
             onEnter: this.context ? state.onEnter?.bind(this.context) : state.onEnter

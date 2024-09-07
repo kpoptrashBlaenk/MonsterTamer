@@ -12,29 +12,29 @@ export class Controls {
         this.lockPlayerInput = false;
     }
 
-    getIsInputLocked(): boolean {
+    public getIsInputLocked(): boolean {
         return this.lockPlayerInput;
     }
 
-    setLockInput(value: boolean): void {
+    public setLockInput(value: boolean): void {
         this.lockPlayerInput = value;
     }
 
-    wasSpaceKeyPressed(): boolean {
+    public wasSpaceKeyPressed(): boolean {
         if (this.cursorKeys === undefined) {
             return false;
         }
         return Phaser.Input.Keyboard.JustDown(this.cursorKeys.space);
     }
 
-    wasBackKeyPressed(): boolean {
+    public wasBackKeyPressed(): boolean {
         if (this.cursorKeys === undefined) {
             return false;
         }
         return Phaser.Input.Keyboard.JustDown(this.cursorKeys.shift);
     }
 
-    getDirectionKeyPressedDown(): Direction {
+    public getDirectionKeyPressedDown(): Direction {
         if (this.cursorKeys === undefined) {
             return DIRECTION.NONE;
         }
@@ -53,7 +53,7 @@ export class Controls {
         return selectedDirection;
     }
 
-    getDirectionKeyJustDown(): Direction {
+    public getDirectionKeyJustDown(): Direction {
         if (this.cursorKeys === undefined) {
             return DIRECTION.NONE;
         }

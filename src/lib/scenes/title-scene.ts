@@ -121,7 +121,7 @@ export class TitleScene extends Phaser.Scene {
         }
     }
 
-    moveMenuSelectCursor(direction: Direction): void {
+    private moveMenuSelectCursor(direction: Direction): void {
         this.updateSelectedOptionFromInput(direction)
         switch (this.selectedMenuOption) {
             case MAIN_MENU_OPTIONS.NEW_GAME:
@@ -138,7 +138,7 @@ export class TitleScene extends Phaser.Scene {
         }
     }
 
-    updateSelectedOptionFromInput(direction: Direction): void {
+    private updateSelectedOptionFromInput(direction: Direction): void {
         switch (direction) {
             case DIRECTION.UP:
                 if (this.selectedMenuOption === MAIN_MENU_OPTIONS.NEW_GAME) {

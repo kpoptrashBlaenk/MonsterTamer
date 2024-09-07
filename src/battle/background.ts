@@ -13,7 +13,7 @@ export class Background {
             .setAlpha(0)
     }
 
-    showForest() {
+    public showForest() {
         this.backgroundGameObject.setTexture(BATTLE_BACKGROUND_ASSET_KEYS.FOREST)
             .setAlpha(1)
     }

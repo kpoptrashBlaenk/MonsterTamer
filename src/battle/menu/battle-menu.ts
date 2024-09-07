@@ -71,14 +71,14 @@ export class BattleMenu {
         this.hideMainBattleMenu()
     }
 
-    get selectedAttack(): number | undefined {
+    public get selectedAttack(): number | undefined {
         if (this.activeBattleMenu === ACTIVE_BATTLE_MENU.BATTLE_MOVE_SELECT) {
             return this.selectedAttackIndex;
         }
         return undefined;
     }
 
-    showMainBattleMenu(): void {
+    public showMainBattleMenu(): void {
         this.activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_MAIN
         this.battleTextGameObjectLine1.setText('What should')
         this.mainBattleMenuPhaserContainerGameObject.setAlpha(1)
@@ -90,23 +90,23 @@ export class BattleMenu {
         this.selectedAttackIndex = undefined;
     }
 
-    hideMainBattleMenu(): void {
+    public hideMainBattleMenu(): void {
         this.mainBattleMenuPhaserContainerGameObject.setAlpha(0)
         this.battleTextGameObjectLine1.setAlpha(0)
         this.battleTextGameObjectLine2.setAlpha(0)
     }
 
-    showMonsterAttackSubMenu(): void {
+    public showMonsterAttackSubMenu(): void {
         this.activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_MOVE_SELECT
         this.moveSelectionSubMenuPhaserContainerGameObject.setAlpha(1)
     }
 
-    hideMonsterAttackSubMenu(): void {
+    public hideMonsterAttackSubMenu(): void {
         this.activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_MAIN;
         this.moveSelectionSubMenuPhaserContainerGameObject.setAlpha(0)
     }
 
-    playInputCursorAnimation(): void {
+    public playInputCursorAnimation(): void {
         this.userInputCursorPhaserImageObject.setPosition(
             this.battleTextGameObjectLine1.displayWidth + this.userInputCursorPhaserImageObject.displayWidth * 3.5,
             this.userInputCursorPhaserImageObject.y
@@ -115,12 +115,12 @@ export class BattleMenu {
         this.userInputCursorPhaserTween.restart()
     }
 
-    hideInputCursor(): void {
+    public hideInputCursor(): void {
         this.userInputCursorPhaserImageObject.setAlpha(0)
         this.userInputCursorPhaserTween.pause()
     }
 
-    handlePlayerInput(input: Direction | 'OK' | 'CANCEL'): void {
+    public handlePlayerInput(input: Direction | 'OK' | 'CANCEL'): void {
         if (this.queuedMessageAnimationPlaying && input === 'OK') {
             return;
         }
@@ -152,7 +152,7 @@ export class BattleMenu {
         this.moveSubBattleMenuCursor()
     }
 
-    updateInfoPaneMessagesAndWaitForInput(messages: string[], callback: () => void, skipAnimation: boolean = false): void {
+    public updateInfoPaneMessagesAndWaitForInput(messages: string[], callback: () => void, skipAnimation: boolean = false): void {
         this.queuedInfoPanelMessages = messages;
         this.queuedInfoPanelCallback = callback;
         this.queuedMessagesSkipAnimation = skipAnimation;
@@ -160,7 +160,7 @@ export class BattleMenu {
         this.updateInfoPaneWithMessage()
     }
 
-    updateInfoPaneMessagesNoInputRequired(message: string, callback: () => void, skipAnimation: boolean = false): void {
+    public updateInfoPaneMessagesNoInputRequired(message: string, callback: () => void, skipAnimation: boolean = false): void {
         if(skipAnimation) { console.log('') } // only here because IDE is crying that skiAnimation is not being used
 
         this.battleTextGameObjectLine1.setText('').setAlpha(1)

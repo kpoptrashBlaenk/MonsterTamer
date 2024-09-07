@@ -136,7 +136,7 @@ export class PreloadScene extends Phaser.Scene {
         this.scene.start(SCENE_KEYS.TITLE_SCENE)
     }
 
-    createAnimations() {
+    private createAnimations() {
 
         const animations: Animations[] = DataUtils.getAnimations(this);
         animations.forEach((animation: Animations) => {
