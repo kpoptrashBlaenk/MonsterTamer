@@ -25,6 +25,7 @@ export const UI_ASSET_KEYS = Object.freeze({
     CURSOR: 'CURSOR',
     MENU_BACKGROUND: 'MENU_BACKGROUND',
 })
+export type UIAssetKeys = keyof typeof UI_ASSET_KEYS
 
 export const DATA_ASSET_KEYS = Object.freeze({
     ATTACKS: 'ATTACKS',

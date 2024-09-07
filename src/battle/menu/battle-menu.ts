@@ -161,7 +161,7 @@ export class BattleMenu {
     }
 
     updateInfoPaneMessagesNoInputRequired(message: string, callback: () => void, skipAnimation: boolean = false): void {
-        console.log(skipAnimation) // only here because IDE is crying that skiAnimation is not being used
+        if(skipAnimation) { console.log('') } // only here because IDE is crying that skiAnimation is not being used
 
         this.battleTextGameObjectLine1.setText('').setAlpha(1)
         this.battleTextGameObjectLine1.setText(message)

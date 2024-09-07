@@ -6,6 +6,7 @@ import {Controls} from "../../utils/controls.ts";
 import {Direction, DIRECTION} from "../../common/direction.ts";
 import {exhaustiveGuard} from "../../utils/guard.ts";
 import {Coordinate} from "../../types/typedef.ts";
+import {NineSlice} from "../../utils/nine-slice.ts";
 
 export const MENU_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
     fontFamily: CUSTOM_FONTS.POKEROGUE,
@@ -23,18 +24,27 @@ const MAIN_MENU_OPTIONS = Object.freeze({
     CONTINUE: 'CONTINUE',
     OPTIONS: 'OPTIONS',
 })
-export type MainMenuOptions = keyof typeof MAIN_MENU_OPTIONS
+type MainMenuOptions = keyof typeof MAIN_MENU_OPTIONS
 
 export class TitleScene extends Phaser.Scene {
     private mainMenuCursorPhaserImageGameObject: Phaser.GameObjects.Image;
     private controls: Controls;
     private selectedMenuOption: MainMenuOptions;
     private isContinueButtonEnabled: boolean;
+    private nineSliceMenu: NineSlice;
 
     constructor() {
         super({
             key: SCENE_KEYS.TITLE_SCENE,
         });
+    }
+
+    init() {
+        this.nineSliceMenu = new NineSlice({
+            cornerCutSize: 32,
+            textureManager: this.sys.textures,
+            assetKey: UI_ASSET_KEYS.MENU_BACKGROUND
+        })
     }
 
     create() {
@@ -48,8 +58,7 @@ export class TitleScene extends Phaser.Scene {
 
         // Create Menu
         const menuBgWidth: number = 500;
-        const menuBg: Phaser.GameObjects.Image = this.add.image(125, 0, UI_ASSET_KEYS.MENU_BACKGROUND).setOrigin(0).setScale(2.4, 2);
-        const menuBgContainer: Phaser.GameObjects.Container = this.add.container(0, 0, [menuBg]);
+        const menuBgContainer: Phaser.GameObjects.Container = this.nineSliceMenu.createNineSliceContainer(this, menuBgWidth, 200);
         const newGameText: Phaser.GameObjects.Text = this.add.text(menuBgWidth / 2, 40, 'New Game', MENU_TEXT_STYLE).setOrigin(0.5);
         const continueText: Phaser.GameObjects.Text = this.add.text(menuBgWidth / 2, 90, 'Continue', MENU_TEXT_STYLE).setOrigin(0.5);
         if(!this.isContinueButtonEnabled) {
