@@ -12,11 +12,11 @@ export class Controls {
         this.lockPlayerInput = false;
     }
 
-    public getIsInputLocked(): boolean {
+    public get isInputLocked(): boolean {
         return this.lockPlayerInput;
     }
 
-    public setLockInput(value: boolean): void {
+    public set lockInput(value: boolean) {
         this.lockPlayerInput = value;
     }
 

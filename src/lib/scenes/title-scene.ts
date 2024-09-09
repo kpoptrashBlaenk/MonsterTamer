@@ -8,7 +8,7 @@ import {exhaustiveGuard} from "../../utils/guard.ts";
 import {Coordinate} from "../../types/typedef.ts";
 import {NineSlice} from "../../utils/nine-slice.ts";
 
-export const MENU_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
+const MENU_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
     fontFamily: CUSTOM_FONTS.POKEROGUE,
     color: '4D4A49',
     fontSize: '35px'
@@ -43,7 +43,7 @@ export class TitleScene extends Phaser.Scene {
         this.nineSliceMenu = new NineSlice({
             cornerCutSize: 32,
             textureManager: this.sys.textures,
-            assetKey: UI_ASSET_KEYS.MENU_BACKGROUND
+            assetKeys: [UI_ASSET_KEYS.MENU_BACKGROUND]
         })
     }
 
@@ -58,7 +58,7 @@ export class TitleScene extends Phaser.Scene {
 
         // Create Menu
         const menuBgWidth: number = 500;
-        const menuBgContainer: Phaser.GameObjects.Container = this.nineSliceMenu.createNineSliceContainer(this, menuBgWidth, 200);
+        const menuBgContainer: Phaser.GameObjects.Container = this.nineSliceMenu.createNineSliceContainer(this, menuBgWidth, 200, UI_ASSET_KEYS.MENU_BACKGROUND);
         const newGameText: Phaser.GameObjects.Text = this.add.text(menuBgWidth / 2, 40, 'New Game', MENU_TEXT_STYLE).setOrigin(0.5);
         const continueText: Phaser.GameObjects.Text = this.add.text(menuBgWidth / 2, 90, 'Continue', MENU_TEXT_STYLE).setOrigin(0.5);
         if(!this.isContinueButtonEnabled) {
@@ -90,11 +90,12 @@ export class TitleScene extends Phaser.Scene {
                 return;
             }
             if (this.selectedMenuOption === MAIN_MENU_OPTIONS.CONTINUE) {
+                // TODO change this when save state created
                 this.scene.start(SCENE_KEYS.BATTLE_SCENE)
                 return;
             }
             if (this.selectedMenuOption === MAIN_MENU_OPTIONS.OPTIONS) {
-                this.scene.start(SCENE_KEYS.BATTLE_SCENE)
+                this.scene.start(SCENE_KEYS.OPTIONS_SCENE)
                 //return;
             }
         })
@@ -104,14 +105,14 @@ export class TitleScene extends Phaser.Scene {
     }
 
     update() {
-        if (this.controls.getIsInputLocked()) {
+        if (this.controls.isInputLocked) {
             return;
         }
 
         const wasSpaceKeyPressed = this.controls.wasSpaceKeyPressed()
         if (wasSpaceKeyPressed) {
             this.cameras.main.fadeOut(500,0,0,0)
-            this.controls.setLockInput(true)
+            this.controls.lockInput = true;
             return;
         }
 
