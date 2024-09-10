@@ -11,6 +11,7 @@ import {CUSTOM_FONTS} from "../../assets/font-keys.ts";
 import {WebFontFileLoader} from "../../assets/web-font-file-loader.ts";
 import {DataUtils} from "../../utils/data-utils.ts";
 import {Animations} from "../../types/global";
+import {dataManager} from "../../utils/data-manager.ts";
 
 export class PreloadScene extends Phaser.Scene {
     constructor() {
@@ -78,7 +79,8 @@ export class PreloadScene extends Phaser.Scene {
     create() {
         this.createAnimations()
         // DEBUGGING: Choose what scene to start in (it should be TITLE_SCENE)
-        this.scene.start(SCENE_KEYS.OPTIONS_SCENE)
+        dataManager.loadData()
+        this.scene.start(SCENE_KEYS.BATTLE_SCENE)
     }
 
     private createAnimations() {

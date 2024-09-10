@@ -15,6 +15,6 @@ export function animateText(scene: Phaser.Scene, target: Phaser.GameObjects.Text
             }
         },
         repeat: length - 1,
-        delay: config?.delay || 50,
+        delay: config?.delay ?? 50,
     })
 }

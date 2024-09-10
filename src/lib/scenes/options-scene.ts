@@ -17,6 +17,7 @@ import {
 import {Controls} from "../../utils/controls.ts";
 import {DIRECTION, Direction} from "../../common/direction.ts";
 import {exhaustiveGuard} from "../../utils/guard.ts";
+import {DATA_MANAGER_STORE_KEYS, dataManager} from "../../utils/data-manager.ts";
 
 const OPTIONS_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
     fontFamily: CUSTOM_FONTS.POKEROGUE,
@@ -72,12 +73,13 @@ export class OptionsScene extends Phaser.Scene {
             textureManager: this.sys.textures,
             assetKeys: [UI_ASSET_KEYS.MENU_BACKGROUND, UI_ASSET_KEYS.MENU_BACKGROUND_GREEN, UI_ASSET_KEYS.MENU_BACKGROUND_PURPLE]
         })
-        this.selectedTextSpeedOption = TEXT_SPEED_OPTIONS.MID;
-        this.selectedBattleSceneOption = BATTLE_SCENE_OPTIONS.ON;
-        this.selectedSoundOption = SOUND_OPTIONS.ON;
-        this.selectedVolumeOption = 4;
-        this.selectedMenuColorOption = 0;
-        this.selectedOptionMenu = OPTION_MENU_OPTIONS.TEXT_SPEED;
+        this.selectedTextSpeedOption = dataManager.getStore.get(DATA_MANAGER_STORE_KEYS.OPTIONS_TEXT_SPEED)
+        this.selectedBattleSceneOption = dataManager.getStore.get(DATA_MANAGER_STORE_KEYS.OPTIONS_BATTLE_SCENE_ANIMATIONS)
+        this.selectedSoundOption = dataManager.getStore.get(DATA_MANAGER_STORE_KEYS.OPTIONS_SOUND)
+        this.selectedVolumeOption = dataManager.getStore.get(DATA_MANAGER_STORE_KEYS.OPTIONS_VOLUME)
+        this.selectedMenuColorOption = dataManager.getStore.get(DATA_MANAGER_STORE_KEYS.OPTIONS_MENU_COLOR)
+
+        this.selectedOptionMenu = OPTION_MENU_OPTIONS.TEXT_SPEED
     }
 
     create() {
@@ -173,7 +175,7 @@ export class OptionsScene extends Phaser.Scene {
         }
 
         if (this.controls.wasSpaceKeyPressed() && this.selectedOptionMenu === OPTION_MENU_OPTIONS.CLOSE) {
-            // TODO: Save Changes
+            this.updateOptionDataManager()
             this.controls.lockInput = true;
             this.cameras.main.fadeOut(500, 0, 0)
             return;
@@ -183,6 +185,17 @@ export class OptionsScene extends Phaser.Scene {
         if (selectedDirection !== DIRECTION.NONE) {
             this.moveOptionMenuCursor(selectedDirection)
         }
+    }
+
+    private updateOptionDataManager(): void {
+        dataManager.getStore.set({
+            [DATA_MANAGER_STORE_KEYS.OPTIONS_TEXT_SPEED]: this.selectedTextSpeedOption,
+            [DATA_MANAGER_STORE_KEYS.OPTIONS_BATTLE_SCENE_ANIMATIONS]: this.selectedBattleSceneOption,
+            [DATA_MANAGER_STORE_KEYS.OPTIONS_SOUND]: this.selectedSoundOption,
+            [DATA_MANAGER_STORE_KEYS.OPTIONS_VOLUME]: this.selectedVolumeOption,
+            [DATA_MANAGER_STORE_KEYS.OPTIONS_MENU_COLOR]: this.selectedMenuColorOption
+        })
+        dataManager.saveData()
     }
 
     private moveOptionMenuCursor(direction: Direction): void {

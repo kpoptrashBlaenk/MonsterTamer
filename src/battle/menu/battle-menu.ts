@@ -12,8 +12,8 @@ import {
 } from "../ui/battle-menu-options.ts";
 import {BATTLE_UI_TEXT_STYLE} from "../ui/battle-menu-config.ts";
 import {animateText} from "../../utils/text-utils.ts";
-import {SKIP_BATTLE_ANIMATIONS} from "../../config.ts";
 import {BattleMonster} from "../monsters/battle-monster.ts";
+import {dataManager} from "../../utils/data-manager.ts";
 
 const BATTLE_MENU_CURSOR_POSITION = Object.freeze({
     x: 42,
@@ -47,10 +47,10 @@ export class BattleMenu {
     private activePlayerMonster: BattleMonster;
     private userInputCursorPhaserImageObject: Phaser.GameObjects.Image;
     private userInputCursorPhaserTween: Phaser.Tweens.Tween;
-    private queuedMessagesSkipAnimation: boolean;
+    private readonly skipAnimations: boolean;
     private queuedMessageAnimationPlaying: boolean;
 
-    constructor(scene: Phaser.Scene, activePlayerMonster: BattleMonster) {
+    constructor(scene: Phaser.Scene, activePlayerMonster: BattleMonster, skipBattleAnimations: boolean = false) {
         this.scene = scene;
         this.activePlayerMonster = activePlayerMonster;
         this.activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_MAIN;
@@ -60,7 +60,7 @@ export class BattleMenu {
         this.queuedInfoPanelMessages = [];
         this.waitingForPlayerInput = false;
         this.selectedAttackIndex = undefined;
-        this.queuedMessagesSkipAnimation = false;
+        this.skipAnimations = skipBattleAnimations;
         this.queuedMessageAnimationPlaying = false;
         this.createMainInfoPane()
         this.createMainBattleMenu()
@@ -152,16 +152,15 @@ export class BattleMenu {
         this.moveSubBattleMenuCursor()
     }
 
-    public updateInfoPaneMessagesAndWaitForInput(messages: string[], callback: () => void, skipAnimation: boolean = false): void {
+    public updateInfoPaneMessagesAndWaitForInput(messages: string[], callback: () => void): void {
         this.queuedInfoPanelMessages = messages;
         this.queuedInfoPanelCallback = callback;
-        this.queuedMessagesSkipAnimation = skipAnimation;
 
         this.updateInfoPaneWithMessage()
     }
 
-    public updateInfoPaneMessagesNoInputRequired(message: string, callback: () => void, skipAnimation: boolean = false): void {
-        if(skipAnimation) { console.log('') } // only here because IDE is crying that skiAnimation is not being used
+    public updateInfoPaneMessagesNoInputRequired(message: string, callback: () => void): void {
+        if(this.skipAnimations) { console.log('') } // only here because IDE is crying that skiAnimation is not being used
 
         this.battleTextGameObjectLine1.setText('').setAlpha(1)
         this.battleTextGameObjectLine1.setText(message)
@@ -172,6 +171,7 @@ export class BattleMenu {
         }
 
         animateText(this.scene, this.battleTextGameObjectLine1, message, {
+            delay: dataManager.getAnimatedTextSpeed(),
             callback: () => {
                 this.waitingForPlayerInput = true;
             }
@@ -193,7 +193,7 @@ export class BattleMenu {
         }
 
         const messageToDisplay: string[] = (this.queuedInfoPanelMessages.shift() as string[] | undefined) || [];
-        if (this.queuedMessagesSkipAnimation) {
+        if (this.skipAnimations) {
             this.battleTextGameObjectLine1.setText(messageToDisplay)
             this.queuedMessageAnimationPlaying = false;
             this.waitingForPlayerInput = true;
@@ -203,6 +203,7 @@ export class BattleMenu {
 
         this.queuedMessageAnimationPlaying = true;
         animateText(this.scene, this.battleTextGameObjectLine1, messageToDisplay, {
+            delay: dataManager.getAnimatedTextSpeed(),
             callback: () => {
                 this.playInputCursorAnimation()
                 this.waitingForPlayerInput = true;
@@ -505,7 +506,7 @@ export class BattleMenu {
         if (this.selectedBattleMenuOption === BATTLE_MENU_OPTIONS.SWITCH) {
             this.updateInfoPaneMessagesAndWaitForInput(['You have no other monsters...'], () => {
                 this.switchToMainBattleMenu()
-            }, SKIP_BATTLE_ANIMATIONS)
+            })
             this.activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_SWITCH;
             return;
         }
@@ -513,7 +514,7 @@ export class BattleMenu {
         if (this.selectedBattleMenuOption === BATTLE_MENU_OPTIONS.ITEM) {
             this.updateInfoPaneMessagesAndWaitForInput(['Your bag is empty...'], () => {
                 this.switchToMainBattleMenu()
-            }, SKIP_BATTLE_ANIMATIONS)
+            })
             this.activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_ITEM;
             return;
         }
@@ -521,7 +522,7 @@ export class BattleMenu {
         if (this.selectedBattleMenuOption === BATTLE_MENU_OPTIONS.FLEE) {
             this.updateInfoPaneMessagesAndWaitForInput(["You can't flee..."], () => {
                 this.switchToMainBattleMenu()
-            }, SKIP_BATTLE_ANIMATIONS)
+            })
             this.activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_FLEE;
             return;
         }

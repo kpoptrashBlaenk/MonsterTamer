@@ -9,10 +9,11 @@ import {Background} from "../../battle/background.ts";
 import {EnemyBattleMonster} from "../../battle/monsters/enemy-battle-monster.ts";
 import {PlayerBattleMonster} from "../../battle/monsters/player-battle-monster.ts";
 import {StateMachine} from "../../utils/state-machine.ts";
-import {SKIP_BATTLE_ANIMATIONS} from "../../config.ts";
 import {ATTACK_TARGET, AttackManager} from "../../battle/attacks/attack-manager.ts";
 import {sceneTransition} from "../../utils/scene-transition.ts";
 import {Controls} from "../../utils/controls.ts";
+import {DATA_MANAGER_STORE_KEYS, dataManager} from "../../utils/data-manager.ts";
+import {BATTLE_SCENE_OPTIONS} from "../../common/options.ts";
 
 const BATTLE_STATES = Object.freeze({
     INTRO: 'INTRO',
@@ -34,6 +35,7 @@ export class BattleScene extends Phaser.Scene {
     private battleStateMachine: StateMachine
     private attackManager: AttackManager;
     private controls: Controls;
+    private skipAnimations: boolean;
 
     constructor() {
         super({
@@ -43,6 +45,13 @@ export class BattleScene extends Phaser.Scene {
 
     init() {
         this.activePlayerAttackIndex = -1;
+
+        const chosenBattleSeenOption: string = dataManager.getStore.get(DATA_MANAGER_STORE_KEYS.OPTIONS_BATTLE_SCENE_ANIMATIONS)
+        if (chosenBattleSeenOption === undefined || chosenBattleSeenOption === BATTLE_SCENE_OPTIONS.ON) {
+            this.skipAnimations = false;
+            return;
+        }
+        this.skipAnimations = true;
     }
 
     create() {
@@ -62,7 +71,7 @@ export class BattleScene extends Phaser.Scene {
                     maxHp: 25,
                     attackIds: [1, 2],
                     baseAttack: 25
-                }, skipBattleAnimations: SKIP_BATTLE_ANIMATIONS
+                }, skipBattleAnimations: this.skipAnimations
             }
         );
         this.activePlayerMonster = new PlayerBattleMonster({
@@ -76,18 +85,18 @@ export class BattleScene extends Phaser.Scene {
                     maxHp: 25,
                     attackIds: [1, 2],
                     baseAttack: 15
-                }, skipBattleAnimations: SKIP_BATTLE_ANIMATIONS
+                }, skipBattleAnimations: this.skipAnimations
             }
         );
 
         // Create Battle Menu
-        this.battleMenu = new BattleMenu(this, this.activePlayerMonster);
+        this.battleMenu = new BattleMenu(this, this.activePlayerMonster, this.skipAnimations);
 
         // Add and then Set State Machine
         this.createBattleStateMachine()
 
         // Create Attack Manager
-        this.attackManager = new AttackManager(this, SKIP_BATTLE_ANIMATIONS);
+        this.attackManager = new AttackManager(this, this.skipAnimations);
 
         // Create Controls
         this.controls = new Controls(this);
@@ -157,7 +166,7 @@ export class BattleScene extends Phaser.Scene {
                         })
                     })
                 })
-            }, SKIP_BATTLE_ANIMATIONS)
+            })
     }
 
     private enemyAttack() {
@@ -178,7 +187,7 @@ export class BattleScene extends Phaser.Scene {
                         })
                     })
                 })
-            }, SKIP_BATTLE_ANIMATIONS)
+            })
     }
 
     private postBattleSequenceCheck() {
@@ -189,7 +198,7 @@ export class BattleScene extends Phaser.Scene {
                         this.battleStateMachine.setState(BATTLE_STATES.FINISHED)
                     })
                 })
-            }, SKIP_BATTLE_ANIMATIONS)
+            })
             return;
         }
 
@@ -200,7 +209,7 @@ export class BattleScene extends Phaser.Scene {
                         this.battleStateMachine.setState(BATTLE_STATES.FINISHED)
                     })
                 })
-            }, SKIP_BATTLE_ANIMATIONS)
+            })
             return;
         }
 
@@ -221,7 +230,7 @@ export class BattleScene extends Phaser.Scene {
             name: BATTLE_STATES.INTRO,
             onEnter: () => {
                 sceneTransition(this, {
-                    skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
+                    skipSceneTransition: this.skipAnimations,
                     callback: () => {
                         this.battleStateMachine.setState(BATTLE_STATES.PRE_BATTLE_INFO)
                     }
@@ -240,7 +249,7 @@ export class BattleScene extends Phaser.Scene {
                             this.time.delayedCall(500, () => {
                                 this.battleStateMachine.setState(BATTLE_STATES.BRING_OUT_MONSTER)
                             })
-                        }, SKIP_BATTLE_ANIMATIONS)
+                        })
                 })
             }
         })
@@ -255,7 +264,7 @@ export class BattleScene extends Phaser.Scene {
                         this.time.delayedCall(500, () => {
                             this.battleStateMachine.setState(BATTLE_STATES.PLAYER_INPUT)
                         })
-                    }, SKIP_BATTLE_ANIMATIONS)
+                    })
                 this.activePlayerMonster.playMonsterAppearAnimation(() => {
                     this.activePlayerMonster.playMonsterHealthBarAppearAnimation(() => undefined)
                 })
@@ -309,7 +318,7 @@ export class BattleScene extends Phaser.Scene {
             onEnter: () => {
                 this.battleMenu.updateInfoPaneMessagesAndWaitForInput(['You got away safely'], () => {
                     this.battleStateMachine.setState(BATTLE_STATES.FINISHED)
-                }, SKIP_BATTLE_ANIMATIONS)
+                })
             }
         })
 
