@@ -366,7 +366,7 @@ export class OptionsScene extends Phaser.Scene {
     }
 
     private updateTextSpeedGameObjects(): void {
-        const textGameObjects: Phaser.GameObjects.Text[] = this.textSpeedOptionTextGameObjects.getChildren();
+        const textGameObjects: Phaser.GameObjects.Text[] = this.textSpeedOptionTextGameObjects.getChildren() as Phaser.GameObjects.Text[];
         textGameObjects.forEach((obj) => {
             obj.setColor(TEXT_FONT_COLORS.NOT_SELECTED)
         })
@@ -416,7 +416,7 @@ export class OptionsScene extends Phaser.Scene {
     }
 
     private updateBattleSceneGameObjects(): void {
-        const textGameObjects: Phaser.GameObjects.Text[] = this.battleSceneOptionTextGameObjects.getChildren();
+        const textGameObjects: Phaser.GameObjects.Text[] = this.battleSceneOptionTextGameObjects.getChildren() as Phaser.GameObjects.Text[];
         textGameObjects.forEach((obj) => {
             obj.setColor(TEXT_FONT_COLORS.NOT_SELECTED)
         })
@@ -461,7 +461,7 @@ export class OptionsScene extends Phaser.Scene {
     }
 
     private updateSoundGameObjects(): void {
-        const textGameObjects: Phaser.GameObjects.Text[] = this.soundOptionTextGameObjects.getChildren();
+        const textGameObjects: Phaser.GameObjects.Text[] = this.soundOptionTextGameObjects.getChildren() as Phaser.GameObjects.Text[];
         textGameObjects.forEach((obj) => {
             obj.setColor(TEXT_FONT_COLORS.NOT_SELECTED)
         })
@@ -484,14 +484,14 @@ export class OptionsScene extends Phaser.Scene {
             if (this.selectedVolumeOption === 0) {
                 return;
             }
-            this.selectedVolumeOption = this.selectedVolumeOption - 1;
+            this.selectedVolumeOption = this.selectedVolumeOption - 1 as VolumeOptions;
         }
 
         if (direction === DIRECTION.RIGHT) {
             if (this.selectedVolumeOption === 4) {
                 return;
             }
-            this.selectedVolumeOption = this.selectedVolumeOption + 1;
+            this.selectedVolumeOption = this.selectedVolumeOption + 1 as VolumeOptions;
         }
     }
 
@@ -528,7 +528,7 @@ export class OptionsScene extends Phaser.Scene {
                 this.selectedMenuColorOption = 2
                 return;
             }
-            this.selectedMenuColorOption = this.selectedMenuColorOption - 1;
+            this.selectedMenuColorOption = this.selectedMenuColorOption - 1 as MenuColorOptions;
         }
 
         if (direction === DIRECTION.RIGHT) {
@@ -536,7 +536,7 @@ export class OptionsScene extends Phaser.Scene {
                 this.selectedMenuColorOption = 0;
                 return;
             }
-            this.selectedMenuColorOption = this.selectedMenuColorOption + 1;
+            this.selectedMenuColorOption = this.selectedMenuColorOption + 1 as MenuColorOptions;
         }
     }
 
