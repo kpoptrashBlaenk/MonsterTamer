@@ -4,6 +4,7 @@ import {PreloadScene} from "./lib/scenes/preload-scene.ts";
 import {TitleScene} from "./lib/scenes/title-scene.js";
 import {BattleScene} from "./lib/scenes/battle-scene.ts";
 import {OptionsScene} from "./lib/scenes/options-scene.ts";
+import { TestScene } from './lib/scenes/test-scene.ts';
 
 // Launch game instance
 const game = new Phaser.Game({
@@ -23,4 +24,5 @@ game.scene.add(SCENE_KEYS.PRELOAD_SCENE, PreloadScene)
 game.scene.add(SCENE_KEYS.BATTLE_SCENE, TitleScene)
 game.scene.add(SCENE_KEYS.BATTLE_SCENE, OptionsScene)
 game.scene.add(SCENE_KEYS.BATTLE_SCENE, BattleScene)
+game.scene.add(SCENE_KEYS.BATTLE_SCENE, TestScene)
 game.scene.start(SCENE_KEYS.PRELOAD_SCENE)
