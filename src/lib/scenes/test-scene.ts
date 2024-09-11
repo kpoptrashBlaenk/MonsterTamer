@@ -1,5 +1,4 @@
 import Phaser from '../phaser.ts'
-import TweakPane from '../tweakpane.ts';
 import {Background} from '../../battle/background.ts';
 import {ATTACK_KEYS, AttackKeys} from '../../battle/attacks/attack-keys.ts';
 import {IceShard} from '../../battle/attacks/ice-shard.ts';
@@ -38,6 +37,7 @@ export class TestScene extends Phaser.Scene {
     }
 
     private addDataGui(): void {
+        const pane = new TweakPane.Pane()
     }
 
     private updateAttackGameObjectPosition(param: 'x' | 'y', value: number): void {
