@@ -37,7 +37,52 @@ export class TestScene extends Phaser.Scene {
     }
 
     private addDataGui(): void {
-        const pane = new TweakPane.Pane()
+        const pane = new TweakPane.Pane();
+
+
+        const monstersFolder = pane.addFolder({
+            title: 'Monsters',
+            expanded: true,
+        })
+
+        const playerMonsterFolder = monstersFolder.addFolder({
+            title: 'Player',
+            expanded: true,
+        })
+        playerMonsterFolder.addBinding(this.playerMonster, 'x', {
+            min: 0,
+            max: 1024,
+            step: 1,
+            readonly: false
+        })
+        playerMonsterFolder.addBinding(this.playerMonster, 'y', {
+            min: 0,
+            max: 576,
+            step: 1,
+            readonly: false
+        })
+
+        const enemyMonsterFolder = monstersFolder.addFolder({
+            title: 'Enemy',
+            expanded: true,
+        })
+        enemyMonsterFolder.addBinding(this.enemyMonster, 'x', {
+            min: 0,
+            max: 1024,
+            step: 1,
+            readonly: false
+        })
+        enemyMonsterFolder.addBinding(this.enemyMonster, 'y', {
+            min: 0,
+            max: 576,
+            step: 1,
+            readonly: false
+        })
+
+        const attacksFolder = pane.addFolder({
+            title: 'Attacks',
+            expanded: true,
+        })
     }
 
     private updateAttackGameObjectPosition(param: 'x' | 'y', value: number): void {
