@@ -1,3 +1,5 @@
+// noinspection JSUnusedGlobalSymbols
+
 import Phaser from '../phaser.ts';
 import {SCENE_KEYS} from "./scene-keys.ts";
 import {
@@ -67,7 +69,7 @@ export class BattleScene extends Phaser.Scene {
                     assetKey: MONSTER_ASSET_KEYS.CARNODUSK,
                     assetFrame: 0,
                     currentLevel: 5,
-                    currentHp: 25,
+                    currentHp: 20,
                     maxHp: 25,
                     attackIds: [1, 2],
                     baseAttack: 25
@@ -100,10 +102,15 @@ export class BattleScene extends Phaser.Scene {
 
         // Create Controls
         this.controls = new Controls(this);
+        this.controls.lockInput = true;
     }
 
     update() {
         this.battleStateMachine.update()
+
+        if(this.controls.isInputLocked) {
+            return;
+        }
 
         const wasSpaceKeyPressed: boolean =  this.controls.wasSpaceKeyPressed();
 
@@ -244,6 +251,7 @@ export class BattleScene extends Phaser.Scene {
                 // Wait for enemy monster to appear on the screen and notify player about the wild monster
                 this.activeEnemyMonster.playMonsterAppearAnimation(() => {
                     this.activeEnemyMonster.playMonsterHealthBarAppearAnimation(() => undefined)
+                    this.controls.lockInput = false;
                     this.battleMenu.updateInfoPaneMessagesAndWaitForInput(
                         [`Wild ${this.activeEnemyMonster.name} appeared`], () => {
                             this.time.delayedCall(500, () => {
