@@ -28,7 +28,7 @@ export class Slash extends Attack {
         ]).setAlpha(0)
     }
 
-    public playAnimation(callback: () => void): void {
+    public playAnimation(callback?: () => void): void {
         if (this.isAnimationPlaying) {
             return;
         }

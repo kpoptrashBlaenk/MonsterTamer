@@ -79,10 +79,71 @@ export class TestScene extends Phaser.Scene {
             readonly: false
         })
 
+        const attacksFolderParams = {
+            attack: this.selectedAttack,
+            x: 745,
+            y: 120
+        }
+
         const attacksFolder = pane.addFolder({
             title: 'Attacks',
             expanded: true,
         })
+
+        attacksFolder.addBinding(attacksFolderParams, 'attack', {
+            options: {
+                [ATTACK_KEYS.SLASH]: ATTACK_KEYS.SLASH,
+                [ATTACK_KEYS.ICE_SHARD]: ATTACK_KEYS.ICE_SHARD
+            }
+        }).on('change', (ev: any) => {
+            if (ev.value === ATTACK_KEYS.SLASH) {
+                this.selectedAttack = ATTACK_KEYS.SLASH
+                attacksFolderParams.x = this.slashAttack.getGameObject()?.x as number
+                attacksFolderParams.y = this.slashAttack.getGameObject()?.y as number
+                attacksFolder.refresh()
+                return;
+            }
+            if (ev.value === ATTACK_KEYS.ICE_SHARD) {
+                this.selectedAttack = ATTACK_KEYS.ICE_SHARD
+                attacksFolderParams.x = this.iceShardAttack.getGameObject()?.x as number
+                attacksFolderParams.y = this.iceShardAttack.getGameObject()?.y as number
+                attacksFolder.refresh()
+                return;
+            }
+        })
+
+        attacksFolder.addBinding(attacksFolderParams, 'x', {
+            min: 0,
+            max: 1024,
+            step: 1,
+            readonly: false
+        }).on('change', (ev: any) => {
+            this.updateAttackGameObjectPosition('x', ev.value)
+        })
+        attacksFolder.addBinding(attacksFolderParams, 'y', {
+            min: 0,
+            max: 576,
+            step: 1,
+            readonly: false
+        }).on('change', (ev: any) => {
+            this.updateAttackGameObjectPosition('y', ev.value)
+        })
+
+        const playAttackButton = attacksFolder.addButton({
+            title: 'Play'
+        })
+        playAttackButton.on('click', () => {
+            if (this.selectedAttack === ATTACK_KEYS.SLASH) {
+                this.slashAttack.playAnimation()
+                return;
+            }
+
+            if (this.selectedAttack === ATTACK_KEYS.ICE_SHARD) {
+                this.iceShardAttack.playAnimation()
+                return;
+            }
+        })
+
     }
 
     private updateAttackGameObjectPosition(param: 'x' | 'y', value: number): void {
@@ -96,6 +157,7 @@ export class TestScene extends Phaser.Scene {
                 return;
             }
         }
+        console.log(this.iceShardAttack.getGameObject())
         if (this.selectedAttack === ATTACK_KEYS.SLASH) {
             this.slashAttack.getGameObject()?.setY(value);
             return;
