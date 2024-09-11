@@ -31,6 +31,7 @@ export class BattleMonster {
         ).setAlpha(0);
 
         this.createHealthBarComponent(config.scaleHealthBarBackgroundImageByY)
+        this.healthBar.setMeterPercentage(this.currentHealth / this.maxHealth)
 
         this.monsterDetails.attackIds.forEach(attackId => {
             const monsterAttack = DataUtils.getMonsterAttack(this.scene, attackId);
