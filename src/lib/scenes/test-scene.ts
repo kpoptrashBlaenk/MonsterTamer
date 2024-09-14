@@ -28,6 +28,7 @@ export class TestScene extends Phaser.Scene {
 
         this.playerMonster = this.add.image(256, 316, MONSTER_ASSET_KEYS.IGUANIGNITE, 0).setFlipX(true)
         this.enemyMonster = this.add.image(768, 144, MONSTER_ASSET_KEYS.CARNODUSK, 0).setFlipX(false)
+        makeDraggable(this.playerMonster);
         makeDraggable(this.enemyMonster);
 
         this.iceShardAttack = new IceShard(this, {x: 256, y: 344});
@@ -38,7 +39,6 @@ export class TestScene extends Phaser.Scene {
 
     private addDataGui(): void {
         const pane = new TweakPane.Pane();
-
 
         const monstersFolder = pane.addFolder({
             title: 'Monsters',
@@ -79,16 +79,15 @@ export class TestScene extends Phaser.Scene {
             readonly: false
         })
 
+        const attacksFolder = pane.addFolder({
+            title: 'Attacks',
+            expanded: true,
+        })
         const attacksFolderParams = {
             attack: this.selectedAttack,
             x: 745,
             y: 120
         }
-
-        const attacksFolder = pane.addFolder({
-            title: 'Attacks',
-            expanded: true,
-        })
 
         attacksFolder.addBinding(attacksFolderParams, 'attack', {
             options: {
