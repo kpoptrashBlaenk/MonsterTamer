@@ -3,6 +3,8 @@ import {CUSTOM_FONTS} from "../../assets/font-keys.ts";
 import {UI_ASSET_KEYS} from "../../assets/asset-keys.ts";
 import {DIRECTION, Direction} from "../../common/direction.ts";
 import {exhaustiveGuard} from "../../utils/guard.ts";
+import {DATA_MANAGER_STORE_KEYS, dataManager} from "../../utils/data-manager.ts";
+import {MENU_COLOR} from "./menu-config.ts";
 
 export const MENU_OPTIONS = Object.freeze({
     MONSTERDEX: 'MONSTERDEX',
@@ -59,7 +61,7 @@ export class Menu {
         this.userInputCursor.setScale(2)
         this.container.add(this.userInputCursor)
 
-        //this.hide()
+        this.hide()
     }
 
     public get getIsVisible(): boolean {
@@ -130,11 +132,36 @@ export class Menu {
 
     private createGraphics(): Phaser.GameObjects.Graphics {
         const g = this.scene.add.graphics()
-        g.fillStyle(0x32454c, 1)
+        const menuColor = this.getMenuColorsFromDataManager()
+
+        g.fillStyle(menuColor.main, 1)
         g.fillRect(1, 0, this.width - 1, this.height - 1)
-        g.lineStyle(8, 0x6d9aa8, 1)
+        g.lineStyle(8, menuColor.border, 1)
         g.strokeRect(0, 0, this.width, this.height)
         g.setAlpha(0.9)
         return g
+    }
+
+    private getMenuColorsFromDataManager(): { main: number, border: number } {
+        const chosenMenuColor = dataManager.getStore.get(DATA_MANAGER_STORE_KEYS.OPTIONS_MENU_COLOR)
+        if (chosenMenuColor === 'undefined') {
+            return MENU_COLOR[1]
+        }
+
+        switch (chosenMenuColor) {
+            case 0:
+                return MENU_COLOR[1]
+            case 1:
+                return MENU_COLOR[2]
+            case 2:
+                return MENU_COLOR[3]
+            default:
+                exhaustiveGuard(chosenMenuColor as never)
+        }
+
+        return {
+            main: 0x32454c,
+            border: 0x6d9aa8
+        }
     }
 }

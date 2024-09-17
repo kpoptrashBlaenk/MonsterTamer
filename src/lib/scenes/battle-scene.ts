@@ -14,7 +14,7 @@ import {sceneTransition} from "../../utils/scene-transition.ts";
 import {Controls} from "../../utils/controls.ts";
 import {DATA_MANAGER_STORE_KEYS, dataManager} from "../../utils/data-manager.ts";
 import {BATTLE_SCENE_OPTIONS} from "../../common/options.ts";
-import {Menu} from "../../battle/menu/settings-menu.ts";
+import {Menu} from "../../battle/menu/menu.ts";
 
 const BATTLE_STATES = Object.freeze({
     INTRO: 'INTRO',
@@ -121,7 +121,7 @@ export class BattleScene extends Phaser.Scene {
 
             if (this.menu.getSelectedMenuOption === 'SAVE') {
                 dataManager.saveData()
-                // TODO: show message showing that game progress have been saved
+                // TODO: show message showing that game progress have been saved and actually save stuff because dataManager is not far enough for now
                 return
             }
             if (this.menu.getSelectedMenuOption === 'EXIT') {
