@@ -20,6 +20,7 @@ interface GlobalState {
         volume: VolumeOptions;
         menuColor: MenuColorOptions;
     }
+    gameStarted: boolean;
 }
 
 const initialState: GlobalState = {
@@ -29,7 +30,8 @@ const initialState: GlobalState = {
         sound: SOUND_OPTIONS.ON,
         volume: 4,
         menuColor: 0
-    }
+    },
+    gameStarted: false,
 }
 
 export const DATA_MANAGER_STORE_KEYS = Object.freeze({
@@ -38,6 +40,7 @@ export const DATA_MANAGER_STORE_KEYS = Object.freeze({
     OPTIONS_SOUND: 'OPTIONS_SOUND',
     OPTIONS_VOLUME: 'OPTIONS_VOLUME',
     OPTIONS_MENU_COLOR: 'OPTIONS_MENU_COLOR',
+    GAME_STARTED: 'GAME_STARTED',
 })
 
 class DataManager extends Phaser.Events.EventEmitter {
@@ -101,6 +104,17 @@ class DataManager extends Phaser.Events.EventEmitter {
         }
     }
 
+    public startNewGame() {
+        // get existing data, keep settings data, then erase data
+        const existingData = {...this.dataManagerDataToGlobalStateObject()}
+        // existingData.player.position = {...initialState.player.position} for erasing data
+        existingData.gameStarted = initialState.gameStarted
+
+        this.store.reset()
+        this.updateDataManager(existingData)
+        this.saveData()
+    }
+
     private dataManagerDataToGlobalStateObject(): GlobalState {
         return {
             options: {
@@ -109,7 +123,8 @@ class DataManager extends Phaser.Events.EventEmitter {
                 sound: this.getStore.get(DATA_MANAGER_STORE_KEYS.OPTIONS_SOUND),
                 volume: this.getStore.get(DATA_MANAGER_STORE_KEYS.OPTIONS_VOLUME),
                 menuColor: this.getStore.get(DATA_MANAGER_STORE_KEYS.OPTIONS_MENU_COLOR),
-            }
+            },
+            gameStarted: this.getStore.get(DATA_MANAGER_STORE_KEYS.GAME_STARTED)
         }
     }
 
@@ -119,7 +134,8 @@ class DataManager extends Phaser.Events.EventEmitter {
             [DATA_MANAGER_STORE_KEYS.OPTIONS_BATTLE_SCENE_ANIMATIONS]: data.options.battleScene,
             [DATA_MANAGER_STORE_KEYS.OPTIONS_SOUND]: data.options.sound,
             [DATA_MANAGER_STORE_KEYS.OPTIONS_VOLUME]: data.options.volume,
-            [DATA_MANAGER_STORE_KEYS.OPTIONS_MENU_COLOR]: data.options.menuColor
+            [DATA_MANAGER_STORE_KEYS.OPTIONS_MENU_COLOR]: data.options.menuColor,
+            [DATA_MANAGER_STORE_KEYS.GAME_STARTED]: data.gameStarted
         })
     }
 }

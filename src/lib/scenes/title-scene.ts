@@ -7,6 +7,7 @@ import {Direction, DIRECTION} from "../../common/direction.ts";
 import {exhaustiveGuard} from "../../utils/guard.ts";
 import {Coordinate} from "../../types/typedef.ts";
 import {NineSlice} from "../../utils/nine-slice.ts";
+import {DATA_MANAGER_STORE_KEYS, dataManager} from "../../utils/data-manager.ts";
 
 const MENU_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
     fontFamily: CUSTOM_FONTS.POKEROGUE,
@@ -49,7 +50,7 @@ export class TitleScene extends Phaser.Scene {
 
     create() {
         this.selectedMenuOption = MAIN_MENU_OPTIONS.NEW_GAME;
-        this.isContinueButtonEnabled = false;
+        this.isContinueButtonEnabled = dataManager.getStore.get(DATA_MANAGER_STORE_KEYS.GAME_STARTED) || false;
 
         // Create Images
         this.add.image(0, 0, TITLE_ASSET_KEYS.BACKGROUND).setOrigin(0).setScale(0.58)
@@ -86,6 +87,7 @@ export class TitleScene extends Phaser.Scene {
         // Fade Effects
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
             if (this.selectedMenuOption === MAIN_MENU_OPTIONS.NEW_GAME) {
+                dataManager.startNewGame()
                 this.scene.start(SCENE_KEYS.BATTLE_SCENE)
                 return;
             }

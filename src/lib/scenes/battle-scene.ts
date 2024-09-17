@@ -104,7 +104,12 @@ export class BattleScene extends Phaser.Scene {
         this.controls = new Controls(this);
         this.controls.lockInput = true;
 
+        // Create Ingame Menu
         this.menu = new Menu(this)
+
+        // Tell dataManager that the game started
+        // INFO: place this at the end of the first create scene that comes when starting a new game
+        dataManager.getStore.set(DATA_MANAGER_STORE_KEYS.GAME_STARTED, true)
     }
 
     update() {
@@ -183,7 +188,6 @@ export class BattleScene extends Phaser.Scene {
                 return
             }
             this.battleMenu.handlePlayerInput(selectedDirection)
-            return
         }
     }
 
