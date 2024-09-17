@@ -86,20 +86,17 @@ export class TitleScene extends Phaser.Scene {
 
         // Fade Effects
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-            if (this.selectedMenuOption === MAIN_MENU_OPTIONS.NEW_GAME) {
-                dataManager.startNewGame()
-                this.scene.start(SCENE_KEYS.BATTLE_SCENE)
-                return;
-            }
-            if (this.selectedMenuOption === MAIN_MENU_OPTIONS.CONTINUE) {
-                // TODO change this when save state created
-                this.scene.start(SCENE_KEYS.BATTLE_SCENE)
-                return;
-            }
             if (this.selectedMenuOption === MAIN_MENU_OPTIONS.OPTIONS) {
                 this.scene.start(SCENE_KEYS.OPTIONS_SCENE)
-                //return;
+                return;
             }
+
+            // This just resets game state, so regardless if New Game or Continue (only other option) we will go to first scene
+            if (this.selectedMenuOption === MAIN_MENU_OPTIONS.NEW_GAME) {
+                dataManager.startNewGame()
+            }
+
+            this.scene.start(SCENE_KEYS.BATTLE_SCENE)
         })
 
         // Create Controls
