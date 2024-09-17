@@ -16,6 +16,7 @@ import {sceneTransition} from "../../utils/scene-transition.ts";
 import {Controls} from "../../utils/controls.ts";
 import {DATA_MANAGER_STORE_KEYS, dataManager} from "../../utils/data-manager.ts";
 import {BATTLE_SCENE_OPTIONS} from "../../common/options.ts";
+import {Menu} from "../../battle/menu/settings-menu.ts";
 
 const BATTLE_STATES = Object.freeze({
     INTRO: 'INTRO',
@@ -38,6 +39,7 @@ export class BattleScene extends Phaser.Scene {
     private attackManager: AttackManager;
     private controls: Controls;
     private skipAnimations: boolean;
+    private menu: Menu
 
     constructor() {
         super({
@@ -103,16 +105,18 @@ export class BattleScene extends Phaser.Scene {
         // Create Controls
         this.controls = new Controls(this);
         this.controls.lockInput = true;
+
+        this.menu = new Menu(this)
     }
 
     update() {
         this.battleStateMachine.update()
 
-        if(this.controls.isInputLocked) {
+        if (this.controls.isInputLocked) {
             return;
         }
 
-        const wasSpaceKeyPressed: boolean =  this.controls.wasSpaceKeyPressed();
+        const wasSpaceKeyPressed: boolean = this.controls.wasSpaceKeyPressed();
 
         if (wasSpaceKeyPressed && (
             this.battleStateMachine.currentStateName === BATTLE_STATES.PRE_BATTLE_INFO ||
@@ -126,6 +130,16 @@ export class BattleScene extends Phaser.Scene {
 
         if (this.battleStateMachine.currentStateName !== BATTLE_STATES.PLAYER_INPUT) {
             return;
+        }
+
+        if (this.controls.wasEscapeKeyPressed()) {
+            if (this.menu.getIsVisible) {
+                this.menu.hide()
+                return
+            } else {
+                this.menu.show()
+                return
+            }
         }
 
         if (wasSpaceKeyPressed) {
@@ -145,7 +159,7 @@ export class BattleScene extends Phaser.Scene {
             this.battleMenu.hideMonsterAttackSubMenu()
             this.battleStateMachine.setState(BATTLE_STATES.ENEMY_INPUT)
         }
-        if ( this.controls.wasBackKeyPressed()) {
+        if (this.controls.wasBackKeyPressed()) {
             this.battleMenu.handlePlayerInput('CANCEL')
             return;
         }

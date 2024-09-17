@@ -80,7 +80,7 @@ export class PreloadScene extends Phaser.Scene {
         this.createAnimations()
         // DEBUGGING: Choose what scene to start in (it should be TITLE_SCENE)
         dataManager.loadData()
-        this.scene.start(SCENE_KEYS.TEST_SCENE)
+        this.scene.start(SCENE_KEYS.BATTLE_SCENE)
     }
 
     private createAnimations() {

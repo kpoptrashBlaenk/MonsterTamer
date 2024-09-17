@@ -4,11 +4,13 @@ import {Direction, DIRECTION} from "../common/direction.ts";
 export class Controls {
     private scene: Phaser.Scene;
     private readonly cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys | undefined;
+    private readonly escapeKey: Phaser.Input.Keyboard.Key | undefined;
     private lockPlayerInput: boolean;
 
     constructor(scene: Phaser.Scene) {
         this.scene = scene;
         this.cursorKeys = this.scene.input.keyboard?.createCursorKeys();
+        this.escapeKey = this.scene.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.ESC)
         this.lockPlayerInput = false;
     }
 
@@ -18,6 +20,13 @@ export class Controls {
 
     public set lockInput(value: boolean) {
         this.lockPlayerInput = value;
+    }
+
+    public wasEscapeKeyPressed(): boolean {
+        if (this.escapeKey === undefined) {
+            return false;
+        }
+        return Phaser.Input.Keyboard.JustDown(this.escapeKey);
     }
 
     public wasSpaceKeyPressed(): boolean {
