@@ -1,6 +1,8 @@
 import Phaser from "../../lib/phaser.ts";
 import {CUSTOM_FONTS} from "../../assets/font-keys.ts";
 import {UI_ASSET_KEYS} from "../../assets/asset-keys.ts";
+import {DIRECTION, Direction} from "../../common/direction.ts";
+import {exhaustiveGuard} from "../../utils/guard.ts";
 
 export const MENU_OPTIONS = Object.freeze({
     MONSTERDEX: 'MONSTERDEX',
@@ -20,17 +22,17 @@ const MENU_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
 
 export class Menu {
     private scene: Phaser.Scene
-    private padding: number
-    private width: number
-    private height: number
-    private graphics: Phaser.GameObjects.Graphics
+    private readonly padding: number
+    private readonly width: number
+    private readonly height: number
+    private readonly graphics: Phaser.GameObjects.Graphics
     private container: Phaser.GameObjects.Container
     private isVisible: boolean
-    private availableMenuOptions: MenuOptions[]
-    private menuOptionsTextGameObjects: Phaser.GameObjects.Text[]
+    private readonly availableMenuOptions: MenuOptions[]
+    private readonly menuOptionsTextGameObjects: Phaser.GameObjects.Text[]
     private selectedMenuOptionIndex: number
     private selectedMenuOption: MenuOptions
-    private userInputCursor: Phaser.GameObjects.Image
+    private readonly userInputCursor: Phaser.GameObjects.Image
 
     constructor(scene: Phaser.Scene) {
         this.scene = scene
@@ -76,7 +78,54 @@ export class Menu {
     public hide(): void {
         this.container.setAlpha(0)
         this.selectedMenuOptionIndex = 0
+        this.moveMenuCursor(DIRECTION.NONE)
         this.isVisible = false
+    }
+
+    public handlePlayerInput(input: Direction | 'OK' | 'CANCEL'): void {
+        if (input === 'CANCEL') {
+            this.hide()
+            return
+        }
+        if (input === 'OK') {
+            this.handleSelectedMenuOption()
+            return
+        }
+
+        this.moveMenuCursor(input)
+    }
+
+    private handleSelectedMenuOption(): void {
+        this.selectedMenuOption = this.availableMenuOptions[this.selectedMenuOptionIndex]
+    }
+
+    private moveMenuCursor(direction: Direction): void {
+        switch (direction) {
+            case DIRECTION.UP:
+                this.selectedMenuOptionIndex -= 1
+                if (this.selectedMenuOptionIndex < 0) {
+                    this.selectedMenuOptionIndex = this.availableMenuOptions.length - 1
+                }
+                break
+            case DIRECTION.DOWN:
+                this.selectedMenuOptionIndex += 1
+                if (this.selectedMenuOptionIndex > this.availableMenuOptions.length - 1) {
+                    this.selectedMenuOptionIndex = 0
+                }
+                break
+            case DIRECTION.RIGHT:
+            case DIRECTION.LEFT:
+                return
+            case DIRECTION.NONE:
+                break
+            default:
+                exhaustiveGuard(direction)
+        }
+
+        const x = 20 + this.padding
+        const y = 29 + this.padding + this.selectedMenuOptionIndex * 50
+
+        this.userInputCursor.setPosition(x, y)
     }
 
     private createGraphics(): Phaser.GameObjects.Graphics {

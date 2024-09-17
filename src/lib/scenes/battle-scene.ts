@@ -116,6 +116,20 @@ export class BattleScene extends Phaser.Scene {
 
         const wasSpaceKeyPressed: boolean = this.controls.wasSpaceKeyPressed();
 
+        if (wasSpaceKeyPressed && this.menu.getIsVisible) {
+            this.menu.handlePlayerInput('OK')
+
+            if (this.menu.getSelectedMenuOption === 'SAVE') {
+                dataManager.saveData()
+                // TODO: show message showing that game progress have been saved
+                return
+            }
+            if (this.menu.getSelectedMenuOption === 'EXIT') {
+                this.menu.hide()
+                return
+            }
+        }
+
         if (wasSpaceKeyPressed && (
             this.battleStateMachine.currentStateName === BATTLE_STATES.PRE_BATTLE_INFO ||
             this.battleStateMachine.currentStateName === BATTLE_STATES.POST_ATTACK_CHECK ||
@@ -162,9 +176,14 @@ export class BattleScene extends Phaser.Scene {
             return;
         }
 
-        let selectedDirection: Direction = this.controls.getDirectionKeyPressedDown()
+        let selectedDirection: Direction = this.controls.getDirectionKeyJustDown()
         if (selectedDirection !== DIRECTION.NONE) {
+            if (this.menu.getIsVisible) {
+                this.menu.handlePlayerInput(selectedDirection)
+                return
+            }
             this.battleMenu.handlePlayerInput(selectedDirection)
+            return
         }
     }
 
