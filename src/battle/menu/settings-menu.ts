@@ -1,5 +1,6 @@
 import Phaser from "../../lib/phaser.ts";
 import {CUSTOM_FONTS} from "../../assets/font-keys.ts";
+import {UI_ASSET_KEYS} from "../../assets/asset-keys.ts";
 
 export const MENU_OPTIONS = Object.freeze({
     MONSTERDEX: 'MONSTERDEX',
@@ -29,6 +30,7 @@ export class Menu {
     private menuOptionsTextGameObjects: Phaser.GameObjects.Text[]
     private selectedMenuOptionIndex: number
     private selectedMenuOption: MenuOptions
+    private userInputCursor: Phaser.GameObjects.Image
 
     constructor(scene: Phaser.Scene) {
         this.scene = scene
@@ -50,6 +52,10 @@ export class Menu {
             this.menuOptionsTextGameObjects.push(textObj)
             this.container.add(this.menuOptionsTextGameObjects)
         }
+
+        this.userInputCursor = this.scene.add.image(20 + this.padding, 29 + this.padding, UI_ASSET_KEYS.CURSOR_WHITE)
+        this.userInputCursor.setScale(2)
+        this.container.add(this.userInputCursor)
 
         //this.hide()
     }
