@@ -1,5 +1,3 @@
-// noinspection JSUnusedGlobalSymbols
-
 import Phaser from '../phaser.ts';
 import {SCENE_KEYS} from "./scene-keys.ts";
 import {
