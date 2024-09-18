@@ -65,6 +65,8 @@ export class BattleScene extends Phaser.Scene {
         this.activeEnemyMonster = new EnemyBattleMonster({
                 scene: this,
                 monsterDetails: {
+                    id: 2,
+                    monsterId: 2,
                     name: MONSTER_ASSET_KEYS.CARNODUSK,
                     assetKey: MONSTER_ASSET_KEYS.CARNODUSK,
                     assetFrame: 0,

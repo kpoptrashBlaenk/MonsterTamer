@@ -42,6 +42,8 @@ const initialState: GlobalState = {
     monsters: {
         inParty: [
             {
+                id: 1,
+                monsterId: 1,
                 name: MONSTER_ASSET_KEYS.IGUANIGNITE,
                 assetKey: MONSTER_ASSET_KEYS.IGUANIGNITE,
                 assetFrame: 0,
