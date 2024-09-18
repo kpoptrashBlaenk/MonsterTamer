@@ -9,6 +9,8 @@ export interface BattleMonsterConfig {
 }
 
 export interface Monster{
+    id: number,
+    monsterId: number,
     name: string,
     assetKey: MonsterAssetKeys,
     assetFrame?: string | number,
@@ -16,7 +18,7 @@ export interface Monster{
     maxHp: number,
     currentHp: number,
     baseAttack: number,
-    attackIds: number[]
+    attackIds: number[],
 }
 
 export interface Coordinate {

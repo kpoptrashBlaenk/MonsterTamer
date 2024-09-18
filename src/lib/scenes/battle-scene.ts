@@ -1,5 +1,3 @@
-// noinspection JSUnusedGlobalSymbols
-
 import Phaser from '../phaser.ts';
 import {SCENE_KEYS} from "./scene-keys.ts";
 import {
@@ -16,6 +14,7 @@ import {sceneTransition} from "../../utils/scene-transition.ts";
 import {Controls} from "../../utils/controls.ts";
 import {DATA_MANAGER_STORE_KEYS, dataManager} from "../../utils/data-manager.ts";
 import {BATTLE_SCENE_OPTIONS} from "../../common/options.ts";
+import {Menu} from "../../battle/menu/menu.ts";
 
 const BATTLE_STATES = Object.freeze({
     INTRO: 'INTRO',
@@ -38,6 +37,7 @@ export class BattleScene extends Phaser.Scene {
     private attackManager: AttackManager;
     private controls: Controls;
     private skipAnimations: boolean;
+    private menu: Menu
 
     constructor() {
         super({
@@ -65,29 +65,23 @@ export class BattleScene extends Phaser.Scene {
         this.activeEnemyMonster = new EnemyBattleMonster({
                 scene: this,
                 monsterDetails: {
+                    id: 2,
+                    monsterId: 2,
                     name: MONSTER_ASSET_KEYS.CARNODUSK,
                     assetKey: MONSTER_ASSET_KEYS.CARNODUSK,
-                    assetFrame: 0,
-                    currentLevel: 5,
-                    currentHp: 20,
-                    maxHp: 25,
-                    attackIds: [1, 2],
-                    baseAttack: 25
-                }, skipBattleAnimations: this.skipAnimations
-            }
-        );
-        this.activePlayerMonster = new PlayerBattleMonster({
-                scene: this,
-                monsterDetails: {
-                    name: MONSTER_ASSET_KEYS.IGUANIGNITE,
-                    assetKey: MONSTER_ASSET_KEYS.IGUANIGNITE,
                     assetFrame: 0,
                     currentLevel: 5,
                     currentHp: 25,
                     maxHp: 25,
                     attackIds: [1, 2],
-                    baseAttack: 15
+                    baseAttack: 5
                 }, skipBattleAnimations: this.skipAnimations
+            }
+        );
+        this.activePlayerMonster = new PlayerBattleMonster({
+                scene: this,
+                monsterDetails: dataManager.getStore.get(DATA_MANAGER_STORE_KEYS.MONSTERS_IN_PARTY)[0],
+                skipBattleAnimations: this.skipAnimations
             }
         );
 
@@ -103,16 +97,37 @@ export class BattleScene extends Phaser.Scene {
         // Create Controls
         this.controls = new Controls(this);
         this.controls.lockInput = true;
+
+        // Create Ingame Menu
+        this.menu = new Menu(this)
+
+        // Tell dataManager that the game started
+        // INFO: place this at the end of the first create scene that comes when starting a new game
+        dataManager.getStore.set(DATA_MANAGER_STORE_KEYS.GAME_STARTED, true)
     }
 
     update() {
         this.battleStateMachine.update()
 
-        if(this.controls.isInputLocked) {
+        if (this.controls.isInputLocked) {
             return;
         }
 
-        const wasSpaceKeyPressed: boolean =  this.controls.wasSpaceKeyPressed();
+        const wasSpaceKeyPressed: boolean = this.controls.wasSpaceKeyPressed();
+
+        if (wasSpaceKeyPressed && this.menu.getIsVisible) {
+            this.menu.handlePlayerInput('OK')
+
+            if (this.menu.getSelectedMenuOption === 'SAVE') {
+                dataManager.saveData()
+                // TODO: show message showing that game progress have been saved and actually save stuff because dataManager is not far enough for now
+                return
+            }
+            if (this.menu.getSelectedMenuOption === 'EXIT') {
+                this.menu.hide()
+                return
+            }
+        }
 
         if (wasSpaceKeyPressed && (
             this.battleStateMachine.currentStateName === BATTLE_STATES.PRE_BATTLE_INFO ||
@@ -126,6 +141,16 @@ export class BattleScene extends Phaser.Scene {
 
         if (this.battleStateMachine.currentStateName !== BATTLE_STATES.PLAYER_INPUT) {
             return;
+        }
+
+        if (this.controls.wasEscapeKeyPressed()) {
+            if (this.menu.getIsVisible) {
+                this.menu.hide()
+                return
+            } else {
+                this.menu.show()
+                return
+            }
         }
 
         if (wasSpaceKeyPressed) {
@@ -145,13 +170,17 @@ export class BattleScene extends Phaser.Scene {
             this.battleMenu.hideMonsterAttackSubMenu()
             this.battleStateMachine.setState(BATTLE_STATES.ENEMY_INPUT)
         }
-        if ( this.controls.wasBackKeyPressed()) {
+        if (this.controls.wasBackKeyPressed()) {
             this.battleMenu.handlePlayerInput('CANCEL')
             return;
         }
 
-        let selectedDirection: Direction = this.controls.getDirectionKeyPressedDown()
+        let selectedDirection: Direction = this.controls.getDirectionKeyJustDown()
         if (selectedDirection !== DIRECTION.NONE) {
+            if (this.menu.getIsVisible) {
+                this.menu.handlePlayerInput(selectedDirection)
+                return
+            }
             this.battleMenu.handlePlayerInput(selectedDirection)
         }
     }

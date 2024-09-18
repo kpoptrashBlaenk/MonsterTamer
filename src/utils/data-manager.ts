@@ -9,8 +9,14 @@ import {
 } from "../common/options.ts";
 import {TEXT_SPEED, TextSpeed} from "../config.ts";
 import {exhaustiveGuard} from "./guard.ts";
+import {Monster} from "../types/typedef.ts";
+import {MONSTER_ASSET_KEYS} from "../assets/asset-keys.ts";
 
 const LOCAL_STORAGE_KEY = 'MONSTER_TAMER_DATA';
+
+interface MonsterData {
+    inParty: Monster[]
+}
 
 interface GlobalState {
     options: {
@@ -20,6 +26,8 @@ interface GlobalState {
         volume: VolumeOptions;
         menuColor: MenuColorOptions;
     }
+    gameStarted: boolean;
+    monsters: MonsterData
 }
 
 const initialState: GlobalState = {
@@ -29,6 +37,23 @@ const initialState: GlobalState = {
         sound: SOUND_OPTIONS.ON,
         volume: 4,
         menuColor: 0
+    },
+    gameStarted: false,
+    monsters: {
+        inParty: [
+            {
+                id: 1,
+                monsterId: 1,
+                name: MONSTER_ASSET_KEYS.IGUANIGNITE,
+                assetKey: MONSTER_ASSET_KEYS.IGUANIGNITE,
+                assetFrame: 0,
+                currentLevel: 5,
+                currentHp: 25,
+                maxHp: 25,
+                attackIds: [1, 2],
+                baseAttack: 15
+            }
+        ]
     }
 }
 
@@ -38,6 +63,8 @@ export const DATA_MANAGER_STORE_KEYS = Object.freeze({
     OPTIONS_SOUND: 'OPTIONS_SOUND',
     OPTIONS_VOLUME: 'OPTIONS_VOLUME',
     OPTIONS_MENU_COLOR: 'OPTIONS_MENU_COLOR',
+    GAME_STARTED: 'GAME_STARTED',
+    MONSTERS_IN_PARTY: 'MONSTERS_IN_PARTY'
 })
 
 class DataManager extends Phaser.Events.EventEmitter {
@@ -101,6 +128,20 @@ class DataManager extends Phaser.Events.EventEmitter {
         }
     }
 
+    public startNewGame() {
+        // get existing data, keep settings data, then erase data
+        const existingData = {...this.dataManagerDataToGlobalStateObject()}
+        // existingData.player.position = {...initialState.player.position} for erasing data
+        existingData.gameStarted = initialState.gameStarted
+        existingData.monsters = {
+            inParty: {...initialState.monsters.inParty}
+        }
+
+        this.store.reset()
+        this.updateDataManager(existingData)
+        this.saveData()
+    }
+
     private dataManagerDataToGlobalStateObject(): GlobalState {
         return {
             options: {
@@ -109,6 +150,10 @@ class DataManager extends Phaser.Events.EventEmitter {
                 sound: this.getStore.get(DATA_MANAGER_STORE_KEYS.OPTIONS_SOUND),
                 volume: this.getStore.get(DATA_MANAGER_STORE_KEYS.OPTIONS_VOLUME),
                 menuColor: this.getStore.get(DATA_MANAGER_STORE_KEYS.OPTIONS_MENU_COLOR),
+            },
+            gameStarted: this.getStore.get(DATA_MANAGER_STORE_KEYS.GAME_STARTED),
+            monsters: {
+                inParty: {...this.getStore.get(DATA_MANAGER_STORE_KEYS.MONSTERS_IN_PARTY)}
             }
         }
     }
@@ -119,7 +164,10 @@ class DataManager extends Phaser.Events.EventEmitter {
             [DATA_MANAGER_STORE_KEYS.OPTIONS_BATTLE_SCENE_ANIMATIONS]: data.options.battleScene,
             [DATA_MANAGER_STORE_KEYS.OPTIONS_SOUND]: data.options.sound,
             [DATA_MANAGER_STORE_KEYS.OPTIONS_VOLUME]: data.options.volume,
-            [DATA_MANAGER_STORE_KEYS.OPTIONS_MENU_COLOR]: data.options.menuColor
+            [DATA_MANAGER_STORE_KEYS.OPTIONS_MENU_COLOR]: data.options.menuColor,
+            [DATA_MANAGER_STORE_KEYS.GAME_STARTED]: data.gameStarted,
+            [DATA_MANAGER_STORE_KEYS.MONSTERS_IN_PARTY]: data.monsters.inParty
+
         })
     }
 }
