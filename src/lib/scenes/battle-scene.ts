@@ -69,25 +69,17 @@ export class BattleScene extends Phaser.Scene {
                     assetKey: MONSTER_ASSET_KEYS.CARNODUSK,
                     assetFrame: 0,
                     currentLevel: 5,
-                    currentHp: 20,
+                    currentHp: 25,
                     maxHp: 25,
                     attackIds: [1, 2],
-                    baseAttack: 25
+                    baseAttack: 5
                 }, skipBattleAnimations: this.skipAnimations
             }
         );
         this.activePlayerMonster = new PlayerBattleMonster({
                 scene: this,
-                monsterDetails: {
-                    name: MONSTER_ASSET_KEYS.IGUANIGNITE,
-                    assetKey: MONSTER_ASSET_KEYS.IGUANIGNITE,
-                    assetFrame: 0,
-                    currentLevel: 5,
-                    currentHp: 25,
-                    maxHp: 25,
-                    attackIds: [1, 2],
-                    baseAttack: 15
-                }, skipBattleAnimations: this.skipAnimations
+                monsterDetails: dataManager.getStore.get(DATA_MANAGER_STORE_KEYS.MONSTERS_IN_PARTY)[0],
+                skipBattleAnimations: this.skipAnimations
             }
         );
 
