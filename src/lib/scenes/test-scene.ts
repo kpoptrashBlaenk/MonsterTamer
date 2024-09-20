@@ -1,11 +1,11 @@
-import Phaser from '../phaser.ts'
-import {Background} from '../../battle/background.ts';
-import {ATTACK_KEYS, AttackKeys} from '../../battle/attacks/attack-keys.ts';
-import {IceShard} from '../../battle/attacks/ice-shard.ts';
-import {Slash} from '../../battle/attacks/slash.ts';
-import {MONSTER_ASSET_KEYS} from '../../assets/asset-keys.ts';
-import {SCENE_KEYS} from './scene-keys.ts';
-import {makeDraggable} from '../../utils/draggable.ts';
+import Phaser from 'phaser'
+import {Background} from '../../battle/background';
+import {ATTACK_KEYS, AttackKeys} from '../../battle/attacks/attack-keys';
+import {IceShard} from '../../battle/attacks/ice-shard';
+import {Slash} from '../../battle/attacks/slash';
+import {MONSTER_ASSET_KEYS} from '../../assets/asset-keys';
+import {SCENE_KEYS} from './scene-keys';
+import {makeDraggable} from '../../utils/draggable';
 
 export class TestScene extends Phaser.Scene {
     private selectedAttack: AttackKeys;

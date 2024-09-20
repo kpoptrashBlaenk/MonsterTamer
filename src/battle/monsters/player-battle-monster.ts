@@ -1,6 +1,6 @@
-import {BattleMonster} from "./battle-monster.ts";
-import {CUSTOM_FONTS} from "../../assets/font-keys.ts";
-import {BattleMonsterConfig, Coordinate} from "../../types/typedef.ts";
+import {BattleMonster} from "./battle-monster";
+import {CUSTOM_FONTS} from "../../assets/font-keys";
+import {BattleMonsterConfig, Coordinate} from "../../types/typedef";
 
 const PLAYER_POSITION: Coordinate = Object.freeze({
     x: 256,

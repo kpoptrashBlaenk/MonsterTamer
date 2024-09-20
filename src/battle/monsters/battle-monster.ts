@@ -1,8 +1,8 @@
-import {HealthBar} from "../ui/health-bar.ts";
-import {BATTLE_ASSET_KEYS} from "../../assets/asset-keys.ts";
-import {DataUtils} from "../../utils/data-utils.ts";
-import {CUSTOM_FONTS} from "../../assets/font-keys.ts";
-import {BattleMonsterConfig, Coordinate, Monster, Attack} from "../../types/typedef.ts";
+import {HealthBar} from "../ui/health-bar";
+import {BATTLE_ASSET_KEYS} from "../../assets/asset-keys";
+import {DataUtils} from "../../utils/data-utils";
+import {CUSTOM_FONTS} from "../../assets/font-keys";
+import {BattleMonsterConfig, Coordinate, Monster, Attack} from "../../types/typedef";
 
 export class BattleMonster {
     protected scene: Phaser.Scene;

@@ -1,5 +1,5 @@
-import Phaser from '../lib/phaser.ts'
-import {BATTLE_BACKGROUND_ASSET_KEYS} from "../assets/asset-keys.ts";
+import Phaser from 'phaser'
+import {BATTLE_BACKGROUND_ASSET_KEYS} from "../assets/asset-keys";
 
 export class Background {
     private scene: Phaser.Scene;

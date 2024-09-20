@@ -1,10 +1,10 @@
-import Phaser from "../../lib/phaser.ts";
-import {CUSTOM_FONTS} from "../../assets/font-keys.ts";
-import {UI_ASSET_KEYS} from "../../assets/asset-keys.ts";
-import {DIRECTION, Direction} from "../../common/direction.ts";
-import {exhaustiveGuard} from "../../utils/guard.ts";
-import {DATA_MANAGER_STORE_KEYS, dataManager} from "../../utils/data-manager.ts";
-import {MENU_COLOR} from "./menu-config.ts";
+import Phaser from "phaser";
+import {CUSTOM_FONTS} from "../../assets/font-keys";
+import {UI_ASSET_KEYS} from "../../assets/asset-keys";
+import {DIRECTION, Direction} from "../../common/direction";
+import {exhaustiveGuard} from "../../utils/guard";
+import {DATA_MANAGER_STORE_KEYS, dataManager} from "../../utils/data-manager";
+import {MENU_COLOR} from "./menu-config";
 
 export const MENU_OPTIONS = Object.freeze({
     MONSTERDEX: 'MONSTERDEX',

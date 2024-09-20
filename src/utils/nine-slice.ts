@@ -1,4 +1,4 @@
-import {UIAssetKeys} from "../assets/asset-keys.ts";
+import {UIAssetKeys} from "../assets/asset-keys";
 
 const ASSET_CUT_FRAMES = Object.freeze({
     TL: 'TL',

@@ -1,6 +1,6 @@
-import {DATA_ASSET_KEYS} from "../assets/asset-keys.ts";
+import {DATA_ASSET_KEYS} from "../assets/asset-keys";
 import { Animations } from "../types/global";
-import { Attack } from "../types/typedef.ts";
+import { Attack } from "../types/typedef";
 
 export class DataUtils {
 

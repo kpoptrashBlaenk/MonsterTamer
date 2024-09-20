@@ -1,10 +1,10 @@
-import Phaser from './lib/phaser.js';
-import {SCENE_KEYS} from "./lib/scenes/scene-keys.ts";
-import {PreloadScene} from "./lib/scenes/preload-scene.ts";
-import {TitleScene} from "./lib/scenes/title-scene.js";
-import {BattleScene} from "./lib/scenes/battle-scene.ts";
-import {OptionsScene} from "./lib/scenes/options-scene.ts";
-import { TestScene } from './lib/scenes/test-scene.ts';
+import Phaser from 'phaser'
+import {SCENE_KEYS} from "./lib/scenes/scene-keys";
+import {PreloadScene} from "./lib/scenes/preload-scene";
+import {TitleScene} from "./lib/scenes/title-scene";
+import {BattleScene} from "./lib/scenes/battle-scene";
+import {OptionsScene} from "./lib/scenes/options-scene";
+import { TestScene } from './lib/scenes/test-scene';
 
 // Launch game instance
 const game = new Phaser.Game({

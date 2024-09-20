@@ -1,8 +1,8 @@
-import Phaser from "../phaser.ts";
-import {SCENE_KEYS} from "./scene-keys.ts";
-import {NineSlice} from "../../utils/nine-slice.ts";
-import {UI_ASSET_KEYS} from "../../assets/asset-keys.ts";
-import {CUSTOM_FONTS} from "../../assets/font-keys.ts";
+import Phaser from "phaser";
+import {SCENE_KEYS} from "./scene-keys";
+import {NineSlice} from "../../utils/nine-slice";
+import {UI_ASSET_KEYS} from "../../assets/asset-keys";
+import {CUSTOM_FONTS} from "../../assets/font-keys";
 import {
     BATTLE_SCENE_OPTIONS,
     BattleSceneOptions,
@@ -13,11 +13,11 @@ import {
     SoundOptions, TEXT_SPEED_OPTIONS,
     TextSpeedOptions,
     VolumeOptions
-} from "../../common/options.ts";
-import {Controls} from "../../utils/controls.ts";
-import {DIRECTION, Direction} from "../../common/direction.ts";
-import {exhaustiveGuard} from "../../utils/guard.ts";
-import {DATA_MANAGER_STORE_KEYS, dataManager} from "../../utils/data-manager.ts";
+} from "../../common/options";
+import {Controls} from "../../utils/controls";
+import {DIRECTION, Direction} from "../../common/direction";
+import {exhaustiveGuard} from "../../utils/guard";
+import {DATA_MANAGER_STORE_KEYS, dataManager} from "../../utils/data-manager";
 
 const OPTIONS_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
     fontFamily: CUSTOM_FONTS.POKEROGUE,

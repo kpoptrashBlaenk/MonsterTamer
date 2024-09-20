@@ -1,4 +1,4 @@
-import Phaser from '../lib/phaser.ts';
+import Phaser from 'phaser';
 
 export function makeDraggable(gameObject: Phaser.GameObjects.Image) {
     gameObject.setInteractive();

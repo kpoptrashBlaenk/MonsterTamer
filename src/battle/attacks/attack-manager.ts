@@ -1,7 +1,7 @@
-import {ATTACK_KEYS, AttackKeys} from "./attack-keys.ts";
-import {exhaustiveGuard} from "../../utils/guard.ts";
-import {IceShard} from "./ice-shard.ts";
-import {Slash} from "./slash.ts";
+import {ATTACK_KEYS, AttackKeys} from "./attack-keys";
+import {exhaustiveGuard} from "../../utils/guard";
+import {IceShard} from "./ice-shard";
+import {Slash} from "./slash";
 
 export const ATTACK_TARGET = Object.freeze({
     PLAYER: 'PLAYER',

@@ -1,5 +1,5 @@
-import {BattleMonster} from "./battle-monster.ts";
-import {BattleMonsterConfig, Coordinate} from "../../types/typedef.ts";
+import {BattleMonster} from "./battle-monster";
+import {BattleMonsterConfig, Coordinate} from "../../types/typedef";
 
 const ENEMY_POSITION: Coordinate = Object.freeze({
     x: 769,

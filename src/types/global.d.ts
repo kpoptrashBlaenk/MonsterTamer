@@ -1,4 +1,4 @@
-import {ATTACK_ASSET_KEYS} from "../assets/asset-keys.ts";
+import {ATTACK_ASSET_KEYS} from "../src/assets/asset-keys";
 
 export interface Animations {
     key: ATTACK_ASSET_KEYS,

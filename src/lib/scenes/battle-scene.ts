@@ -1,20 +1,20 @@
-import Phaser from '../phaser.ts';
-import {SCENE_KEYS} from "./scene-keys.ts";
+import Phaser from 'phaser';
+import {SCENE_KEYS} from "./scene-keys";
 import {
     MONSTER_ASSET_KEYS
-} from "../../assets/asset-keys.ts";
-import {BattleMenu} from "../../battle/menu/battle-menu.ts";
-import {Direction, DIRECTION} from "../../common/direction.ts";
-import {Background} from "../../battle/background.ts";
-import {EnemyBattleMonster} from "../../battle/monsters/enemy-battle-monster.ts";
-import {PlayerBattleMonster} from "../../battle/monsters/player-battle-monster.ts";
-import {StateMachine} from "../../utils/state-machine.ts";
-import {ATTACK_TARGET, AttackManager} from "../../battle/attacks/attack-manager.ts";
-import {sceneTransition} from "../../utils/scene-transition.ts";
-import {Controls} from "../../utils/controls.ts";
-import {DATA_MANAGER_STORE_KEYS, dataManager} from "../../utils/data-manager.ts";
-import {BATTLE_SCENE_OPTIONS} from "../../common/options.ts";
-import {Menu} from "../../battle/menu/menu.ts";
+} from "../../assets/asset-keys";
+import {BattleMenu} from "../../battle/menu/battle-menu";
+import {Direction, DIRECTION} from "../../common/direction";
+import {Background} from "../../battle/background";
+import {EnemyBattleMonster} from "../../battle/monsters/enemy-battle-monster";
+import {PlayerBattleMonster} from "../../battle/monsters/player-battle-monster";
+import {StateMachine} from "../../utils/state-machine";
+import {ATTACK_TARGET, AttackManager} from "../../battle/attacks/attack-manager";
+import {sceneTransition} from "../../utils/scene-transition";
+import {Controls} from "../../utils/controls";
+import {DATA_MANAGER_STORE_KEYS, dataManager} from "../../utils/data-manager";
+import {BATTLE_SCENE_OPTIONS} from "../../common/options";
+import {Menu} from "../../battle/menu/menu";
 
 const BATTLE_STATES = Object.freeze({
     INTRO: 'INTRO',

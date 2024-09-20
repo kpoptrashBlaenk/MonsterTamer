@@ -1,4 +1,4 @@
-import {Coordinate} from "../../types/typedef.ts";
+import {Coordinate} from "../../types/typedef";
 
 export class Attack {
     protected scene: Phaser.Scene;

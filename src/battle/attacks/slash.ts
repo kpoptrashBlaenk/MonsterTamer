@@ -1,6 +1,6 @@
-import {Attack} from "./attack.ts";
-import {ATTACK_ASSET_KEYS} from "../../assets/asset-keys.ts";
-import {Coordinate} from "../../types/typedef.ts";
+import {Attack} from "./attack";
+import {ATTACK_ASSET_KEYS} from "../../assets/asset-keys";
+import {Coordinate} from "../../types/typedef";
 
 export class Slash extends Attack {
     protected attackGameObject: Phaser.GameObjects.Container;

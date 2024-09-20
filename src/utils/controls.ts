@@ -1,5 +1,5 @@
-import Phaser from "../lib/phaser.ts";
-import {Direction, DIRECTION} from "../common/direction.ts";
+import Phaser from "phaser";
+import {Direction, DIRECTION} from "../common/direction";
 
 export class Controls {
     private scene: Phaser.Scene;

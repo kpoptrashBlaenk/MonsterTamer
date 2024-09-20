@@ -1,5 +1,5 @@
-import Phaser from '../../lib/phaser.ts'
-import {HEALTH_BAR_ASSET_KEYS} from "../../assets/asset-keys.ts";
+import Phaser from 'phaser'
+import {HEALTH_BAR_ASSET_KEYS} from "../../assets/asset-keys";
 
 interface Options {
     duration?: number;

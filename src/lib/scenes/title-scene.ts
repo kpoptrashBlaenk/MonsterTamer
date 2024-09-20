@@ -1,13 +1,13 @@
-import Phaser from "../phaser.ts";
-import {SCENE_KEYS} from "./scene-keys.ts";
-import {TITLE_ASSET_KEYS, UI_ASSET_KEYS} from "../../assets/asset-keys.ts";
-import {CUSTOM_FONTS} from "../../assets/font-keys.ts";
-import {Controls} from "../../utils/controls.ts";
-import {Direction, DIRECTION} from "../../common/direction.ts";
-import {exhaustiveGuard} from "../../utils/guard.ts";
-import {Coordinate} from "../../types/typedef.ts";
-import {NineSlice} from "../../utils/nine-slice.ts";
-import {DATA_MANAGER_STORE_KEYS, dataManager} from "../../utils/data-manager.ts";
+import Phaser from "phaser";
+import {SCENE_KEYS} from "./scene-keys";
+import {TITLE_ASSET_KEYS, UI_ASSET_KEYS} from "../../assets/asset-keys";
+import {CUSTOM_FONTS} from "../../assets/font-keys";
+import {Controls} from "../../utils/controls";
+import {Direction, DIRECTION} from "../../common/direction";
+import {exhaustiveGuard} from "../../utils/guard";
+import {Coordinate} from "../../types/typedef";
+import {NineSlice} from "../../utils/nine-slice";
+import {DATA_MANAGER_STORE_KEYS, dataManager} from "../../utils/data-manager";
 
 const MENU_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
     fontFamily: CUSTOM_FONTS.POKEROGUE,

@@ -1,4 +1,4 @@
-import Phaser from "../lib/phaser.ts";
+import Phaser from "phaser";
 import {
     BATTLE_SCENE_OPTIONS,
     BattleSceneOptions,
@@ -6,11 +6,11 @@ import {
     SoundOptions, TEXT_SPEED_OPTIONS,
     TextSpeedOptions,
     VolumeOptions
-} from "../common/options.ts";
-import {TEXT_SPEED, TextSpeed} from "../config.ts";
-import {exhaustiveGuard} from "./guard.ts";
-import {Monster} from "../types/typedef.ts";
-import {MONSTER_ASSET_KEYS} from "../assets/asset-keys.ts";
+} from "../common/options";
+import {TEXT_SPEED, TextSpeed} from "../config";
+import {exhaustiveGuard} from "./guard";
+import {Monster} from "../types/typedef";
+import {MONSTER_ASSET_KEYS} from "../assets/asset-keys";
 
 const LOCAL_STORAGE_KEY = 'MONSTER_TAMER_DATA';
 
