@@ -6,7 +6,7 @@ module.exports = {
   entry: './src/main.ts', // Entry point is now in the public folder
   output: {
     filename: 'bundle.min.js', // Output file will be bundle.min.js
-    path: path.resolve(__dirname, ''), // Output will go into the dist folder
+    path: path.resolve(__dirname, 'dist'), // Output will go into the dist folder
   },
   devServer: {
     static: {
