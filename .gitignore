@@ -3,5 +3,7 @@
 
 public/assets
 
+# Because of gh-pages
+**/assets
 bundle.min.js
 index.html

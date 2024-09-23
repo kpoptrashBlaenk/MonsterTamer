@@ -30,7 +30,8 @@ module.exports = {
   plugins: [
     new CopyPlugin({
       patterns: [
-        { from: 'public/index.html', to: 'index.html' },  // Copy index.html to dist
+        { from: 'public/index.html', to: 'index.html' },
+        { from: 'public/assets', to: 'assets' },// Copy index.html to dist
       ],
     }),
   ],
