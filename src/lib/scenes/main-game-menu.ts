@@ -45,7 +45,6 @@ export class MainGameScene extends Phaser.Scene {
         });
 
         this.width = 500
-
         this.availableMenuOptions = [MAIN_GAME_OPTIONS.BATTLE, MAIN_GAME_OPTIONS.TEAM, MAIN_GAME_OPTIONS.SAVE, MAIN_GAME_OPTIONS.EXIT]
     }
 
@@ -56,12 +55,11 @@ export class MainGameScene extends Phaser.Scene {
             assetKeys: [UI_ASSET_KEYS.MENU_BACKGROUND]
         })
     }
-    
+
     create() {
         this.menuOptionsTextGameObjects = []
         this.selectedMenuOptionIndex = 0
-
-        this.selectedMenuOption = MAIN_GAME_OPTIONS.BATTLE;
+        this.selectedMenuOption = this.availableMenuOptions[this.selectedMenuOptionIndex];
 
         // Create Images
         this.add.image(0, 0, TITLE_ASSET_KEYS.BACKGROUND).setOrigin(0).setScale(0.58)
@@ -108,7 +106,6 @@ export class MainGameScene extends Phaser.Scene {
                     // TODO: TEAM OPTIONS
                     return;
                 case MAIN_GAME_OPTIONS.SAVE:
-                    dataManager.saveData()
                     return;
                 case MAIN_GAME_OPTIONS.EXIT:
                     this.scene.start(SCENE_KEYS.TITLE_SCENE)
@@ -130,9 +127,14 @@ export class MainGameScene extends Phaser.Scene {
 
         const wasSpaceKeyPressed = this.controls.wasSpaceKeyPressed()
         if (wasSpaceKeyPressed) {
-            this.cameras.main.fadeOut(500, 0, 0, 0)
-            this.controls.lockInput = true;
-            return;
+            if (this.selectedMenuOption === MAIN_GAME_OPTIONS.SAVE) {
+                dataManager.saveData()
+                return
+            } else {
+                this.cameras.main.fadeOut(500, 0, 0, 0)
+                this.controls.lockInput = true;
+                return;
+            }
         }
 
         let selectedDirection: Direction = this.controls.getDirectionKeyJustDown()
