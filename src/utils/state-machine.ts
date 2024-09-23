@@ -1,27 +1,27 @@
 interface State {
-    name: string;
-    onEnter?: () => void;
+    name: string
+    onEnter?: () => void
 }
 
 export class StateMachine {
-    private states: Map<string, State>;
-    private currentState: State | undefined;
-    private readonly id: string;
-    private readonly context: Object | undefined;
-    private isChangingState: boolean;
-    private ChangingStateQueue: string[];
+    private states: Map<string, State>
+    private currentState: State | undefined
+    private readonly id: string
+    private readonly context: Object | undefined
+    private isChangingState: boolean
+    private ChangingStateQueue: string[]
 
     constructor(id: string, context: Object | undefined) {
-        this.id = id;
-        this.context = context;
-        this.isChangingState = false;
-        this.ChangingStateQueue = [];
-        this.currentState = undefined;
-        this.states = new Map();
+        this.id = id
+        this.context = context
+        this.isChangingState = false
+        this.ChangingStateQueue = []
+        this.currentState = undefined
+        this.states = new Map()
     }
 
     public get currentStateName(): string | undefined {
-        return this.currentState?.name;
+        return this.currentState?.name
     }
 
     update() {
@@ -31,31 +31,31 @@ export class StateMachine {
     }
 
     public setState(name: string | undefined): void {
-        const methodName = 'setState';
+        const methodName = 'setState'
 
         if (!this.states.has(name as string)) {
-            console.warn(`[${StateMachine.name}-${this.id}:${methodName}] tried to change to unknown state: ${name}`);
-            return;
+            console.warn(`[${StateMachine.name}-${this.id}:${methodName}] tried to change to unknown state: ${name}`)
+            return
         }
 
         if (this.isCurrentState(name as string)) {
-            return;
+            return
         }
 
         if (this.isChangingState) {
-            this.ChangingStateQueue.push(name as string);
-            return;
+            this.ChangingStateQueue.push(name as string)
+            return
         }
 
-        this.isChangingState = true;
+        this.isChangingState = true
 
-        this.currentState = this.states.get(name as string);
+        this.currentState = this.states.get(name as string)
 
         if(this.currentState) {
-            this.currentState.onEnter?.();
+            this.currentState.onEnter?.()
         }
 
-        this.isChangingState = false;
+        this.isChangingState = false
     }
 
     public addState(state: State): void {
@@ -67,8 +67,8 @@ export class StateMachine {
 
     private isCurrentState(name: string): boolean {
         if (!this.currentState) {
-            return false;
+            return false
         }
-        return this.currentState.name === name;
+        return this.currentState.name === name
     }
 }

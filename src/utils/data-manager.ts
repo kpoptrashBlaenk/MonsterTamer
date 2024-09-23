@@ -1,4 +1,4 @@
-import Phaser from "phaser";
+import Phaser from "phaser"
 import {
     BATTLE_SCENE_OPTIONS,
     BattleSceneOptions,
@@ -6,13 +6,13 @@ import {
     SoundOptions, TEXT_SPEED_OPTIONS,
     TextSpeedOptions,
     VolumeOptions
-} from "../common/options";
-import {TEXT_SPEED, TextSpeed} from "../config";
-import {exhaustiveGuard} from "./guard";
-import {Monster} from "../types/typedef";
-import {MONSTER_ASSET_KEYS} from "../assets/asset-keys";
+} from "../common/options"
+import {TEXT_SPEED, TextSpeed} from "../config"
+import {exhaustiveGuard} from "./guard"
+import {Monster} from "../types/typedef"
+import {MONSTER_ASSET_KEYS} from "../assets/asset-keys"
 
-const LOCAL_STORAGE_KEY = 'MONSTER_TAMER_DATA';
+const LOCAL_STORAGE_KEY = 'MONSTER_TAMER_DATA'
 
 interface MonsterData {
     inParty: Monster[]
@@ -20,13 +20,13 @@ interface MonsterData {
 
 interface GlobalState {
     options: {
-        textSpeed: TextSpeedOptions;
-        battleScene: BattleSceneOptions;
-        sound: SoundOptions;
-        volume: VolumeOptions;
-        menuColor: MenuColorOptions;
+        textSpeed: TextSpeedOptions
+        battleScene: BattleSceneOptions
+        sound: SoundOptions
+        volume: VolumeOptions
+        menuColor: MenuColorOptions
     }
-    gameStarted: boolean;
+    gameStarted: boolean
     monsters: MonsterData
 }
 
@@ -68,32 +68,32 @@ export const DATA_MANAGER_STORE_KEYS = Object.freeze({
 })
 
 class DataManager extends Phaser.Events.EventEmitter {
-    private readonly store: Phaser.Data.DataManager;
+    private readonly store: Phaser.Data.DataManager
 
     constructor() {
-        super();
-        this.store = new Phaser.Data.DataManager(this);
+        super()
+        this.store = new Phaser.Data.DataManager(this)
         this.updateDataManager(initialState)
     }
 
     public get getStore(): Phaser.Data.DataManager {
-        return this.store;
+        return this.store
     }
 
     public loadData() {
         if (typeof Storage === 'undefined') {
             console.warn(`[${DataManager.name}:loadData]: localStorage is not supported, can't save data.`)
-            return;
+            return
         }
 
         const savedData = localStorage.getItem(LOCAL_STORAGE_KEY)
 
         if (savedData === null) {
-            return;
+            return
         }
 
         try {
-            const parsedData: GlobalState = JSON.parse(savedData);
+            const parsedData: GlobalState = JSON.parse(savedData)
             this.updateDataManager(parsedData)
         } catch (error) {
             console.warn(`[${DataManager.name}:saveData]: Error when trying to parse and save data from localStorage.`)
@@ -103,10 +103,10 @@ class DataManager extends Phaser.Events.EventEmitter {
     public saveData(): void {
         if (typeof Storage === 'undefined') {
             console.warn(`[${DataManager.name}:saveData]: localStorage is not supported, can't save data.`)
-            return;
+            return
         }
 
-        const dataToSave: GlobalState = this.dataManagerDataToGlobalStateObject();
+        const dataToSave: GlobalState = this.dataManagerDataToGlobalStateObject()
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(dataToSave))
     }
 
@@ -172,4 +172,4 @@ class DataManager extends Phaser.Events.EventEmitter {
     }
 }
 
-export const dataManager: DataManager = new DataManager();
+export const dataManager: DataManager = new DataManager()

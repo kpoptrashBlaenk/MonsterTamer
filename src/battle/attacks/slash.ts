@@ -1,15 +1,15 @@
-import {Attack} from "./attack";
-import {ATTACK_ASSET_KEYS} from "../../assets/asset-keys";
-import {Coordinate} from "../../types/typedef";
+import {Attack} from "./attack"
+import {ATTACK_ASSET_KEYS} from "../../assets/asset-keys"
+import {Coordinate} from "../../types/typedef"
 
 export class Slash extends Attack {
-    protected attackGameObject: Phaser.GameObjects.Container;
-    protected attackGameObject1: Phaser.GameObjects.Sprite;
-    protected attackGameObject2: Phaser.GameObjects.Sprite;
-    protected attackGameObject3: Phaser.GameObjects.Sprite;
+    protected attackGameObject: Phaser.GameObjects.Container
+    protected attackGameObject1: Phaser.GameObjects.Sprite
+    protected attackGameObject2: Phaser.GameObjects.Sprite
+    protected attackGameObject3: Phaser.GameObjects.Sprite
 
     constructor(scene: Phaser.Scene, position: Coordinate) {
-        super(scene, position);
+        super(scene, position)
 
         // Create Game Object
         this.attackGameObject1 = this.scene.add.sprite(0, 0, ATTACK_ASSET_KEYS.SLASH, 0)
@@ -30,10 +30,10 @@ export class Slash extends Attack {
 
     public playAnimation(callback?: () => void): void {
         if (this.isAnimationPlaying) {
-            return;
+            return
         }
 
-        this.isAnimationPlaying = true;
+        this.isAnimationPlaying = true
         this.attackGameObject.setAlpha(1)
 
         this.attackGameObject1.play(ATTACK_ASSET_KEYS.SLASH)
@@ -43,7 +43,7 @@ export class Slash extends Attack {
         this.attackGameObject1.once(
             Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + ATTACK_ASSET_KEYS.SLASH,
             () => {
-                this.isAnimationPlaying = false;
+                this.isAnimationPlaying = false
                 this.attackGameObject.setAlpha(0)
                 this.attackGameObject1.setFrame(0)
                 this.attackGameObject2.setFrame(0)

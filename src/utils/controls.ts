@@ -1,51 +1,51 @@
-import Phaser from "phaser";
-import {Direction, DIRECTION} from "../common/direction";
+import Phaser from "phaser"
+import {Direction, DIRECTION} from "../common/direction"
 
 export class Controls {
-    private scene: Phaser.Scene;
-    private readonly cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys | undefined;
-    private readonly escapeKey: Phaser.Input.Keyboard.Key | undefined;
-    private lockPlayerInput: boolean;
+    private scene: Phaser.Scene
+    private readonly cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys | undefined
+    private readonly escapeKey: Phaser.Input.Keyboard.Key | undefined
+    private lockPlayerInput: boolean
 
     constructor(scene: Phaser.Scene) {
-        this.scene = scene;
-        this.cursorKeys = this.scene.input.keyboard?.createCursorKeys();
+        this.scene = scene
+        this.cursorKeys = this.scene.input.keyboard?.createCursorKeys()
         this.escapeKey = this.scene.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.ESC)
-        this.lockPlayerInput = false;
+        this.lockPlayerInput = false
     }
 
     public get isInputLocked(): boolean {
-        return this.lockPlayerInput;
+        return this.lockPlayerInput
     }
 
     public set lockInput(value: boolean) {
-        this.lockPlayerInput = value;
+        this.lockPlayerInput = value
     }
 
     public wasEscapeKeyPressed(): boolean {
         if (this.escapeKey === undefined) {
-            return false;
+            return false
         }
-        return Phaser.Input.Keyboard.JustDown(this.escapeKey);
+        return Phaser.Input.Keyboard.JustDown(this.escapeKey)
     }
 
     public wasSpaceKeyPressed(): boolean {
         if (this.cursorKeys === undefined) {
-            return false;
+            return false
         }
-        return Phaser.Input.Keyboard.JustDown(this.cursorKeys.space);
+        return Phaser.Input.Keyboard.JustDown(this.cursorKeys.space)
     }
 
     public wasBackKeyPressed(): boolean {
         if (this.cursorKeys === undefined) {
-            return false;
+            return false
         }
-        return Phaser.Input.Keyboard.JustDown(this.cursorKeys.shift);
+        return Phaser.Input.Keyboard.JustDown(this.cursorKeys.shift)
     }
 
     public getDirectionKeyPressedDown(): Direction {
         if (this.cursorKeys === undefined) {
-            return DIRECTION.NONE;
+            return DIRECTION.NONE
         }
 
         let selectedDirection: Direction = DIRECTION.NONE
@@ -59,12 +59,12 @@ export class Controls {
             selectedDirection = DIRECTION.DOWN
         }
 
-        return selectedDirection;
+        return selectedDirection
     }
 
     public getDirectionKeyJustDown(): Direction {
         if (this.cursorKeys === undefined) {
-            return DIRECTION.NONE;
+            return DIRECTION.NONE
         }
 
         let selectedDirection: Direction = DIRECTION.NONE
@@ -78,7 +78,7 @@ export class Controls {
             selectedDirection = DIRECTION.DOWN
         }
 
-        return selectedDirection;
+        return selectedDirection
     }
 
 

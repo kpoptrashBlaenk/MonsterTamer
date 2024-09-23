@@ -1,5 +1,5 @@
-import {BattleMonster} from "./battle-monster";
-import {BattleMonsterConfig, Coordinate} from "../../types/typedef";
+import {BattleMonster} from "./battle-monster"
+import {BattleMonsterConfig, Coordinate} from "../../types/typedef"
 
 const ENEMY_POSITION: Coordinate = Object.freeze({
     x: 769,
@@ -9,19 +9,19 @@ const ENEMY_POSITION: Coordinate = Object.freeze({
 export class EnemyBattleMonster extends BattleMonster {
 
     constructor(config: BattleMonsterConfig) {
-        super({...config, scaleHealthBarBackgroundImageByY: 0.8}, ENEMY_POSITION);
+        super({...config, scaleHealthBarBackgroundImageByY: 0.8}, ENEMY_POSITION)
     }
 
     public playMonsterAppearAnimation(callback: () => void): void {
-        const startXPosition: number = -100;
-        const endXPosition: number = ENEMY_POSITION.x;
+        const startXPosition: number = -100
+        const endXPosition: number = ENEMY_POSITION.x
         this.phaserGameObject.setPosition(startXPosition, ENEMY_POSITION.y)
         this.phaserGameObject.setAlpha(1)
 
         if (this.skipBattleAnimations) {
             this.phaserGameObject.setX(endXPosition)
             callback()
-            return;
+            return
         }
 
         this.scene.tweens.add({
@@ -37,15 +37,15 @@ export class EnemyBattleMonster extends BattleMonster {
     }
 
     public playMonsterHealthBarAppearAnimation(callback: () => void): void {
-        const startXPosition = -600;
-        const endXPosition: number = this.phaserHealthBarGameContainer.x;
+        const startXPosition = -600
+        const endXPosition: number = this.phaserHealthBarGameContainer.x
         this.phaserHealthBarGameContainer.setPosition(startXPosition, this.phaserHealthBarGameContainer.y)
         this.phaserHealthBarGameContainer.setAlpha(1)
 
         if (this.skipBattleAnimations) {
             this.phaserHealthBarGameContainer.setX(endXPosition)
             callback()
-            return;
+            return
         }
 
         this.scene.tweens.add({
@@ -61,12 +61,12 @@ export class EnemyBattleMonster extends BattleMonster {
     }
 
     public playMonsterDeathAnimation(callback: () => void): void {
-        const endYPosition: number = this.phaserGameObject.y - 400;
+        const endYPosition: number = this.phaserGameObject.y - 400
 
         if (this.skipBattleAnimations) {
             this.phaserGameObject.setY(endYPosition)
             callback()
-            return;
+            return
         }
 
         this.scene.tweens.add({

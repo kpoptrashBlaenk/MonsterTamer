@@ -4,7 +4,7 @@ export const BATTLE_MENU_OPTIONS = Object.freeze({
     ITEM: 'ITEM',
     FLEE: 'FLEE'
 })
-export type BattleMenuOptions = keyof typeof BATTLE_MENU_OPTIONS;
+export type BattleMenuOptions = keyof typeof BATTLE_MENU_OPTIONS
 
 export const ATTACK_MOVE_OPTIONS = Object.freeze({
     MOVE_1: 'MOVE_1',

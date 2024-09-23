@@ -1,6 +1,6 @@
-import {BattleMonster} from "./battle-monster";
-import {CUSTOM_FONTS} from "../../assets/font-keys";
-import {BattleMonsterConfig, Coordinate} from "../../types/typedef";
+import {BattleMonster} from "./battle-monster"
+import {CUSTOM_FONTS} from "../../assets/font-keys"
+import {BattleMonsterConfig, Coordinate} from "../../types/typedef"
 
 const PLAYER_POSITION: Coordinate = Object.freeze({
     x: 256,
@@ -8,10 +8,10 @@ const PLAYER_POSITION: Coordinate = Object.freeze({
 })
 
 export class PlayerBattleMonster extends BattleMonster {
-    private healthBarTextGameObject: Phaser.GameObjects.Text;
+    private healthBarTextGameObject: Phaser.GameObjects.Text
 
     constructor(config: BattleMonsterConfig) {
-        super(config, PLAYER_POSITION);
+        super(config, PLAYER_POSITION)
         this.phaserGameObject.setFlipX(true)
         this.phaserHealthBarGameContainer.setPosition(556, 318)
 
@@ -19,15 +19,15 @@ export class PlayerBattleMonster extends BattleMonster {
     }
 
     public playMonsterAppearAnimation(callback: () => void): void {
-        const startXPosition: number = 1024;
-        const endXPosition: number = PLAYER_POSITION.x;
+        const startXPosition: number = 1024
+        const endXPosition: number = PLAYER_POSITION.x
         this.phaserGameObject.setPosition(startXPosition, PLAYER_POSITION.y)
         this.phaserGameObject.setAlpha(1)
 
         if (this.skipBattleAnimations) {
             this.phaserGameObject.setX(endXPosition)
             callback()
-            return;
+            return
         }
 
         this.scene.tweens.add({
@@ -43,15 +43,15 @@ export class PlayerBattleMonster extends BattleMonster {
     }
 
     public playMonsterHealthBarAppearAnimation(callback: () => void): void {
-        const startXPosition: number = 1024;
-        const endXPosition: number = this.phaserHealthBarGameContainer.x;
+        const startXPosition: number = 1024
+        const endXPosition: number = this.phaserHealthBarGameContainer.x
         this.phaserHealthBarGameContainer.setPosition(startXPosition, this.phaserHealthBarGameContainer.y)
         this.phaserHealthBarGameContainer.setAlpha(1)
 
         if (this.skipBattleAnimations) {
             this.phaserHealthBarGameContainer.setX(endXPosition)
             callback()
-            return;
+            return
         }
 
         this.scene.tweens.add({
@@ -67,12 +67,12 @@ export class PlayerBattleMonster extends BattleMonster {
     }
 
     public playMonsterDeathAnimation(callback: () => void): void {
-        const endYPosition: number = this.phaserGameObject.y + 400;
+        const endYPosition: number = this.phaserGameObject.y + 400
 
         if (this.skipBattleAnimations) {
             this.phaserGameObject.setY(endYPosition)
             callback()
-            return;
+            return
         }
 
         this.scene.tweens.add({
@@ -96,7 +96,7 @@ export class PlayerBattleMonster extends BattleMonster {
             fontFamily: CUSTOM_FONTS.POKEROGUE,
             color: '7E3D3F',
             fontSize: '16px'
-        }).setOrigin(1, 0);
+        }).setOrigin(1, 0)
         this.setHealthBarText()
 
         this.phaserHealthBarGameContainer.add(this.healthBarTextGameObject)

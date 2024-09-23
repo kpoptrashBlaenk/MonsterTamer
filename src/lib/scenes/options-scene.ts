@@ -1,8 +1,8 @@
-import Phaser from "phaser";
-import {SCENE_KEYS} from "./scene-keys";
-import {NineSlice} from "../../utils/nine-slice";
-import {UI_ASSET_KEYS} from "../../assets/asset-keys";
-import {CUSTOM_FONTS} from "../../assets/font-keys";
+import Phaser from "phaser"
+import {SCENE_KEYS} from "./scene-keys"
+import {NineSlice} from "../../utils/nine-slice"
+import {UI_ASSET_KEYS} from "../../assets/asset-keys"
+import {CUSTOM_FONTS} from "../../assets/font-keys"
 import {
     BATTLE_SCENE_OPTIONS,
     BattleSceneOptions,
@@ -13,11 +13,11 @@ import {
     SoundOptions, TEXT_SPEED_OPTIONS,
     TextSpeedOptions,
     VolumeOptions
-} from "../../common/options";
-import {Controls} from "../../utils/controls";
-import {DIRECTION, Direction} from "../../common/direction";
-import {exhaustiveGuard} from "../../utils/guard";
-import {DATA_MANAGER_STORE_KEYS, dataManager} from "../../utils/data-manager";
+} from "../../common/options"
+import {Controls} from "../../utils/controls"
+import {DIRECTION, Direction} from "../../common/direction"
+import {exhaustiveGuard} from "../../utils/guard"
+import {DATA_MANAGER_STORE_KEYS, dataManager} from "../../utils/data-manager"
 
 const OPTIONS_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
     fontFamily: CUSTOM_FONTS.POKEROGUE,
@@ -40,31 +40,31 @@ const TEXT_FONT_COLORS = Object.freeze({
 })
 
 export class OptionsScene extends Phaser.Scene {
-    private mainContainer: Phaser.GameObjects.Container;
-    private nineSliceMainContainer: NineSlice;
-    private textSpeedOptionTextGameObjects: Phaser.GameObjects.Group;
-    private battleSceneOptionTextGameObjects: Phaser.GameObjects.Group;
-    private soundOptionTextGameObjects: Phaser.GameObjects.Group;
-    private volumeOptionTextGameObjects: Phaser.GameObjects.Group;
-    private menuColorOptionTextGameObjects: Phaser.GameObjects.Group;
-    private volumeOptionMenuCursor: Phaser.GameObjects.Rectangle;
-    private volumeOptionValueText: Phaser.GameObjects.Text;
-    private selectedMenuColorTextGameObject: Phaser.GameObjects.Text;
-    private infoContainer: Phaser.GameObjects.Container;
-    private selectedOptionInfoMsgTextGameObject: Phaser.GameObjects.Text;
-    private optionsMenuCursor: Phaser.GameObjects.Rectangle;
-    private controls: Controls;
-    private selectedOptionMenu: OptionMenuOptions;
-    private selectedTextSpeedOption: TextSpeedOptions;
-    private selectedBattleSceneOption: BattleSceneOptions;
-    private selectedSoundOption: SoundOptions;
-    private selectedVolumeOption: VolumeOptions;
-    private selectedMenuColorOption: MenuColorOptions;
+    private mainContainer: Phaser.GameObjects.Container
+    private nineSliceMainContainer: NineSlice
+    private textSpeedOptionTextGameObjects: Phaser.GameObjects.Group
+    private battleSceneOptionTextGameObjects: Phaser.GameObjects.Group
+    private soundOptionTextGameObjects: Phaser.GameObjects.Group
+    private volumeOptionTextGameObjects: Phaser.GameObjects.Group
+    private menuColorOptionTextGameObjects: Phaser.GameObjects.Group
+    private volumeOptionMenuCursor: Phaser.GameObjects.Rectangle
+    private volumeOptionValueText: Phaser.GameObjects.Text
+    private selectedMenuColorTextGameObject: Phaser.GameObjects.Text
+    private infoContainer: Phaser.GameObjects.Container
+    private selectedOptionInfoMsgTextGameObject: Phaser.GameObjects.Text
+    private optionsMenuCursor: Phaser.GameObjects.Rectangle
+    private controls: Controls
+    private selectedOptionMenu: OptionMenuOptions
+    private selectedTextSpeedOption: TextSpeedOptions
+    private selectedBattleSceneOption: BattleSceneOptions
+    private selectedSoundOption: SoundOptions
+    private selectedVolumeOption: VolumeOptions
+    private selectedMenuColorOption: MenuColorOptions
 
     constructor() {
         super({
             key: SCENE_KEYS.OPTIONS_SCENE,
-        });
+        })
     }
 
     init() {
@@ -84,10 +84,10 @@ export class OptionsScene extends Phaser.Scene {
 
     create() {
         // Create Container
-        const {width, height}: { width: number, height: number } = this.scale;
-        const optionMenuWidth = width - 200;
+        const {width, height}: { width: number, height: number } = this.scale
+        const optionMenuWidth = width - 200
 
-        this.mainContainer = this.nineSliceMainContainer.createNineSliceContainer(this, optionMenuWidth, 432, UI_ASSET_KEYS.MENU_BACKGROUND);
+        this.mainContainer = this.nineSliceMainContainer.createNineSliceContainer(this, optionMenuWidth, 432, UI_ASSET_KEYS.MENU_BACKGROUND)
         this.mainContainer.setX(100).setY(20)
 
         // Create Options
@@ -111,19 +111,19 @@ export class OptionsScene extends Phaser.Scene {
             this.add.text(420, 75, 'Slow', OPTIONS_TEXT_STYLE),
             this.add.text(590, 75, 'Mid', OPTIONS_TEXT_STYLE),
             this.add.text(760, 75, 'Fast', OPTIONS_TEXT_STYLE)
-        ]);
+        ])
 
         // Create Battle Scene Option
         this.battleSceneOptionTextGameObjects = this.add.group([
             this.add.text(420, 130, 'On', OPTIONS_TEXT_STYLE),
             this.add.text(590, 130, 'Off', OPTIONS_TEXT_STYLE)
-        ]);
+        ])
 
         // Create Sound Option
         this.soundOptionTextGameObjects = this.add.group([
             this.add.text(420, 185, 'On', OPTIONS_TEXT_STYLE),
             this.add.text(590, 185, 'Off', OPTIONS_TEXT_STYLE)
-        ]);
+        ])
 
         // Create Volume Option
         this.add.rectangle(420, 260, 300, 4, 0xffffff, 1).setOrigin(0, 0.5)
@@ -136,7 +136,7 @@ export class OptionsScene extends Phaser.Scene {
         this.add.image(660, 302, UI_ASSET_KEYS.CURSOR_WHITE).setOrigin(0, 0).setScale(2.5)
 
         // Option Details
-        this.infoContainer = this.nineSliceMainContainer.createNineSliceContainer(this, optionMenuWidth, 100, UI_ASSET_KEYS.MENU_BACKGROUND);
+        this.infoContainer = this.nineSliceMainContainer.createNineSliceContainer(this, optionMenuWidth, 100, UI_ASSET_KEYS.MENU_BACKGROUND)
         this.infoContainer.setPosition(100, height - 110)
         this.selectedOptionInfoMsgTextGameObject = this.add.text(125, 480, OPTION_MENU_OPTION_INFO_MSG.TEXT_SPEED, {
             ...OPTIONS_TEXT_STYLE,
@@ -156,7 +156,7 @@ export class OptionsScene extends Phaser.Scene {
         this.updateMenuColorGameObjects()
 
         // Create controls
-        this.controls = new Controls(this);
+        this.controls = new Controls(this)
 
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
             this.scene.start(SCENE_KEYS.TITLE_SCENE)
@@ -165,20 +165,20 @@ export class OptionsScene extends Phaser.Scene {
 
     update() {
         if (this.controls.isInputLocked) {
-            return;
+            return
         }
 
         if (this.controls.wasBackKeyPressed()) {
-            this.controls.lockInput = true;
+            this.controls.lockInput = true
             this.cameras.main.fadeOut(500, 0, 0)
-            return;
+            return
         }
 
         if (this.controls.wasSpaceKeyPressed() && this.selectedOptionMenu === OPTION_MENU_OPTIONS.CLOSE) {
             this.updateOptionDataManager()
-            this.controls.lockInput = true;
+            this.controls.lockInput = true
             this.cameras.main.fadeOut(500, 0, 0)
-            return;
+            return
         }
 
         const selectedDirection: Direction = this.controls.getDirectionKeyJustDown()
@@ -200,7 +200,7 @@ export class OptionsScene extends Phaser.Scene {
 
     private moveOptionMenuCursor(direction: Direction): void {
         if (direction === DIRECTION.NONE) {
-            return;
+            return
         }
 
         this.updateSelectedOptionMenuFromInput(direction)
@@ -208,22 +208,22 @@ export class OptionsScene extends Phaser.Scene {
         switch (this.selectedOptionMenu) {
             case OPTION_MENU_OPTIONS.TEXT_SPEED:
                 this.optionsMenuCursor.setY(75)
-                break;
+                break
             case OPTION_MENU_OPTIONS.BATTLE_SCENE:
                 this.optionsMenuCursor.setY(75 + 55)
-                break;
+                break
             case OPTION_MENU_OPTIONS.SOUND:
                 this.optionsMenuCursor.setY(75 + 55 * 2)
-                break;
+                break
             case OPTION_MENU_OPTIONS.VOLUME:
                 this.optionsMenuCursor.setY(75 + 55 * 3)
-                break;
+                break
             case OPTION_MENU_OPTIONS.MENU_COLOR:
                 this.optionsMenuCursor.setY(75 + 55 * 4)
-                break;
+                break
             case OPTION_MENU_OPTIONS.CLOSE:
                 this.optionsMenuCursor.setY(75 + 55 * 5)
-                break;
+                break
             default:
                 exhaustiveGuard(this.selectedOptionMenu)
         }
@@ -232,22 +232,22 @@ export class OptionsScene extends Phaser.Scene {
 
     private updateSelectedOptionMenuFromInput(direction: Direction): void {
         if (direction === DIRECTION.NONE) {
-            return;
+            return
         }
 
         if (this.selectedOptionMenu === OPTION_MENU_OPTIONS.TEXT_SPEED) {
             switch (direction) {
                 case DIRECTION.DOWN:
                     this.selectedOptionMenu = OPTION_MENU_OPTIONS.BATTLE_SCENE
-                    return;
+                    return
                 case DIRECTION.UP:
                     this.selectedOptionMenu = OPTION_MENU_OPTIONS.CLOSE
-                    return;
+                    return
                 case DIRECTION.RIGHT:
                 case DIRECTION.LEFT:
                     this.updateTextSpeedOption(direction)
                     this.updateTextSpeedGameObjects()
-                    return;
+                    return
                 default:
                     exhaustiveGuard(direction)
             }
@@ -257,15 +257,15 @@ export class OptionsScene extends Phaser.Scene {
             switch (direction) {
                 case DIRECTION.DOWN:
                     this.selectedOptionMenu = OPTION_MENU_OPTIONS.SOUND
-                    return;
+                    return
                 case DIRECTION.UP:
                     this.selectedOptionMenu = OPTION_MENU_OPTIONS.TEXT_SPEED
-                    return;
+                    return
                 case DIRECTION.RIGHT:
                 case DIRECTION.LEFT:
                     this.updateBattleSceneOption(direction)
                     this.updateBattleSceneGameObjects()
-                    return;
+                    return
                 default:
                     exhaustiveGuard(direction)
             }
@@ -275,15 +275,15 @@ export class OptionsScene extends Phaser.Scene {
             switch (direction) {
                 case DIRECTION.DOWN:
                     this.selectedOptionMenu = OPTION_MENU_OPTIONS.VOLUME
-                    return;
+                    return
                 case DIRECTION.UP:
                     this.selectedOptionMenu = OPTION_MENU_OPTIONS.BATTLE_SCENE
-                    return;
+                    return
                 case DIRECTION.RIGHT:
                 case DIRECTION.LEFT:
                     this.updateSoundOption(direction)
                     this.updateSoundGameObjects()
-                    return;
+                    return
                 default:
                     exhaustiveGuard(direction)
             }
@@ -293,15 +293,15 @@ export class OptionsScene extends Phaser.Scene {
             switch (direction) {
                 case DIRECTION.DOWN:
                     this.selectedOptionMenu = OPTION_MENU_OPTIONS.MENU_COLOR
-                    return;
+                    return
                 case DIRECTION.UP:
                     this.selectedOptionMenu = OPTION_MENU_OPTIONS.SOUND
-                    return;
+                    return
                 case DIRECTION.RIGHT:
                 case DIRECTION.LEFT:
                     this.updateVolumeOption(direction)
                     this.updateVolumeGameObjects()
-                    return;
+                    return
                 default:
                     exhaustiveGuard(direction)
             }
@@ -311,15 +311,15 @@ export class OptionsScene extends Phaser.Scene {
             switch (direction) {
                 case DIRECTION.DOWN:
                     this.selectedOptionMenu = OPTION_MENU_OPTIONS.CLOSE
-                    return;
+                    return
                 case DIRECTION.UP:
                     this.selectedOptionMenu = OPTION_MENU_OPTIONS.VOLUME
-                    return;
+                    return
                 case DIRECTION.RIGHT:
                 case DIRECTION.LEFT:
                     this.updateMenuColorOption(direction)
                     this.updateMenuColorGameObjects()
-                    return;
+                    return
                 default:
                     exhaustiveGuard(direction)
             }
@@ -329,13 +329,13 @@ export class OptionsScene extends Phaser.Scene {
             switch (direction) {
                 case DIRECTION.DOWN:
                     this.selectedOptionMenu = OPTION_MENU_OPTIONS.TEXT_SPEED
-                    return;
+                    return
                 case DIRECTION.UP:
                     this.selectedOptionMenu = OPTION_MENU_OPTIONS.MENU_COLOR
-                    return;
+                    return
                 case DIRECTION.RIGHT:
                 case DIRECTION.LEFT:
-                    return;
+                    return
                 default:
                     exhaustiveGuard(direction)
             }
@@ -347,15 +347,15 @@ export class OptionsScene extends Phaser.Scene {
     private updateTextSpeedOption(direction: 'LEFT' | 'RIGHT'): void {
         if (direction === DIRECTION.LEFT) {
             if (this.selectedTextSpeedOption === TEXT_SPEED_OPTIONS.SLOW) {
-                return;
+                return
             }
             if (this.selectedTextSpeedOption === TEXT_SPEED_OPTIONS.MID) {
                 this.selectedTextSpeedOption = TEXT_SPEED_OPTIONS.SLOW
-                return;
+                return
             }
             if (this.selectedTextSpeedOption === TEXT_SPEED_OPTIONS.FAST) {
                 this.selectedTextSpeedOption = TEXT_SPEED_OPTIONS.MID
-                return;
+                return
             }
             exhaustiveGuard(this.selectedTextSpeedOption)
         }
@@ -363,14 +363,14 @@ export class OptionsScene extends Phaser.Scene {
         if (direction === DIRECTION.RIGHT) {
             if (this.selectedTextSpeedOption === TEXT_SPEED_OPTIONS.SLOW) {
                 this.selectedTextSpeedOption = TEXT_SPEED_OPTIONS.MID
-                return;
+                return
             }
             if (this.selectedTextSpeedOption === TEXT_SPEED_OPTIONS.MID) {
                 this.selectedTextSpeedOption = TEXT_SPEED_OPTIONS.FAST
-                return;
+                return
             }
             if (this.selectedTextSpeedOption === TEXT_SPEED_OPTIONS.FAST) {
-                return;
+                return
             }
             exhaustiveGuard(this.selectedTextSpeedOption)
         }
@@ -379,24 +379,24 @@ export class OptionsScene extends Phaser.Scene {
     }
 
     private updateTextSpeedGameObjects(): void {
-        const textGameObjects: Phaser.GameObjects.Text[] = this.textSpeedOptionTextGameObjects.getChildren() as Phaser.GameObjects.Text[];
+        const textGameObjects: Phaser.GameObjects.Text[] = this.textSpeedOptionTextGameObjects.getChildren() as Phaser.GameObjects.Text[]
         textGameObjects.forEach((obj) => {
             obj.setColor(TEXT_FONT_COLORS.NOT_SELECTED)
         })
 
         if (this.selectedTextSpeedOption === TEXT_SPEED_OPTIONS.SLOW) {
             textGameObjects[0].setColor(TEXT_FONT_COLORS.SELECTED)
-            return;
+            return
         }
 
         if (this.selectedTextSpeedOption === TEXT_SPEED_OPTIONS.MID) {
             textGameObjects[1].setColor(TEXT_FONT_COLORS.SELECTED)
-            return;
+            return
         }
 
         if (this.selectedTextSpeedOption === TEXT_SPEED_OPTIONS.FAST) {
             textGameObjects[2].setColor(TEXT_FONT_COLORS.SELECTED)
-            return;
+            return
         }
 
         exhaustiveGuard(this.selectedTextSpeedOption)
@@ -405,11 +405,11 @@ export class OptionsScene extends Phaser.Scene {
     private updateBattleSceneOption(direction: 'LEFT' | 'RIGHT'): void {
         if (direction === DIRECTION.LEFT) {
             if (this.selectedBattleSceneOption === BATTLE_SCENE_OPTIONS.ON) {
-                return;
+                return
             }
             if (this.selectedBattleSceneOption === BATTLE_SCENE_OPTIONS.OFF) {
                 this.selectedBattleSceneOption = BATTLE_SCENE_OPTIONS.ON
-                return;
+                return
             }
             exhaustiveGuard(this.selectedBattleSceneOption)
         }
@@ -417,10 +417,10 @@ export class OptionsScene extends Phaser.Scene {
         if (direction === DIRECTION.RIGHT) {
             if (this.selectedBattleSceneOption === BATTLE_SCENE_OPTIONS.ON) {
                 this.selectedBattleSceneOption = BATTLE_SCENE_OPTIONS.OFF
-                return;
+                return
             }
             if (this.selectedBattleSceneOption === BATTLE_SCENE_OPTIONS.OFF) {
-                return;
+                return
             }
             exhaustiveGuard(this.selectedBattleSceneOption)
         }
@@ -429,19 +429,19 @@ export class OptionsScene extends Phaser.Scene {
     }
 
     private updateBattleSceneGameObjects(): void {
-        const textGameObjects: Phaser.GameObjects.Text[] = this.battleSceneOptionTextGameObjects.getChildren() as Phaser.GameObjects.Text[];
+        const textGameObjects: Phaser.GameObjects.Text[] = this.battleSceneOptionTextGameObjects.getChildren() as Phaser.GameObjects.Text[]
         textGameObjects.forEach((obj) => {
             obj.setColor(TEXT_FONT_COLORS.NOT_SELECTED)
         })
 
         if (this.selectedBattleSceneOption === BATTLE_SCENE_OPTIONS.ON) {
             textGameObjects[0].setColor(TEXT_FONT_COLORS.SELECTED)
-            return;
+            return
         }
 
         if (this.selectedBattleSceneOption === BATTLE_SCENE_OPTIONS.OFF) {
             textGameObjects[1].setColor(TEXT_FONT_COLORS.SELECTED)
-            return;
+            return
         }
 
         exhaustiveGuard(this.selectedBattleSceneOption)
@@ -450,11 +450,11 @@ export class OptionsScene extends Phaser.Scene {
     private updateSoundOption(direction: 'LEFT' | 'RIGHT'): void {
         if (direction === DIRECTION.LEFT) {
             if (this.selectedSoundOption === SOUND_OPTIONS.ON) {
-                return;
+                return
             }
             if (this.selectedSoundOption === SOUND_OPTIONS.OFF) {
                 this.selectedSoundOption = SOUND_OPTIONS.ON
-                return;
+                return
             }
             exhaustiveGuard(this.selectedSoundOption)
         }
@@ -462,10 +462,10 @@ export class OptionsScene extends Phaser.Scene {
         if (direction === DIRECTION.RIGHT) {
             if (this.selectedSoundOption === SOUND_OPTIONS.ON) {
                 this.selectedSoundOption = SOUND_OPTIONS.OFF
-                return;
+                return
             }
             if (this.selectedSoundOption === SOUND_OPTIONS.OFF) {
-                return;
+                return
             }
             exhaustiveGuard(this.selectedSoundOption)
         }
@@ -474,19 +474,19 @@ export class OptionsScene extends Phaser.Scene {
     }
 
     private updateSoundGameObjects(): void {
-        const textGameObjects: Phaser.GameObjects.Text[] = this.soundOptionTextGameObjects.getChildren() as Phaser.GameObjects.Text[];
+        const textGameObjects: Phaser.GameObjects.Text[] = this.soundOptionTextGameObjects.getChildren() as Phaser.GameObjects.Text[]
         textGameObjects.forEach((obj) => {
             obj.setColor(TEXT_FONT_COLORS.NOT_SELECTED)
         })
 
         if (this.selectedSoundOption === SOUND_OPTIONS.ON) {
             textGameObjects[0].setColor(TEXT_FONT_COLORS.SELECTED)
-            return;
+            return
         }
 
         if (this.selectedSoundOption === SOUND_OPTIONS.OFF) {
             textGameObjects[1].setColor(TEXT_FONT_COLORS.SELECTED)
-            return;
+            return
         }
 
         exhaustiveGuard(this.selectedSoundOption)
@@ -495,16 +495,16 @@ export class OptionsScene extends Phaser.Scene {
     private updateVolumeOption(direction: 'LEFT' | 'RIGHT'): void {
         if (direction === DIRECTION.LEFT) {
             if (this.selectedVolumeOption === 0) {
-                return;
+                return
             }
-            this.selectedVolumeOption = this.selectedVolumeOption - 1 as VolumeOptions;
+            this.selectedVolumeOption = this.selectedVolumeOption - 1 as VolumeOptions
         }
 
         if (direction === DIRECTION.RIGHT) {
             if (this.selectedVolumeOption === 4) {
-                return;
+                return
             }
-            this.selectedVolumeOption = this.selectedVolumeOption + 1 as VolumeOptions;
+            this.selectedVolumeOption = this.selectedVolumeOption + 1 as VolumeOptions
         }
     }
 
@@ -513,25 +513,25 @@ export class OptionsScene extends Phaser.Scene {
             case 0:
                 this.volumeOptionMenuCursor.setX(420)
                 this.volumeOptionValueText.setText('0%')
-                break;
+                break
             case 1:
                 this.volumeOptionMenuCursor.setX(490)
                 this.volumeOptionValueText.setText('25%')
-                break;
+                break
             case 2:
                 this.volumeOptionMenuCursor.setX(560)
                 this.volumeOptionValueText.setText('50%')
-                break;
+                break
             case 3:
                 this.volumeOptionMenuCursor.setX(630)
                 this.volumeOptionValueText.setText('75%')
-                break;
+                break
             case 4:
                 this.volumeOptionMenuCursor.setX(710)
                 this.volumeOptionValueText.setText('100%')
-                break;
+                break
             default: exhaustiveGuard(this.selectedVolumeOption)
-                return;
+                return
         }
     }
 
@@ -539,17 +539,17 @@ export class OptionsScene extends Phaser.Scene {
         if (direction === DIRECTION.LEFT) {
             if (this.selectedMenuColorOption === 0) {
                 this.selectedMenuColorOption = 2
-                return;
+                return
             }
-            this.selectedMenuColorOption = this.selectedMenuColorOption - 1 as MenuColorOptions;
+            this.selectedMenuColorOption = this.selectedMenuColorOption - 1 as MenuColorOptions
         }
 
         if (direction === DIRECTION.RIGHT) {
             if (this.selectedMenuColorOption === 2) {
-                this.selectedMenuColorOption = 0;
-                return;
+                this.selectedMenuColorOption = 0
+                return
             }
-            this.selectedMenuColorOption = this.selectedMenuColorOption + 1 as MenuColorOptions;
+            this.selectedMenuColorOption = this.selectedMenuColorOption + 1 as MenuColorOptions
         }
     }
 
@@ -559,19 +559,19 @@ export class OptionsScene extends Phaser.Scene {
                 this.selectedMenuColorTextGameObject.setText('1')
                 this.nineSliceMainContainer.updateNineSliceContainerTexture(this.sys.textures,this.mainContainer, UI_ASSET_KEYS.MENU_BACKGROUND)
                 this.nineSliceMainContainer.updateNineSliceContainerTexture(this.sys.textures,this.infoContainer, UI_ASSET_KEYS.MENU_BACKGROUND)
-                break;
+                break
             case 1:
                 this.selectedMenuColorTextGameObject.setText('2')
                 this.nineSliceMainContainer.updateNineSliceContainerTexture(this.sys.textures,this.mainContainer, UI_ASSET_KEYS.MENU_BACKGROUND_GREEN)
                 this.nineSliceMainContainer.updateNineSliceContainerTexture(this.sys.textures,this.infoContainer, UI_ASSET_KEYS.MENU_BACKGROUND_GREEN)
-                break;
+                break
             case 2:
                 this.selectedMenuColorTextGameObject.setText('3')
                 this.nineSliceMainContainer.updateNineSliceContainerTexture(this.sys.textures,this.mainContainer, UI_ASSET_KEYS.MENU_BACKGROUND_PURPLE)
                 this.nineSliceMainContainer.updateNineSliceContainerTexture(this.sys.textures,this.infoContainer, UI_ASSET_KEYS.MENU_BACKGROUND_PURPLE)
-                break;
+                break
             default: exhaustiveGuard(this.selectedMenuColorOption)
-                return;
+                return
         }
     }
 }

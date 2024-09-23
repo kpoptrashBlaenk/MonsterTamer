@@ -1,29 +1,29 @@
 import Phaser from 'phaser'
-import {HEALTH_BAR_ASSET_KEYS} from "../../assets/asset-keys";
+import {HEALTH_BAR_ASSET_KEYS} from "../../assets/asset-keys"
 
 interface Options {
-    duration?: number;
-    callback?: () => void;
+    duration?: number
+    callback?: () => void
 }
 
 export class HealthBar {
-    private scene: Phaser.Scene;
-    private readonly healthBarContainer: Phaser.GameObjects.Container;
-    private readonly fullWidth: number;
-    private readonly scaleY: number;
-    private leftCap: Phaser.GameObjects.Image;
-    private middle: Phaser.GameObjects.Image;
-    private rightCap: Phaser.GameObjects.Image;
-    private leftShadowCap: Phaser.GameObjects.Image;
-    private middleShadow: Phaser.GameObjects.Image;
-    private rightShadowCap: Phaser.GameObjects.Image;
+    private scene: Phaser.Scene
+    private readonly healthBarContainer: Phaser.GameObjects.Container
+    private readonly fullWidth: number
+    private readonly scaleY: number
+    private leftCap: Phaser.GameObjects.Image
+    private middle: Phaser.GameObjects.Image
+    private rightCap: Phaser.GameObjects.Image
+    private leftShadowCap: Phaser.GameObjects.Image
+    private middleShadow: Phaser.GameObjects.Image
+    private rightShadowCap: Phaser.GameObjects.Image
 
     constructor(scene: Phaser.Scene, x: number, y: number) {
-        this.scene = scene;
-        this.fullWidth = 360;
+        this.scene = scene
+        this.fullWidth = 360
         this.scaleY = 0.7
 
-        this.healthBarContainer = this.scene.add.container(x, y, []);
+        this.healthBarContainer = this.scene.add.container(x, y, [])
         this.createHealthBarShadowImages(x, y)
         this.createHealthBarImages(x, y)
         this.setMeterPercentage(1)
@@ -63,12 +63,12 @@ export class HealthBar {
     }
 
     public setMeterPercentage(percent: number = 1): void {
-        this.middle.displayWidth = this.fullWidth * percent;
-        this.rightCap.x = this.middle.x + this.middle.displayWidth;
+        this.middle.displayWidth = this.fullWidth * percent
+        this.rightCap.x = this.middle.x + this.middle.displayWidth
     }
 
     public setMeterPercentageAnimated(percent: number = 1, options?: Options): void {
-        const width = this.fullWidth * percent;
+        const width = this.fullWidth * percent
 
         this.scene.tweens.add({
             targets: this.middle,
@@ -76,10 +76,10 @@ export class HealthBar {
             duration: options?.duration ?? 1000,
             ease: Phaser.Math.Easing.Sine.Out,
             onUpdate: () => {
-                this.rightCap.x = this.middle.x + this.middle.displayWidth;
-                const isVisible = this.middle.displayWidth > 0;
-                this.leftCap.visible = isVisible;
-                this.rightCap.visible = isVisible;
+                this.rightCap.x = this.middle.x + this.middle.displayWidth
+                const isVisible = this.middle.displayWidth > 0
+                this.leftCap.visible = isVisible
+                this.rightCap.visible = isVisible
             },
             onComplete: options?.callback
         })

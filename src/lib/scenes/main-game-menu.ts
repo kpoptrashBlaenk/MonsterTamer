@@ -1,13 +1,13 @@
-import Phaser from "phaser";
-import {SCENE_KEYS} from "./scene-keys";
-import {TITLE_ASSET_KEYS, UI_ASSET_KEYS} from "../../assets/asset-keys";
-import {CUSTOM_FONTS} from "../../assets/font-keys";
-import {Controls} from "../../utils/controls";
-import {Direction, DIRECTION} from "../../common/direction";
-import {exhaustiveGuard} from "../../utils/guard";
-import {Coordinate} from "../../types/typedef";
-import {NineSlice} from "../../utils/nine-slice";
-import {dataManager} from "../../utils/data-manager";
+import Phaser from "phaser"
+import {SCENE_KEYS} from "./scene-keys"
+import {TITLE_ASSET_KEYS, UI_ASSET_KEYS} from "../../assets/asset-keys"
+import {CUSTOM_FONTS} from "../../assets/font-keys"
+import {Controls} from "../../utils/controls"
+import {Direction, DIRECTION} from "../../common/direction"
+import {exhaustiveGuard} from "../../utils/guard"
+import {Coordinate} from "../../types/typedef"
+import {NineSlice} from "../../utils/nine-slice"
+import {dataManager} from "../../utils/data-manager"
 
 const MENU_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
     fontFamily: CUSTOM_FONTS.POKEROGUE,
@@ -29,11 +29,11 @@ const MAIN_GAME_OPTIONS = Object.freeze({
 type MainGameOptions = keyof typeof MAIN_GAME_OPTIONS
 
 export class MainGameScene extends Phaser.Scene {
-    private mainMenuCursorPhaserImageGameObject: Phaser.GameObjects.Image;
-    private controls: Controls;
-    private selectedMenuOption: MainGameOptions;
-    private nineSliceMenu: NineSlice;
-    private selectedMenuOptionIndex: number;
+    private mainMenuCursorPhaserImageGameObject: Phaser.GameObjects.Image
+    private controls: Controls
+    private selectedMenuOption: MainGameOptions
+    private nineSliceMenu: NineSlice
+    private selectedMenuOptionIndex: number
     private readonly availableMenuOptions: MainGameOptions[]
     private menuOptionsTextGameObjects: Phaser.GameObjects.Text[]
     private readonly width: number
@@ -42,7 +42,7 @@ export class MainGameScene extends Phaser.Scene {
     constructor() {
         super({
             key: SCENE_KEYS.MAIN_GAME_SCENE,
-        });
+        })
 
         this.width = 500
         this.availableMenuOptions = [MAIN_GAME_OPTIONS.BATTLE, MAIN_GAME_OPTIONS.TEAM, MAIN_GAME_OPTIONS.SAVE, MAIN_GAME_OPTIONS.EXIT]
@@ -59,7 +59,7 @@ export class MainGameScene extends Phaser.Scene {
     create() {
         this.menuOptionsTextGameObjects = []
         this.selectedMenuOptionIndex = 0
-        this.selectedMenuOption = this.availableMenuOptions[this.selectedMenuOptionIndex];
+        this.selectedMenuOption = this.availableMenuOptions[this.selectedMenuOptionIndex]
 
         // Create Images
         this.add.image(0, 0, TITLE_ASSET_KEYS.BACKGROUND).setOrigin(0).setScale(0.58)
@@ -67,8 +67,8 @@ export class MainGameScene extends Phaser.Scene {
         this.add.image(this.scale.width / 2, 150, TITLE_ASSET_KEYS.TITLE).setScale(0.55).setAlpha(0.5)
 
         // Create Menu
-        const menuBgContainer: Phaser.GameObjects.Container = this.nineSliceMenu.createNineSliceContainer(this, this.width, 30 + this.availableMenuOptions.length * 50, UI_ASSET_KEYS.MENU_BACKGROUND);
-        this.container = this.add.container(this.width / 2, 0, [menuBgContainer]);
+        const menuBgContainer: Phaser.GameObjects.Container = this.nineSliceMenu.createNineSliceContainer(this, this.width, 30 + this.availableMenuOptions.length * 50, UI_ASSET_KEYS.MENU_BACKGROUND)
+        this.container = this.add.container(this.width / 2, 0, [menuBgContainer])
         this.container.setPosition(this.scale.width / 2 - this.width / 2, 300)
 
         for (let i = 0; i < this.availableMenuOptions.length; i++) {
@@ -77,11 +77,11 @@ export class MainGameScene extends Phaser.Scene {
             text = text.charAt(0).toUpperCase() + text.slice(1).toLowerCase()
             const textObj = this.add.text(this.width / 2, y, text, MENU_TEXT_STYLE).setOrigin(0.5)
             this.menuOptionsTextGameObjects.push(textObj)
-            this.container.add(this.menuOptionsTextGameObjects);
+            this.container.add(this.menuOptionsTextGameObjects)
         }
 
         // Create Cursor
-        this.mainMenuCursorPhaserImageGameObject = this.add.image(PLAYER_INPUT_CURSOR_POSITION.x, PLAYER_INPUT_CURSOR_POSITION.y, UI_ASSET_KEYS.CURSOR).setOrigin(0.5).setScale(2.5);
+        this.mainMenuCursorPhaserImageGameObject = this.add.image(PLAYER_INPUT_CURSOR_POSITION.x, PLAYER_INPUT_CURSOR_POSITION.y, UI_ASSET_KEYS.CURSOR).setOrigin(0.5).setScale(2.5)
         this.container.add(this.mainMenuCursorPhaserImageGameObject)
         this.add.tween({
             delay: 0,
@@ -101,28 +101,28 @@ export class MainGameScene extends Phaser.Scene {
             switch (this.selectedMenuOption) {
                 case MAIN_GAME_OPTIONS.BATTLE:
                     this.scene.start(SCENE_KEYS.BATTLE_SCENE)
-                    return;
+                    return
                 case MAIN_GAME_OPTIONS.TEAM:
                     // TODO: TEAM OPTIONS
-                    return;
+                    return
                 case MAIN_GAME_OPTIONS.SAVE:
-                    return;
+                    return
                 case MAIN_GAME_OPTIONS.EXIT:
                     this.scene.start(SCENE_KEYS.TITLE_SCENE)
-                    return;
+                    return
                 default:
                     exhaustiveGuard(this.selectedMenuOption)
-                    return;
+                    return
             }
         })
 
         // Create Controls
-        this.controls = new Controls(this);
+        this.controls = new Controls(this)
     }
 
     update() {
         if (this.controls.isInputLocked) {
-            return;
+            return
         }
 
         const wasSpaceKeyPressed = this.controls.wasSpaceKeyPressed()
@@ -132,8 +132,8 @@ export class MainGameScene extends Phaser.Scene {
                 return
             } else {
                 this.cameras.main.fadeOut(500, 0, 0, 0)
-                this.controls.lockInput = true;
-                return;
+                this.controls.lockInput = true
+                return
             }
         }
 

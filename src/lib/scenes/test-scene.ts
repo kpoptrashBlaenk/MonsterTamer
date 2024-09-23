@@ -1,44 +1,44 @@
 import Phaser from 'phaser'
-import {Background} from '../../battle/background';
-import {ATTACK_KEYS, AttackKeys} from '../../battle/attacks/attack-keys';
-import {IceShard} from '../../battle/attacks/ice-shard';
-import {Slash} from '../../battle/attacks/slash';
-import {MONSTER_ASSET_KEYS} from '../../assets/asset-keys';
-import {SCENE_KEYS} from './scene-keys';
-import {makeDraggable} from '../../utils/draggable';
+import {Background} from '../../battle/background'
+import {ATTACK_KEYS, AttackKeys} from '../../battle/attacks/attack-keys'
+import {IceShard} from '../../battle/attacks/ice-shard'
+import {Slash} from '../../battle/attacks/slash'
+import {MONSTER_ASSET_KEYS} from '../../assets/asset-keys'
+import {SCENE_KEYS} from './scene-keys'
+import {makeDraggable} from '../../utils/draggable'
 
 export class TestScene extends Phaser.Scene {
-    private selectedAttack: AttackKeys;
-    private iceShardAttack: IceShard;
-    private slashAttack: Slash;
-    private playerMonster: Phaser.GameObjects.Image;
-    private enemyMonster: Phaser.GameObjects.Image;
+    private selectedAttack: AttackKeys
+    private iceShardAttack: IceShard
+    private slashAttack: Slash
+    private playerMonster: Phaser.GameObjects.Image
+    private enemyMonster: Phaser.GameObjects.Image
 
     constructor() {
-        super({key: SCENE_KEYS.TEST_SCENE});
+        super({key: SCENE_KEYS.TEST_SCENE})
     }
 
     init() {
-        this.selectedAttack = ATTACK_KEYS.SLASH;
+        this.selectedAttack = ATTACK_KEYS.SLASH
     }
 
     create() {
-        const background: Background = new Background(this);
+        const background: Background = new Background(this)
         background.showForest()
 
         this.playerMonster = this.add.image(256, 316, MONSTER_ASSET_KEYS.IGUANIGNITE, 0).setFlipX(true)
         this.enemyMonster = this.add.image(768, 144, MONSTER_ASSET_KEYS.CARNODUSK, 0).setFlipX(false)
-        makeDraggable(this.playerMonster);
-        makeDraggable(this.enemyMonster);
+        makeDraggable(this.playerMonster)
+        makeDraggable(this.enemyMonster)
 
-        this.iceShardAttack = new IceShard(this, {x: 256, y: 344});
-        this.slashAttack = new Slash(this, {x: 745, y: 140});
+        this.iceShardAttack = new IceShard(this, {x: 256, y: 344})
+        this.slashAttack = new Slash(this, {x: 745, y: 140})
 
-        this.addDataGui();
+        this.addDataGui()
     }
 
     private addDataGui(): void {
-        const pane = new TweakPane.Pane();
+        const pane = new TweakPane.Pane()
 
         const monstersFolder = pane.addFolder({
             title: 'Monsters',
@@ -100,14 +100,14 @@ export class TestScene extends Phaser.Scene {
                 attacksFolderParams.x = this.slashAttack.getGameObject()?.x as number
                 attacksFolderParams.y = this.slashAttack.getGameObject()?.y as number
                 attacksFolder.refresh()
-                return;
+                return
             }
             if (ev.value === ATTACK_KEYS.ICE_SHARD) {
                 this.selectedAttack = ATTACK_KEYS.ICE_SHARD
                 attacksFolderParams.x = this.iceShardAttack.getGameObject()?.x as number
                 attacksFolderParams.y = this.iceShardAttack.getGameObject()?.y as number
                 attacksFolder.refresh()
-                return;
+                return
             }
         })
 
@@ -134,12 +134,12 @@ export class TestScene extends Phaser.Scene {
         playAttackButton.on('click', () => {
             if (this.selectedAttack === ATTACK_KEYS.SLASH) {
                 this.slashAttack.playAnimation()
-                return;
+                return
             }
 
             if (this.selectedAttack === ATTACK_KEYS.ICE_SHARD) {
                 this.iceShardAttack.playAnimation()
-                return;
+                return
             }
         })
 
@@ -149,20 +149,20 @@ export class TestScene extends Phaser.Scene {
         if (param === 'x') {
             if (this.selectedAttack === ATTACK_KEYS.SLASH) {
                 this.slashAttack.getGameObject()?.setX(value)
-                return;
+                return
             }
             if (this.selectedAttack === ATTACK_KEYS.ICE_SHARD) {
-                this.iceShardAttack.getGameObject()?.setX(value);
-                return;
+                this.iceShardAttack.getGameObject()?.setX(value)
+                return
             }
         }
         console.log(this.iceShardAttack.getGameObject())
         if (this.selectedAttack === ATTACK_KEYS.SLASH) {
-            this.slashAttack.getGameObject()?.setY(value);
-            return;
+            this.slashAttack.getGameObject()?.setY(value)
+            return
         }
         if (this.selectedAttack === ATTACK_KEYS.ICE_SHARD) {
-            this.iceShardAttack.getGameObject()?.setY(value);
+            this.iceShardAttack.getGameObject()?.setY(value)
         }
     }
 }

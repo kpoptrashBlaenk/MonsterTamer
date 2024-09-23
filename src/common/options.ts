@@ -27,5 +27,5 @@ export const SOUND_OPTIONS = Object.freeze({
 })
 export type SoundOptions = keyof typeof SOUND_OPTIONS
 
-export type VolumeOptions = 0 | 1 | 2 | 3 | 4;
-export type MenuColorOptions = 0 | 1 | 2;
+export type VolumeOptions = 0 | 1 | 2 | 3 | 4
+export type MenuColorOptions = 0 | 1 | 2

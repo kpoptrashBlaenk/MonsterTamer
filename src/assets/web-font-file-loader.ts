@@ -1,15 +1,15 @@
 import Phaser from 'phaser'
-import * as WebFontLoader from "../lib/webfontloader";
+import * as WebFontLoader from "../lib/webfontloader"
 
 export class WebFontFileLoader extends Phaser.Loader.File {
-    private readonly fontNames: string[];
+    private readonly fontNames: string[]
 
     constructor(loader: Phaser.Loader.LoaderPlugin, fontNames: string[]) {
         super(loader, {
             type: 'webfont',
             key: fontNames.toString()
-        });
-        this.fontNames = fontNames;
+        })
+        this.fontNames = fontNames
     }
 
     load() {

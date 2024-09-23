@@ -1,5 +1,5 @@
-import {MonsterAssetKeys} from "../assets/asset-keys";
-import {AttackKeys} from "../battle/attacks/attack-keys";
+import {MonsterAssetKeys} from "../assets/asset-keys"
+import {AttackKeys} from "../battle/attacks/attack-keys"
 
 export interface BattleMonsterConfig {
     scene: Phaser.Scene,

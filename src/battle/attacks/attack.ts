@@ -1,20 +1,20 @@
-import {Coordinate} from "../../types/typedef";
+import {Coordinate} from "../../types/typedef"
 
 export class Attack {
-    protected scene: Phaser.Scene;
-    protected position: Coordinate;
-    protected isAnimationPlaying: boolean;
-    protected attackGameObject: Phaser.GameObjects.Sprite | Phaser.GameObjects.Container | undefined;
+    protected scene: Phaser.Scene
+    protected position: Coordinate
+    protected isAnimationPlaying: boolean
+    protected attackGameObject: Phaser.GameObjects.Sprite | Phaser.GameObjects.Container | undefined
 
     constructor(scene: Phaser.Scene, position: Coordinate) {
-        this.scene = scene;
-        this.position = position;
-        this.isAnimationPlaying = false;
-        this.attackGameObject = undefined;
+        this.scene = scene
+        this.position = position
+        this.isAnimationPlaying = false
+        this.attackGameObject = undefined
     }
 
     public getGameObject(): Phaser.GameObjects.Sprite | Phaser.GameObjects.Container | undefined {
-        return this.attackGameObject;
+        return this.attackGameObject
     }
 
     public playAnimation(callback: () => void): void {

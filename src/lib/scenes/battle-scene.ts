@@ -1,20 +1,20 @@
-import Phaser from 'phaser';
-import {SCENE_KEYS} from "./scene-keys";
+import Phaser from 'phaser'
+import {SCENE_KEYS} from "./scene-keys"
 import {
     MONSTER_ASSET_KEYS
-} from "../../assets/asset-keys";
-import {BattleMenu} from "../../battle/menu/battle-menu";
-import {Direction, DIRECTION} from "../../common/direction";
-import {Background} from "../../battle/background";
-import {EnemyBattleMonster} from "../../battle/monsters/enemy-battle-monster";
-import {PlayerBattleMonster} from "../../battle/monsters/player-battle-monster";
-import {StateMachine} from "../../utils/state-machine";
-import {ATTACK_TARGET, AttackManager} from "../../battle/attacks/attack-manager";
-import {sceneTransition} from "../../utils/scene-transition";
-import {Controls} from "../../utils/controls";
-import {DATA_MANAGER_STORE_KEYS, dataManager} from "../../utils/data-manager";
-import {BATTLE_SCENE_OPTIONS} from "../../common/options";
-import {Menu} from "../../battle/menu/menu";
+} from "../../assets/asset-keys"
+import {BattleMenu} from "../../battle/menu/battle-menu"
+import {Direction, DIRECTION} from "../../common/direction"
+import {Background} from "../../battle/background"
+import {EnemyBattleMonster} from "../../battle/monsters/enemy-battle-monster"
+import {PlayerBattleMonster} from "../../battle/monsters/player-battle-monster"
+import {StateMachine} from "../../utils/state-machine"
+import {ATTACK_TARGET, AttackManager} from "../../battle/attacks/attack-manager"
+import {sceneTransition} from "../../utils/scene-transition"
+import {Controls} from "../../utils/controls"
+import {DATA_MANAGER_STORE_KEYS, dataManager} from "../../utils/data-manager"
+import {BATTLE_SCENE_OPTIONS} from "../../common/options"
+import {Menu} from "../../battle/menu/menu"
 
 const BATTLE_STATES = Object.freeze({
     INTRO: 'INTRO',
@@ -29,36 +29,36 @@ const BATTLE_STATES = Object.freeze({
 })
 
 export class BattleScene extends Phaser.Scene {
-    private battleMenu: BattleMenu;
-    private activeEnemyMonster: EnemyBattleMonster;
-    private activePlayerMonster: PlayerBattleMonster;
-    private activePlayerAttackIndex: number;
+    private battleMenu: BattleMenu
+    private activeEnemyMonster: EnemyBattleMonster
+    private activePlayerMonster: PlayerBattleMonster
+    private activePlayerAttackIndex: number
     private battleStateMachine: StateMachine
-    private attackManager: AttackManager;
-    private controls: Controls;
-    private skipAnimations: boolean;
+    private attackManager: AttackManager
+    private controls: Controls
+    private skipAnimations: boolean
     private menu: Menu
 
     constructor() {
         super({
             key: SCENE_KEYS.BATTLE_SCENE,
-        });
+        })
     }
 
     init() {
-        this.activePlayerAttackIndex = -1;
+        this.activePlayerAttackIndex = -1
 
         const chosenBattleSeenOption: string = dataManager.getStore.get(DATA_MANAGER_STORE_KEYS.OPTIONS_BATTLE_SCENE_ANIMATIONS)
         if (chosenBattleSeenOption === undefined || chosenBattleSeenOption === BATTLE_SCENE_OPTIONS.ON) {
-            this.skipAnimations = false;
-            return;
+            this.skipAnimations = false
+            return
         }
-        this.skipAnimations = true;
+        this.skipAnimations = true
     }
 
     create() {
         // Background
-        const background = new Background(this);
+        const background = new Background(this)
         background.showForest()
 
         // Monsters
@@ -77,26 +77,26 @@ export class BattleScene extends Phaser.Scene {
                     baseAttack: 5
                 }, skipBattleAnimations: this.skipAnimations
             }
-        );
+        )
         this.activePlayerMonster = new PlayerBattleMonster({
                 scene: this,
                 monsterDetails: dataManager.getStore.get(DATA_MANAGER_STORE_KEYS.MONSTERS_IN_PARTY)[0],
                 skipBattleAnimations: this.skipAnimations
             }
-        );
+        )
 
         // Create Battle Menu
-        this.battleMenu = new BattleMenu(this, this.activePlayerMonster, this.skipAnimations);
+        this.battleMenu = new BattleMenu(this, this.activePlayerMonster, this.skipAnimations)
 
         // Add and then Set State Machine
         this.createBattleStateMachine()
 
         // Create Attack Manager
-        this.attackManager = new AttackManager(this, this.skipAnimations);
+        this.attackManager = new AttackManager(this, this.skipAnimations)
 
         // Create Controls
-        this.controls = new Controls(this);
-        this.controls.lockInput = true;
+        this.controls = new Controls(this)
+        this.controls.lockInput = true
 
         // Create Ingame Menu
         this.menu = new Menu(this)
@@ -110,10 +110,10 @@ export class BattleScene extends Phaser.Scene {
         this.battleStateMachine.update()
 
         if (this.controls.isInputLocked) {
-            return;
+            return
         }
 
-        const wasSpaceKeyPressed: boolean = this.controls.wasSpaceKeyPressed();
+        const wasSpaceKeyPressed: boolean = this.controls.wasSpaceKeyPressed()
 
         if (wasSpaceKeyPressed && this.menu.getIsVisible) {
             this.menu.handlePlayerInput('OK')
@@ -136,11 +136,11 @@ export class BattleScene extends Phaser.Scene {
             this.battleStateMachine.currentStateName === BATTLE_STATES.FLEE_ATTEMPT
         )) {
             this.battleMenu.handlePlayerInput('OK')
-            return;
+            return
         }
 
         if (this.battleStateMachine.currentStateName !== BATTLE_STATES.PLAYER_INPUT) {
-            return;
+            return
         }
 
         if (this.controls.wasEscapeKeyPressed()) {
@@ -158,13 +158,13 @@ export class BattleScene extends Phaser.Scene {
 
             // Check if player selected an attack, then update display text
             if (this.battleMenu.selectedAttack === undefined) {
-                return;
+                return
             }
             this.activePlayerAttackIndex = this.battleMenu.selectedAttack
 
             // Check if selected attack exists
             if (!this.activePlayerMonster.attacks[this.activePlayerAttackIndex]) {
-                return;
+                return
             }
 
             this.battleMenu.hideMonsterAttackSubMenu()
@@ -172,7 +172,7 @@ export class BattleScene extends Phaser.Scene {
         }
         if (this.controls.wasBackKeyPressed()) {
             this.battleMenu.handlePlayerInput('CANCEL')
-            return;
+            return
         }
 
         let selectedDirection: Direction = this.controls.getDirectionKeyJustDown()
@@ -187,7 +187,7 @@ export class BattleScene extends Phaser.Scene {
 
     private playerAttack() {
         if (this.activePlayerMonster.isFainted) {
-            return;
+            return
         }
 
         this.battleMenu.updateInfoPaneMessagesNoInputRequired(
@@ -208,7 +208,7 @@ export class BattleScene extends Phaser.Scene {
     private enemyAttack() {
         if (this.activeEnemyMonster.isFainted) {
             this.battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_CHECK)
-            return;
+            return
         }
 
         this.battleMenu.updateInfoPaneMessagesNoInputRequired(
@@ -235,7 +235,7 @@ export class BattleScene extends Phaser.Scene {
                     })
                 })
             })
-            return;
+            return
         }
 
         if (this.activePlayerMonster.isFainted) {
@@ -246,7 +246,7 @@ export class BattleScene extends Phaser.Scene {
                     })
                 })
             })
-            return;
+            return
         }
 
         this.battleStateMachine.setState(BATTLE_STATES.PLAYER_INPUT)
@@ -260,7 +260,7 @@ export class BattleScene extends Phaser.Scene {
     }
 
     private createBattleStateMachine() {
-        this.battleStateMachine = new StateMachine('battle', this);
+        this.battleStateMachine = new StateMachine('battle', this)
 
         this.battleStateMachine.addState({
             name: BATTLE_STATES.INTRO,
@@ -280,7 +280,7 @@ export class BattleScene extends Phaser.Scene {
                 // Wait for enemy monster to appear on the screen and notify player about the wild monster
                 this.activeEnemyMonster.playMonsterAppearAnimation(() => {
                     this.activeEnemyMonster.playMonsterHealthBarAppearAnimation(() => undefined)
-                    this.controls.lockInput = false;
+                    this.controls.lockInput = false
                     this.battleMenu.updateInfoPaneMessagesAndWaitForInput(
                         [`Wild ${this.activeEnemyMonster.name} appeared`], () => {
                             this.time.delayedCall(500, () => {
