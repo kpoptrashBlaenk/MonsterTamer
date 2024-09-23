@@ -96,7 +96,7 @@ export class TitleScene extends Phaser.Scene {
                 dataManager.startNewGame()
             }
 
-            this.scene.start(SCENE_KEYS.BATTLE_SCENE)
+            this.scene.start(SCENE_KEYS.MAIN_GAME_SCENE)
         })
 
         // Create Controls
