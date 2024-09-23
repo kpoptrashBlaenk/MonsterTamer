@@ -2,3 +2,6 @@
 **/.idea
 
 public/assets
+
+bundle.min.js
+index.html
