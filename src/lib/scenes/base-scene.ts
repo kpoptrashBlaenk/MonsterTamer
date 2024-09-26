@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import {SCENE_KEYS, SceneKeys} from "./scene-keys";
+import {SceneKeys} from "./scene-keys";
 import {Controls} from "../../utils/controls";
 
 export class BaseScene extends Phaser.Scene {
@@ -13,15 +13,15 @@ export class BaseScene extends Phaser.Scene {
     }
 
     init() {
-        console.log(`[${this.constructor.name}:init] invoked`)
+        this.log(`[${this.constructor.name}:init] invoked`)
     }
 
     preload() {
-        console.log(`[${this.constructor.name}:preload] invoked`)
+        this.log(`[${this.constructor.name}:preload] invoked`)
     }
 
     create() {
-        console.log(`[${this.constructor.name}:create] invoked`)
+        this.log(`[${this.constructor.name}:create] invoked`)
 
         // Create Controls
         this.controls = new Controls(this)
@@ -29,5 +29,9 @@ export class BaseScene extends Phaser.Scene {
 
     update(time?: number) {
 
+    }
+
+    protected log(message: string) {
+        console.log(`%c${message}`, 'color: orange; background: black;')
     }
 }
