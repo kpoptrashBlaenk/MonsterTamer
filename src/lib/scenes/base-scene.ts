@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import {SceneKeys} from "./scene-keys";
+import {SCENE_KEYS, SceneKeys} from "./scene-keys";
 import {Controls} from "../../utils/controls";
 
 export class BaseScene extends Phaser.Scene {
@@ -7,6 +7,9 @@ export class BaseScene extends Phaser.Scene {
 
     constructor(config: { key: SceneKeys}) {
         super(config)
+        if(this.constructor === BaseScene) {
+            throw new Error('BaseScene is an abstract class and cannot be instantiated directly.')
+        }
     }
 
     init() {
