@@ -22,6 +22,8 @@ export class PreloadScene extends BaseScene {
     }
 
     preload() {
+        super.preload()
+
         const monsterTamerAssetPath: string = '../assets/images/monster-tamer'
         const kenneysAssetPath: string = '../assets/images/kenneys-assets'
         const pimenAssetPath: string = '../assets/images/pimen'
@@ -78,6 +80,8 @@ export class PreloadScene extends BaseScene {
     }
 
     create() {
+        super.create()
+
         this.createAnimations()
         // DEBUGGING: Choose what scene to start in (it should be TITLE_SCENE)
         dataManager.loadData()

@@ -1,4 +1,3 @@
-import Phaser from "phaser";
 import {SCENE_KEYS} from "./scene-keys";
 import {BaseScene} from "./base-scene";
 

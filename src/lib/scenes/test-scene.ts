@@ -20,10 +20,14 @@ export class TestScene extends BaseScene {
     }
 
     init() {
+        super.init()
+
         this.selectedAttack = ATTACK_KEYS.SLASH
     }
 
     create() {
+        super.create()
+
         const background: Background = new Background(this)
         background.showForest()
 

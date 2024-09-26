@@ -54,7 +54,6 @@ export class OptionsScene extends BaseScene {
     private infoContainer: Phaser.GameObjects.Container
     private selectedOptionInfoMsgTextGameObject: Phaser.GameObjects.Text
     private optionsMenuCursor: Phaser.GameObjects.Rectangle
-    private controls: Controls
     private selectedOptionMenu: OptionMenuOptions
     private selectedTextSpeedOption: TextSpeedOptions
     private selectedBattleSceneOption: BattleSceneOptions
@@ -69,6 +68,8 @@ export class OptionsScene extends BaseScene {
     }
 
     init() {
+        super.init()
+
         this.nineSliceMainContainer = new NineSlice({
             cornerCutSize: 32,
             textureManager: this.sys.textures,
@@ -84,6 +85,8 @@ export class OptionsScene extends BaseScene {
     }
 
     create() {
+        super.create()
+
         // Create Container
         const {width, height}: { width: number, height: number } = this.scale
         const optionMenuWidth = width - 200
@@ -156,15 +159,14 @@ export class OptionsScene extends BaseScene {
         this.updateVolumeGameObjects()
         this.updateMenuColorGameObjects()
 
-        // Create controls
-        this.controls = new Controls(this)
-
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
             this.scene.start(SCENE_KEYS.TITLE_SCENE)
         })
     }
 
     update() {
+        super.update()
+
         if (this.controls.isInputLocked) {
             return
         }
