@@ -8,6 +8,7 @@ import {exhaustiveGuard} from "../../utils/guard"
 import {Coordinate} from "../../types/typedef"
 import {NineSlice} from "../../utils/nine-slice"
 import {dataManager} from "../../utils/data-manager"
+import {BaseScene} from "./base-scene";
 
 const MENU_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
     fontFamily: CUSTOM_FONTS.POKEROGUE,
@@ -28,7 +29,7 @@ const MAIN_GAME_OPTIONS = Object.freeze({
 })
 type MainGameOptions = keyof typeof MAIN_GAME_OPTIONS
 
-export class MainGameScene extends Phaser.Scene {
+export class MainGameScene extends BaseScene {
     private mainMenuCursorPhaserImageGameObject: Phaser.GameObjects.Image
     private controls: Controls
     private selectedMenuOption: MainGameOptions
