@@ -12,8 +12,9 @@ import {WebFontFileLoader} from "../../assets/web-font-file-loader"
 import {DataUtils} from "../../utils/data-utils"
 import {Animations} from "../../types/global"
 import {dataManager} from "../../utils/data-manager"
+import {BaseScene} from "./base-scene";
 
-export class PreloadScene extends Phaser.Scene {
+export class PreloadScene extends BaseScene {
     constructor() {
         super({
             key: SCENE_KEYS.PRELOAD_SCENE,

@@ -7,3 +7,5 @@ export const SCENE_KEYS = Object.freeze({
     MAIN_GAME_SCENE: 'MAIN_GAME_SCENE',
     MONSTER_PARTY_SCENE: 'MONSTER_PARTY_SCENE'
 })
+
+export type SceneKeys = keyof typeof SCENE_KEYS

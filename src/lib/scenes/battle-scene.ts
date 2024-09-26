@@ -15,6 +15,7 @@ import {Controls} from "../../utils/controls"
 import {DATA_MANAGER_STORE_KEYS, dataManager} from "../../utils/data-manager"
 import {BATTLE_SCENE_OPTIONS} from "../../common/options"
 import {Menu} from "../../battle/menu/menu"
+import {BaseScene} from "./base-scene";
 
 const BATTLE_STATES = Object.freeze({
     INTRO: 'INTRO',
@@ -28,7 +29,7 @@ const BATTLE_STATES = Object.freeze({
     FLEE_ATTEMPT: 'FLEE_ATTEMPT'
 })
 
-export class BattleScene extends Phaser.Scene {
+export class BattleScene extends BaseScene {
     private battleMenu: BattleMenu
     private activeEnemyMonster: EnemyBattleMonster
     private activePlayerMonster: PlayerBattleMonster
