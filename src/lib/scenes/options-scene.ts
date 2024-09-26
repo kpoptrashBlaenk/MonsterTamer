@@ -18,6 +18,7 @@ import {Controls} from "../../utils/controls"
 import {DIRECTION, Direction} from "../../common/direction"
 import {exhaustiveGuard} from "../../utils/guard"
 import {DATA_MANAGER_STORE_KEYS, dataManager} from "../../utils/data-manager"
+import {BaseScene} from "./base-scene";
 
 const OPTIONS_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
     fontFamily: CUSTOM_FONTS.POKEROGUE,
@@ -39,7 +40,7 @@ const TEXT_FONT_COLORS = Object.freeze({
     SELECTED: '#FF2222'
 })
 
-export class OptionsScene extends Phaser.Scene {
+export class OptionsScene extends BaseScene {
     private mainContainer: Phaser.GameObjects.Container
     private nineSliceMainContainer: NineSlice
     private textSpeedOptionTextGameObjects: Phaser.GameObjects.Group

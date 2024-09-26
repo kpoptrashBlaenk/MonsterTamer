@@ -6,8 +6,9 @@ import {Slash} from '../../battle/attacks/slash'
 import {MONSTER_ASSET_KEYS} from '../../assets/asset-keys'
 import {SCENE_KEYS} from './scene-keys'
 import {makeDraggable} from '../../utils/draggable'
+import {BaseScene} from "./base-scene";
 
-export class TestScene extends Phaser.Scene {
+export class TestScene extends BaseScene {
     private selectedAttack: AttackKeys
     private iceShardAttack: IceShard
     private slashAttack: Slash
