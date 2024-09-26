@@ -36,7 +36,6 @@ export class BattleScene extends BaseScene {
     private activePlayerAttackIndex: number
     private battleStateMachine: StateMachine
     private attackManager: AttackManager
-    private controls: Controls
     private skipAnimations: boolean
     private menu: Menu
 
@@ -47,6 +46,8 @@ export class BattleScene extends BaseScene {
     }
 
     init() {
+        super.init()
+
         this.activePlayerAttackIndex = -1
 
         const chosenBattleSeenOption: string = dataManager.getStore.get(DATA_MANAGER_STORE_KEYS.OPTIONS_BATTLE_SCENE_ANIMATIONS)
@@ -58,6 +59,8 @@ export class BattleScene extends BaseScene {
     }
 
     create() {
+        super.create()
+
         // Background
         const background = new Background(this)
         background.showForest()
@@ -95,8 +98,7 @@ export class BattleScene extends BaseScene {
         // Create Attack Manager
         this.attackManager = new AttackManager(this, this.skipAnimations)
 
-        // Create Controls
-        this.controls = new Controls(this)
+        // Lock Controls
         this.controls.lockInput = true
 
         // Create Ingame Menu
@@ -108,6 +110,8 @@ export class BattleScene extends BaseScene {
     }
 
     update() {
+        super.update()
+
         this.battleStateMachine.update()
 
         if (this.controls.isInputLocked) {
