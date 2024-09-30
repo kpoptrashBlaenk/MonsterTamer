@@ -9,8 +9,8 @@ import {
 } from "../common/options"
 import {TEXT_SPEED, TextSpeed} from "../config"
 import {exhaustiveGuard} from "./guard"
-import {Monster} from "../types/typedef"
-import {MONSTER_ASSET_KEYS} from "../assets/asset-keys"
+import {BaseInventoryItem, Inventory, InventoryItem, Item, Monster} from "../types/typedef"
+import {DataUtils} from "./data-utils"
 
 const LOCAL_STORAGE_KEY = 'MONSTER_TAMER_DATA'
 
@@ -28,6 +28,8 @@ interface GlobalState {
     }
     gameStarted: boolean
     monsters: MonsterData
+    inventory: Inventory
+    itemsPickedUp: number[]
 }
 
 const initialState: GlobalState = {
@@ -40,21 +42,23 @@ const initialState: GlobalState = {
     },
     gameStarted: false,
     monsters: {
-        inParty: [
-            {
+        inParty: []
+    },
+    inventory: [
+        {
+            item: {
                 id: 1,
-                monsterId: 1,
-                name: MONSTER_ASSET_KEYS.IGUANIGNITE,
-                assetKey: MONSTER_ASSET_KEYS.IGUANIGNITE,
-                assetFrame: 0,
-                currentLevel: 5,
-                currentHp: 25,
-                maxHp: 25,
-                attackIds: [1, 2],
-                baseAttack: 15
-            }
-        ]
-    }
+            },
+            quantity: 10,
+        },
+        {
+            item: {
+                id: 2,
+            },
+            quantity: 5,
+        },
+    ],
+    itemsPickedUp: [],
 }
 
 export const DATA_MANAGER_STORE_KEYS = Object.freeze({
@@ -64,7 +68,9 @@ export const DATA_MANAGER_STORE_KEYS = Object.freeze({
     OPTIONS_VOLUME: 'OPTIONS_VOLUME',
     OPTIONS_MENU_COLOR: 'OPTIONS_MENU_COLOR',
     GAME_STARTED: 'GAME_STARTED',
-    MONSTERS_IN_PARTY: 'MONSTERS_IN_PARTY'
+    MONSTERS_IN_PARTY: 'MONSTERS_IN_PARTY',
+    INVENTORY: 'INVENTORY',
+    ITEMS_PICKED_UP: 'ITEMS_PICKED_UP',
 })
 
 class DataManager extends Phaser.Events.EventEmitter {
@@ -80,6 +86,13 @@ class DataManager extends Phaser.Events.EventEmitter {
         return this.store
     }
 
+    init(scene: Phaser.Scene): void {
+        const startingMonster = DataUtils.getMonsterById(scene, 1);
+        const startingMonster2 = DataUtils.getMonsterById(scene, 2);
+        const startingMonster3 = DataUtils.getMonsterById(scene, 3);
+        this.store.set(DATA_MANAGER_STORE_KEYS.MONSTERS_IN_PARTY, [startingMonster, startingMonster2, startingMonster3]);
+    }
+
     public loadData() {
         if (typeof Storage === 'undefined') {
             console.warn(`[${DataManager.name}:loadData]: localStorage is not supported, can't save data.`)
@@ -87,7 +100,6 @@ class DataManager extends Phaser.Events.EventEmitter {
         }
 
         const savedData = localStorage.getItem(LOCAL_STORAGE_KEY)
-
         if (savedData === null) {
             return
         }
@@ -110,6 +122,22 @@ class DataManager extends Phaser.Events.EventEmitter {
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(dataToSave))
     }
 
+    public startNewGame(scene: Phaser.Scene): void {
+        // Get existing data, keep settings data, then erase data
+        const existingData = {...this.dataManagerDataToGlobalStateObject()}
+        existingData.gameStarted = initialState.gameStarted
+        existingData.monsters = {
+            inParty: [...initialState.monsters.inParty]
+        }
+        existingData.inventory = initialState.inventory
+        existingData.itemsPickedUp = [...initialState.itemsPickedUp]
+
+        this.store.reset()
+        this.updateDataManager(existingData)
+        this.init(scene)
+        this.saveData()
+    }
+
     public getAnimatedTextSpeed(): TextSpeed | undefined {
         const chosenTextSpeed: TextSpeedOptions = this.getStore.get(DATA_MANAGER_STORE_KEYS.OPTIONS_TEXT_SPEED)
         if (chosenTextSpeed === undefined) {
@@ -128,18 +156,70 @@ class DataManager extends Phaser.Events.EventEmitter {
         }
     }
 
-    public startNewGame() {
-        // get existing data, keep settings data, then erase data
-        const existingData = {...this.dataManagerDataToGlobalStateObject()}
-        // existingData.player.position = {...initialState.player.position} for erasing data
-        existingData.gameStarted = initialState.gameStarted
-        existingData.monsters = {
-            inParty: {...initialState.monsters.inParty}
-        }
+    getInventory(scene: Phaser.Scene): InventoryItem[] {
+        const items: InventoryItem[] = []
+        const inventory: Inventory = this.store.get(DATA_MANAGER_STORE_KEYS.INVENTORY)
+        inventory.forEach((baseItem) => {
+            const item = DataUtils.getItem(scene, baseItem.item.id)
+            items.push({
+                item: item,
+                quantity: baseItem.quantity,
+            })
+        })
+        return items
+    }
 
-        this.store.reset()
-        this.updateDataManager(existingData)
-        this.saveData()
+    updateInventory(items: InventoryItem[]): void {
+        const inventory: BaseInventoryItem[] = items.map((item) => {
+            return {
+                item: {
+                    id: item.item.id,
+                },
+                quantity: item.quantity,
+            }
+        })
+        this.store.set(DATA_MANAGER_STORE_KEYS.INVENTORY, inventory)
+    }
+
+    addItem(item: Item, quantity: number): void {
+        const inventory: Inventory = this.store.get(DATA_MANAGER_STORE_KEYS.INVENTORY)
+        const existingItem = inventory.find((inventoryItem) => {
+            return inventoryItem.item.id === item.id
+        })
+        if (existingItem) {
+            existingItem.quantity += quantity
+        } else {
+            inventory.push({
+                item,
+                quantity
+            })
+        }
+        this.store.set(DATA_MANAGER_STORE_KEYS.INVENTORY, inventory)
+    }
+
+    addItemPickedUp(itemId: number): void {
+        const itemsPickedUp: number[] = this.store.get(DATA_MANAGER_STORE_KEYS.ITEMS_PICKED_UP) || []
+        itemsPickedUp.push(itemId)
+        this.store.set(DATA_MANAGER_STORE_KEYS.ITEMS_PICKED_UP, itemsPickedUp)
+    }
+
+    isPartyFull(): boolean {
+        const partySize: number = this.store.get(DATA_MANAGER_STORE_KEYS.MONSTERS_IN_PARTY).length
+        return partySize === 6
+    }
+
+    private updateDataManager(data: GlobalState): void {
+        this.store.set({
+            [DATA_MANAGER_STORE_KEYS.OPTIONS_TEXT_SPEED]: data.options.textSpeed,
+            [DATA_MANAGER_STORE_KEYS.OPTIONS_BATTLE_SCENE_ANIMATIONS]: data.options.battleScene,
+            [DATA_MANAGER_STORE_KEYS.OPTIONS_SOUND]: data.options.sound,
+            [DATA_MANAGER_STORE_KEYS.OPTIONS_VOLUME]: data.options.volume,
+            [DATA_MANAGER_STORE_KEYS.OPTIONS_MENU_COLOR]: data.options.menuColor,
+            [DATA_MANAGER_STORE_KEYS.GAME_STARTED]: data.gameStarted,
+            [DATA_MANAGER_STORE_KEYS.MONSTERS_IN_PARTY]: data.monsters.inParty,
+            [DATA_MANAGER_STORE_KEYS.INVENTORY]: data.inventory,
+            [DATA_MANAGER_STORE_KEYS.ITEMS_PICKED_UP]: data.itemsPickedUp || [...initialState.itemsPickedUp],
+        })
     }
 
     private dataManagerDataToGlobalStateObject(): GlobalState {
@@ -154,21 +234,10 @@ class DataManager extends Phaser.Events.EventEmitter {
             gameStarted: this.getStore.get(DATA_MANAGER_STORE_KEYS.GAME_STARTED),
             monsters: {
                 inParty: {...this.getStore.get(DATA_MANAGER_STORE_KEYS.MONSTERS_IN_PARTY)}
-            }
+            },
+            inventory: this.store.get(DATA_MANAGER_STORE_KEYS.INVENTORY),
+            itemsPickedUp: [...(this.store.get(DATA_MANAGER_STORE_KEYS.ITEMS_PICKED_UP) || [])]
         }
-    }
-
-    private updateDataManager(data: GlobalState): void {
-        this.store.set({
-            [DATA_MANAGER_STORE_KEYS.OPTIONS_TEXT_SPEED]: data.options.textSpeed,
-            [DATA_MANAGER_STORE_KEYS.OPTIONS_BATTLE_SCENE_ANIMATIONS]: data.options.battleScene,
-            [DATA_MANAGER_STORE_KEYS.OPTIONS_SOUND]: data.options.sound,
-            [DATA_MANAGER_STORE_KEYS.OPTIONS_VOLUME]: data.options.volume,
-            [DATA_MANAGER_STORE_KEYS.OPTIONS_MENU_COLOR]: data.options.menuColor,
-            [DATA_MANAGER_STORE_KEYS.GAME_STARTED]: data.gameStarted,
-            [DATA_MANAGER_STORE_KEYS.MONSTERS_IN_PARTY]: data.monsters.inParty
-
-        })
     }
 }
 

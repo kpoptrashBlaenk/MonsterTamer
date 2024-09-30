@@ -30,7 +30,6 @@ type MainMenuOptions = keyof typeof MAIN_MENU_OPTIONS
 
 export class TitleScene extends BaseScene {
     private mainMenuCursorPhaserImageGameObject: Phaser.GameObjects.Image
-    private controls: Controls
     private selectedMenuOption: MainMenuOptions
     private isContinueButtonEnabled: boolean
     private nineSliceMenu: NineSlice
@@ -42,6 +41,8 @@ export class TitleScene extends BaseScene {
     }
 
     init() {
+        super.init()
+
         this.nineSliceMenu = new NineSlice({
             cornerCutSize: 32,
             textureManager: this.sys.textures,
@@ -50,6 +51,8 @@ export class TitleScene extends BaseScene {
     }
 
     create() {
+        super.create()
+
         this.selectedMenuOption = MAIN_MENU_OPTIONS.NEW_GAME
         this.isContinueButtonEnabled = dataManager.getStore.get(DATA_MANAGER_STORE_KEYS.GAME_STARTED) || false
 
