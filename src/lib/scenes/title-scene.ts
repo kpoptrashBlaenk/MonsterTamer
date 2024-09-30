@@ -1,6 +1,6 @@
 import Phaser from "phaser"
 import {SCENE_KEYS} from "./scene-keys"
-import {TITLE_ASSET_KEYS, UI_ASSET_KEYS} from "../../assets/asset-keys"
+import {AUDIO_ASSET_KEYS, TITLE_ASSET_KEYS, UI_ASSET_KEYS} from "../../assets/asset-keys"
 import {CUSTOM_FONTS} from "../../assets/font-keys"
 import {Controls} from "../../utils/controls"
 import {Direction, DIRECTION} from "../../common/direction"
@@ -9,6 +9,7 @@ import {Coordinate} from "../../types/typedef"
 import {NineSlice} from "../../utils/nine-slice"
 import {DATA_MANAGER_STORE_KEYS, dataManager} from "../../utils/data-manager"
 import {BaseScene} from "./base-scene";
+import {playBackgroundMusic} from "../../utils/audio-utils";
 
 const MENU_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
     fontFamily: CUSTOM_FONTS.POKEROGUE,
@@ -95,19 +96,20 @@ export class TitleScene extends BaseScene {
                 return
             }
 
-            // This just resets game state, so regardless if New Game or Continue (only other option) we will go to first scene
+            // This just resets game state, so regardless if New Game or Continue (only other option), we will go to first scene
             if (this.selectedMenuOption === MAIN_MENU_OPTIONS.NEW_GAME) {
-                dataManager.startNewGame()
+                dataManager.startNewGame(this)
             }
 
             this.scene.start(SCENE_KEYS.MAIN_GAME_SCENE)
         })
 
-        // Create Controls
-        this.controls = new Controls(this)
+        playBackgroundMusic(this, AUDIO_ASSET_KEYS.TITLE)
     }
 
     update() {
+        super.update()
+
         if (this.controls.isInputLocked) {
             return
         }

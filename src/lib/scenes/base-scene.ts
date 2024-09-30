@@ -12,7 +12,7 @@ export class BaseScene extends Phaser.Scene {
         }
     }
 
-    init(data: any | undefined) {
+    init(data?: any | undefined) {
         if (data) {
             this.log(`[${this.constructor.name}:init] invoked, data provided: ${JSON.stringify(data)}`)
             return
@@ -34,7 +34,10 @@ export class BaseScene extends Phaser.Scene {
         this.scene.bringToTop()
     }
 
-    public handleSceneResume(data: any | undefined) {
+    update() {
+    }
+
+    public handleSceneResume(data?: any | undefined) {
         if (data) {
             this.log(`[${this.constructor.name}:handleSceneResume] invoked, data provided: ${JSON.stringify(data)}`)
             return;
