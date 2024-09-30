@@ -19,6 +19,7 @@ import {DIRECTION, Direction} from "../../common/direction"
 import {exhaustiveGuard} from "../../utils/guard"
 import {DATA_MANAGER_STORE_KEYS, dataManager} from "../../utils/data-manager"
 import {BaseScene} from "./base-scene";
+import { setGlobalSoundSettings } from "../../utils/audio-utils"
 
 const OPTIONS_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
     fontFamily: CUSTOM_FONTS.POKEROGUE,
@@ -54,7 +55,6 @@ export class OptionsScene extends BaseScene {
     private infoContainer: Phaser.GameObjects.Container
     private selectedOptionInfoMsgTextGameObject: Phaser.GameObjects.Text
     private optionsMenuCursor: Phaser.GameObjects.Rectangle
-    private controls: Controls
     private selectedOptionMenu: OptionMenuOptions
     private selectedTextSpeedOption: TextSpeedOptions
     private selectedBattleSceneOption: BattleSceneOptions
@@ -69,10 +69,16 @@ export class OptionsScene extends BaseScene {
     }
 
     init() {
+        super.init()
+
         this.nineSliceMainContainer = new NineSlice({
             cornerCutSize: 32,
             textureManager: this.sys.textures,
-            assetKeys: [UI_ASSET_KEYS.MENU_BACKGROUND, UI_ASSET_KEYS.MENU_BACKGROUND_GREEN, UI_ASSET_KEYS.MENU_BACKGROUND_PURPLE]
+            assetKeys: [
+                UI_ASSET_KEYS.MENU_BACKGROUND,
+                UI_ASSET_KEYS.MENU_BACKGROUND_GREEN,
+                UI_ASSET_KEYS.MENU_BACKGROUND_PURPLE
+            ]
         })
         this.selectedTextSpeedOption = dataManager.getStore.get(DATA_MANAGER_STORE_KEYS.OPTIONS_TEXT_SPEED)
         this.selectedBattleSceneOption = dataManager.getStore.get(DATA_MANAGER_STORE_KEYS.OPTIONS_BATTLE_SCENE_ANIMATIONS)
@@ -84,6 +90,8 @@ export class OptionsScene extends BaseScene {
     }
 
     create() {
+        super.create()
+
         // Create Container
         const {width, height}: { width: number, height: number } = this.scale
         const optionMenuWidth = width - 200
@@ -156,15 +164,15 @@ export class OptionsScene extends BaseScene {
         this.updateVolumeGameObjects()
         this.updateMenuColorGameObjects()
 
-        // Create controls
-        this.controls = new Controls(this)
-
+        // Create Fade Out
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
             this.scene.start(SCENE_KEYS.TITLE_SCENE)
         })
     }
 
     update() {
+        super.update()
+
         if (this.controls.isInputLocked) {
             return
         }
@@ -176,8 +184,9 @@ export class OptionsScene extends BaseScene {
         }
 
         if (this.controls.wasSpaceKeyPressed() && this.selectedOptionMenu === OPTION_MENU_OPTIONS.CLOSE) {
-            this.updateOptionDataManager()
             this.controls.lockInput = true
+            this.updateOptionDataManager()
+            setGlobalSoundSettings(this)
             this.cameras.main.fadeOut(500, 0, 0)
             return
         }
@@ -510,7 +519,7 @@ export class OptionsScene extends BaseScene {
     }
 
     private updateVolumeGameObjects(): void {
-        switch(this.selectedVolumeOption) {
+        switch (this.selectedVolumeOption) {
             case 0:
                 this.volumeOptionMenuCursor.setX(420)
                 this.volumeOptionValueText.setText('0%')
@@ -531,7 +540,8 @@ export class OptionsScene extends BaseScene {
                 this.volumeOptionMenuCursor.setX(710)
                 this.volumeOptionValueText.setText('100%')
                 break
-            default: exhaustiveGuard(this.selectedVolumeOption)
+            default:
+                exhaustiveGuard(this.selectedVolumeOption)
                 return
         }
     }
@@ -555,23 +565,24 @@ export class OptionsScene extends BaseScene {
     }
 
     private updateMenuColorGameObjects(): void {
-        switch(this.selectedMenuColorOption) {
+        switch (this.selectedMenuColorOption) {
             case 0:
                 this.selectedMenuColorTextGameObject.setText('1')
-                this.nineSliceMainContainer.updateNineSliceContainerTexture(this.sys.textures,this.mainContainer, UI_ASSET_KEYS.MENU_BACKGROUND)
-                this.nineSliceMainContainer.updateNineSliceContainerTexture(this.sys.textures,this.infoContainer, UI_ASSET_KEYS.MENU_BACKGROUND)
+                this.nineSliceMainContainer.updateNineSliceContainerTexture(this.sys.textures, this.mainContainer, UI_ASSET_KEYS.MENU_BACKGROUND)
+                this.nineSliceMainContainer.updateNineSliceContainerTexture(this.sys.textures, this.infoContainer, UI_ASSET_KEYS.MENU_BACKGROUND)
                 break
             case 1:
                 this.selectedMenuColorTextGameObject.setText('2')
-                this.nineSliceMainContainer.updateNineSliceContainerTexture(this.sys.textures,this.mainContainer, UI_ASSET_KEYS.MENU_BACKGROUND_GREEN)
-                this.nineSliceMainContainer.updateNineSliceContainerTexture(this.sys.textures,this.infoContainer, UI_ASSET_KEYS.MENU_BACKGROUND_GREEN)
+                this.nineSliceMainContainer.updateNineSliceContainerTexture(this.sys.textures, this.mainContainer, UI_ASSET_KEYS.MENU_BACKGROUND_GREEN)
+                this.nineSliceMainContainer.updateNineSliceContainerTexture(this.sys.textures, this.infoContainer, UI_ASSET_KEYS.MENU_BACKGROUND_GREEN)
                 break
             case 2:
                 this.selectedMenuColorTextGameObject.setText('3')
-                this.nineSliceMainContainer.updateNineSliceContainerTexture(this.sys.textures,this.mainContainer, UI_ASSET_KEYS.MENU_BACKGROUND_PURPLE)
-                this.nineSliceMainContainer.updateNineSliceContainerTexture(this.sys.textures,this.infoContainer, UI_ASSET_KEYS.MENU_BACKGROUND_PURPLE)
+                this.nineSliceMainContainer.updateNineSliceContainerTexture(this.sys.textures, this.mainContainer, UI_ASSET_KEYS.MENU_BACKGROUND_PURPLE)
+                this.nineSliceMainContainer.updateNineSliceContainerTexture(this.sys.textures, this.infoContainer, UI_ASSET_KEYS.MENU_BACKGROUND_PURPLE)
                 break
-            default: exhaustiveGuard(this.selectedMenuColorOption)
+            default:
+                exhaustiveGuard(this.selectedMenuColorOption)
                 return
         }
     }
