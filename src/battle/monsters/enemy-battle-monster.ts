@@ -12,8 +12,12 @@ export class EnemyBattleMonster extends BattleMonster {
         super({...config, scaleHealthBarBackgroundImageByY: 0.8}, ENEMY_POSITION)
     }
 
+    public get baseExpValue(): number {
+        return this.monsterDetails.baseExp
+    }
+
     public playMonsterAppearAnimation(callback: () => void): void {
-        const startXPosition: number = -100
+        const startXPosition: number = -30 // 100
         const endXPosition: number = ENEMY_POSITION.x
         this.phaserGameObject.setPosition(startXPosition, ENEMY_POSITION.y)
         this.phaserGameObject.setAlpha(1)
@@ -28,7 +32,6 @@ export class EnemyBattleMonster extends BattleMonster {
             delay: 0,
             duration: 1000,
             targets: this.phaserGameObject,
-            // Note: For some reason x can't be an Object with {from, start, end}
             x: endXPosition,
             onComplete: () => {
                 callback()
@@ -38,7 +41,7 @@ export class EnemyBattleMonster extends BattleMonster {
 
     public playMonsterHealthBarAppearAnimation(callback: () => void): void {
         const startXPosition = -600
-        const endXPosition: number = this.phaserHealthBarGameContainer.x
+        const endXPosition = 0
         this.phaserHealthBarGameContainer.setPosition(startXPosition, this.phaserHealthBarGameContainer.y)
         this.phaserHealthBarGameContainer.setAlpha(1)
 
@@ -52,7 +55,6 @@ export class EnemyBattleMonster extends BattleMonster {
             delay: 0,
             duration: 500,
             targets: this.phaserHealthBarGameContainer,
-            // Note: For some reason x can't be an Object with {from, start, end}
             x: endXPosition,
             onComplete: () => {
                 callback()
@@ -73,11 +75,62 @@ export class EnemyBattleMonster extends BattleMonster {
             delay: 0,
             duration: 1000,
             targets: this.phaserGameObject,
-            // Note: For some reason y can't be an Object with {from, start, end}
             y: endYPosition,
             onComplete: () => {
                 callback()
             }
+        })
+    }
+
+    public pickRandomMove() {
+        return Phaser.Math.Between(0, this.monsterAttacks.length - 1)
+    }
+
+    public playCatchAnimation(): Promise<void> {
+        return new Promise((resolve) => {
+            if (this.skipBattleAnimations) {
+                this.phaserGameObject.setAlpha(0)
+                resolve()
+                return
+            }
+
+            this.scene.tweens.add({
+                duration: 500,
+                targets: this.phaserGameObject,
+                alpha: {
+                    from: 1,
+                    start: 1,
+                    to: 0,
+                },
+                ease: Phaser.Math.Easing.Sine.InOut,
+                onComplete: () => {
+                    resolve();
+                },
+            })
+        })
+    }
+
+    public playCatchAnimationFailed(): Promise<void> {
+        return new Promise((resolve) => {
+            if (this.skipBattleAnimations) {
+                this.phaserGameObject.setAlpha(1)
+                resolve()
+                return
+            }
+
+            this.scene.tweens.add({
+                duration: 500,
+                targets: this.phaserGameObject,
+                alpha: {
+                    from: 0,
+                    start: 0,
+                    to: 1,
+                },
+                ease: Phaser.Math.Easing.Sine.InOut,
+                onComplete: () => {
+                    resolve()
+                },
+            })
         })
     }
 }

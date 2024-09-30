@@ -37,7 +37,7 @@ export class BaseScene extends Phaser.Scene {
     update() {
     }
 
-    public handleSceneResume(data?: any | undefined) {
+    public handleSceneResume(sys: Phaser.Scenes.Systems, data?: any | undefined) {
         if (data) {
             this.log(`[${this.constructor.name}:handleSceneResume] invoked, data provided: ${JSON.stringify(data)}`)
             return;

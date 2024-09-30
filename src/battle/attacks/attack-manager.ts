@@ -15,9 +15,9 @@ export class AttackManager {
     private iceShardAttack: IceShard
     private slashAttack: Slash
 
-    constructor(scene: Phaser.Scene, skipBattleAnimations: boolean) {
+    constructor(scene: Phaser.Scene, skipBattleAnimations?: boolean) {
         this.scene = scene
-        this.skipBattleAnimations = skipBattleAnimations
+        this.skipBattleAnimations = skipBattleAnimations || false
     }
 
     public playAttackAnimation(attack: AttackKeys, target: AttackTarget, callback: () => void): void {

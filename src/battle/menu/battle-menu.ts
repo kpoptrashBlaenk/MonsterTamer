@@ -14,6 +14,9 @@ import {BATTLE_UI_TEXT_STYLE} from "../ui/battle-menu-config"
 import {animateText} from "../../utils/text-utils"
 import {BattleMonster} from "../monsters/battle-monster"
 import {dataManager} from "../../utils/data-manager"
+import {Item} from "../../types/typedef";
+import {SCENE_KEYS} from '../../lib/scenes/scene-keys'
+import {BattleSceneWasResumedData} from "../../lib/scenes/battle-scene";
 
 const BATTLE_MENU_CURSOR_POSITION = Object.freeze({
     x: 42,
@@ -49,6 +52,10 @@ export class BattleMenu {
     private userInputCursorPhaserTween: Phaser.Tweens.Tween
     private readonly skipAnimations: boolean
     private queuedMessageAnimationPlaying: boolean
+    private usedItem: Item | undefined
+    private fleeAttempt: boolean
+    private switchMonsterAttempt: boolean
+    private wasItemUsed: boolean
 
     constructor(scene: Phaser.Scene, activePlayerMonster: BattleMonster, skipBattleAnimations: boolean = false) {
         this.scene = scene
@@ -62,13 +69,25 @@ export class BattleMenu {
         this.selectedAttackIndex = undefined
         this.skipAnimations = skipBattleAnimations
         this.queuedMessageAnimationPlaying = false
+        this.wasItemUsed = false
+        this.usedItem = undefined
+        this.fleeAttempt = false
+        this.switchMonsterAttempt = false
         this.createMainInfoPane()
         this.createMainBattleMenu()
         this.createMonsterAttackSubMenu()
         this.createPlayerInputCursor()
 
-        this.hideMonsterAttackSubMenu()
-        this.hideMainBattleMenu()
+        this.scene.events.on(Phaser.Scenes.Events.RESUME, this.handleSceneResume, this)
+        this.scene.events.once(Phaser.Scenes.Events.SHUTDOWN,
+            () => {
+                this.scene.events.off(Phaser.Scenes.Events.RESUME, this.handleSceneResume, this)
+            },
+            this
+        )
+
+        // this.hideMonsterAttackSubMenu()
+        // this.hideMainBattleMenu()
     }
 
     public get selectedAttack(): number | undefined {
@@ -76,6 +95,37 @@ export class BattleMenu {
             return this.selectedAttackIndex
         }
         return undefined
+    }
+
+    public get getWasItemUsed(): boolean {
+        return this.wasItemUsed
+    }
+
+    public get itemUsed(): Item | undefined {
+        return this.usedItem
+    }
+
+    public get isAttemptingToFlee(): boolean {
+        return this.fleeAttempt
+    }
+
+    get isAttemptingToSwitchMonsters(): boolean {
+        return this.switchMonsterAttempt;
+    }
+
+    public updateMonsterAttackSubMenu(): void {
+        this.moveSelectionSubMenuPhaserContainerGameObject.getAll().forEach((gameObject) => {
+            if (gameObject instanceof Phaser.GameObjects.Text) {
+                gameObject.setText('-')
+            }
+        })
+        this.activePlayerMonster.attacks.forEach((attack, index) => {
+            const gameObject = this.moveSelectionSubMenuPhaserContainerGameObject.getAt(index)
+
+            if (gameObject instanceof Phaser.GameObjects.Text) {
+                gameObject.setText(attack.name)
+            }
+        });
     }
 
     public showMainBattleMenu(): void {
@@ -88,6 +138,10 @@ export class BattleMenu {
         this.selectedBattleMenuOption = BATTLE_MENU_OPTIONS.FIGHT
         this.mainBattleMenuCursorPhaserImageGameObject.setPosition(BATTLE_MENU_CURSOR_POSITION.x, BATTLE_MENU_CURSOR_POSITION.y)
         this.selectedAttackIndex = undefined
+        this.wasItemUsed = false
+        this.fleeAttempt = false
+        this.switchMonsterAttempt = false
+        this.usedItem = undefined
     }
 
     public hideMainBattleMenu(): void {
@@ -148,37 +202,42 @@ export class BattleMenu {
 
         this.updateSelectedBattleMenuOptionFromInput(input as Direction)
         this.moveMainBattleMenuCursor()
+
         this.updateSelectedAttackMoveOptionFromInput(input as Direction)
         this.moveSubBattleMenuCursor()
     }
 
-    public updateInfoPaneMessagesAndWaitForInput(messages: string[], callback: () => void): void {
-        this.queuedInfoPanelMessages = messages
-        this.queuedInfoPanelCallback = callback
-
-        this.updateInfoPaneWithMessage()
-    }
-
-    public updateInfoPaneMessagesNoInputRequired(message: string, callback: () => void): void {
-        if(this.skipAnimations) { console.log('') } // only here because IDE is crying that skiAnimation is not being used
-
+    public updateInfoPaneMessagesNoInputRequired(message: string, callback?: () => void): void {
         this.battleTextGameObjectLine1.setText('').setAlpha(1)
-        this.battleTextGameObjectLine1.setText(message)
-        this.waitingForPlayerInput = false
-        if (callback) {
-            callback()
+
+        if (this.skipAnimations) {
+            this.battleTextGameObjectLine1.setText(message)
+            this.waitingForPlayerInput = false
+            if (callback) {
+                callback()
+            }
             return
         }
 
         animateText(this.scene, this.battleTextGameObjectLine1, message, {
             delay: dataManager.getAnimatedTextSpeed(),
             callback: () => {
-                this.waitingForPlayerInput = true
+                this.waitingForPlayerInput = false
+                if (callback) {
+                    callback()
+                }
             }
         })
     }
 
-    private updateInfoPaneWithMessage() {
+    public updateInfoPaneMessagesAndWaitForInput(messages: string[], callback?: () => void): void {
+        this.queuedInfoPanelMessages = messages
+        this.queuedInfoPanelCallback = callback
+
+        this.updateInfoPaneWithMessage()
+    }
+
+    private updateInfoPaneWithMessage(): void {
         this.waitingForPlayerInput = false
         this.battleTextGameObjectLine1.setText('').setAlpha(1)
         this.hideInputCursor()
@@ -192,7 +251,7 @@ export class BattleMenu {
             return
         }
 
-        const messageToDisplay: string[] = (this.queuedInfoPanelMessages.shift() as string[] | undefined) || []
+        const messageToDisplay = this.queuedInfoPanelMessages.shift() || []
         if (this.skipAnimations) {
             this.battleTextGameObjectLine1.setText(messageToDisplay)
             this.queuedMessageAnimationPlaying = false
@@ -212,8 +271,16 @@ export class BattleMenu {
         })
     }
 
-    private createMainBattleMenu() {
-        this.battleTextGameObjectLine1 = this.scene.add.text(20, 468, 'What should', BATTLE_UI_TEXT_STYLE)
+    private createMainBattleMenu(): void {
+        this.battleTextGameObjectLine1 = this.scene.add.text(20, 468, 'What should', {
+                ...BATTLE_UI_TEXT_STYLE,
+                ...{
+                    wordWrap: {
+                        width: this.scene.scale.width - 55
+                    }
+                }
+            }
+        )
         this.battleTextGameObjectLine2 = this.scene.add.text(20, 512, `${this.activePlayerMonster.name} do next?`, BATTLE_UI_TEXT_STYLE)
 
         this.mainBattleMenuCursorPhaserImageGameObject = this.scene.add.image(BATTLE_MENU_CURSOR_POSITION.x, BATTLE_MENU_CURSOR_POSITION.y, UI_ASSET_KEYS.CURSOR, 0)
@@ -229,10 +296,10 @@ export class BattleMenu {
             this.mainBattleMenuCursorPhaserImageGameObject
         ])
 
-        //this.hideMainBattleMenu() // Commented out because technically useless
+        this.hideMainBattleMenu()
     }
 
-    private createMonsterAttackSubMenu() {
+    private createMonsterAttackSubMenu(): void {
         this.attackBattleMenuCursorPhaserImageGameObject = this.scene.add.image(42, 42, UI_ASSET_KEYS.CURSOR, 0)
             .setOrigin(0.5)
             .setScale(1.5)
@@ -253,9 +320,10 @@ export class BattleMenu {
         this.hideMonsterAttackSubMenu()
     }
 
-    private createMainInfoPane() {
+    private createMainInfoPane(): void {
         const padding: number = 4
         const rectangleHeight: number = 124
+
         this.scene.add.rectangle(padding, this.scene.scale.height - rectangleHeight - padding, this.scene.scale.width - padding * 2, rectangleHeight, 0xede4f3, 1)
             .setOrigin(0)
             .setStrokeStyle(8, 0xe4434a, 1)
@@ -283,9 +351,7 @@ export class BattleMenu {
                     this.selectedBattleMenuOption = BATTLE_MENU_OPTIONS.ITEM
                     return
                 case DIRECTION.LEFT:
-                    return
                 case DIRECTION.UP:
-                    return
                 case DIRECTION.NONE:
                     return
                 default:
@@ -303,9 +369,7 @@ export class BattleMenu {
                     this.selectedBattleMenuOption = BATTLE_MENU_OPTIONS.FIGHT
                     return
                 case DIRECTION.RIGHT:
-                    return
                 case DIRECTION.UP:
-                    return
                 case DIRECTION.NONE:
                     return
                 default:
@@ -323,9 +387,7 @@ export class BattleMenu {
                     this.selectedBattleMenuOption = BATTLE_MENU_OPTIONS.FIGHT
                     return
                 case DIRECTION.DOWN:
-                    return
                 case DIRECTION.LEFT:
-                    return
                 case DIRECTION.NONE:
                     return
                 default:
@@ -343,9 +405,7 @@ export class BattleMenu {
                     this.selectedBattleMenuOption = BATTLE_MENU_OPTIONS.SWITCH
                     return
                 case DIRECTION.RIGHT:
-                    return
                 case DIRECTION.DOWN:
-                    return
                 case DIRECTION.NONE:
                     return
                 default:
@@ -357,7 +417,7 @@ export class BattleMenu {
         exhaustiveGuard(this.selectedBattleMenuOption)
     }
 
-    private moveMainBattleMenuCursor() {
+    private moveMainBattleMenuCursor(): void {
         if (this.activeBattleMenu !== ACTIVE_BATTLE_MENU.BATTLE_MAIN) {
             return
         }
@@ -379,7 +439,7 @@ export class BattleMenu {
         }
     }
 
-    private updateSelectedAttackMoveOptionFromInput(direction: Direction) {
+    private updateSelectedAttackMoveOptionFromInput(direction: Direction): void {
         if (this.activeBattleMenu !== ACTIVE_BATTLE_MENU.BATTLE_MOVE_SELECT) {
             return
         }
@@ -393,9 +453,7 @@ export class BattleMenu {
                     this.selectedAttackMoveOption = ATTACK_MOVE_OPTIONS.MOVE_3
                     return
                 case DIRECTION.LEFT:
-                    return
                 case DIRECTION.UP:
-                    return
                 case DIRECTION.NONE:
                     return
                 default:
@@ -413,9 +471,7 @@ export class BattleMenu {
                     this.selectedAttackMoveOption = ATTACK_MOVE_OPTIONS.MOVE_4
                     return
                 case DIRECTION.RIGHT:
-                    return
                 case DIRECTION.UP:
-                    return
                 case DIRECTION.NONE:
                     return
                 default:
@@ -433,9 +489,7 @@ export class BattleMenu {
                     this.selectedAttackMoveOption = ATTACK_MOVE_OPTIONS.MOVE_1
                     return
                 case DIRECTION.LEFT:
-                    return
                 case DIRECTION.DOWN:
-                    return
                 case DIRECTION.NONE:
                     return
                 default:
@@ -453,9 +507,7 @@ export class BattleMenu {
                     this.selectedAttackMoveOption = ATTACK_MOVE_OPTIONS.MOVE_2
                     return
                 case DIRECTION.RIGHT:
-                    return
                 case DIRECTION.DOWN:
-                    return
                 case DIRECTION.NONE:
                     return
                 default:
@@ -464,7 +516,7 @@ export class BattleMenu {
         }
     }
 
-    private moveSubBattleMenuCursor() {
+    private moveSubBattleMenuCursor(): void {
         if (this.activeBattleMenu !== ACTIVE_BATTLE_MENU.BATTLE_MOVE_SELECT) {
             return
         }
@@ -486,55 +538,53 @@ export class BattleMenu {
         }
     }
 
-    private switchToMainBattleMenu() {
+    private switchToMainBattleMenu(): void {
         this.waitingForPlayerInput = false
         this.hideInputCursor()
-
         this.hideMonsterAttackSubMenu()
         this.showMainBattleMenu()
     }
 
-    private handlePlayerChooseMainBattleOption() {
+    private handlePlayerChooseMainBattleOption(): void {
         this.hideMainBattleMenu()
 
         if (this.selectedBattleMenuOption === BATTLE_MENU_OPTIONS.FIGHT) {
             this.showMonsterAttackSubMenu()
-            this.activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_MOVE_SELECT
-            return
-        }
-
-        if (this.selectedBattleMenuOption === BATTLE_MENU_OPTIONS.SWITCH) {
-            this.updateInfoPaneMessagesAndWaitForInput(['You have no other monsters...'], () => {
-                this.switchToMainBattleMenu()
-            })
-            this.activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_SWITCH
             return
         }
 
         if (this.selectedBattleMenuOption === BATTLE_MENU_OPTIONS.ITEM) {
-            this.updateInfoPaneMessagesAndWaitForInput(['Your bag is empty...'], () => {
-                this.switchToMainBattleMenu()
-            })
             this.activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_ITEM
+
+            const sceneDataToPass = {
+                previousSceneName: SCENE_KEYS.BATTLE_SCENE,
+            };
+            this.scene.scene.launch(SCENE_KEYS.INVENTORY_SCENE, sceneDataToPass);
+            this.scene.scene.pause(SCENE_KEYS.BATTLE_SCENE);
             return
         }
 
+        if (this.selectedBattleMenuOption === BATTLE_MENU_OPTIONS.SWITCH) {
+            this.activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_SWITCH
+            this.switchMonsterAttempt = true
+            return
+        }
+
+
         if (this.selectedBattleMenuOption === BATTLE_MENU_OPTIONS.FLEE) {
-            this.updateInfoPaneMessagesAndWaitForInput(["You can't flee..."], () => {
-                this.switchToMainBattleMenu()
-            })
             this.activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_FLEE
+            this.fleeAttempt = true
             return
         }
 
         exhaustiveGuard(this.selectedBattleMenuOption)
     }
 
-    private handlePlayerChooseAttack() {
-        let selectedAttackMoveIndex: number
+    private handlePlayerChooseAttack(): void {
+        let selectedAttackMoveIndex = 0
         switch (this.selectedAttackMoveOption) {
             case ATTACK_MOVE_OPTIONS.MOVE_1:
-                selectedAttackMoveIndex = 0
+                // selectedAttackMoveIndex = 0
                 break
             case ATTACK_MOVE_OPTIONS.MOVE_2:
                 selectedAttackMoveIndex = 1
@@ -547,13 +597,12 @@ export class BattleMenu {
                 break
             default:
                 exhaustiveGuard(this.selectedAttackMoveOption)
-                selectedAttackMoveIndex = -1
         }
 
         this.selectedAttackIndex = selectedAttackMoveIndex
     }
 
-    private createPlayerInputCursor() {
+    private createPlayerInputCursor(): void {
         this.userInputCursorPhaserImageObject = this.scene.add.image(390, 0, UI_ASSET_KEYS.CURSOR)
             .setAngle(90)
             .setScale(2.0, 1.5)
@@ -571,5 +620,22 @@ export class BattleMenu {
             targets: this.userInputCursorPhaserImageObject
         })
         this.userInputCursorPhaserTween.pause()
+    }
+
+    private handleSceneResume(data: BattleSceneWasResumedData) {
+        console.log(`[${BattleMenu.name}:handleSceneResume] scene has been resumed, data provided: ${JSON.stringify(data)}`)
+
+        if (data && data.wasMonsterSelected) {
+            return
+        }
+
+        if (!data || !data.wasItemUsed) {
+            this.switchToMainBattleMenu()
+            return
+        }
+
+        this.wasItemUsed = true
+        this.usedItem = data.item
+        this.updateInfoPaneMessagesAndWaitForInput([`You used the following item: ${data.item?.name}`])
     }
 }

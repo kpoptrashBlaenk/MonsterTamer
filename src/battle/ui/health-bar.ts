@@ -4,6 +4,7 @@ import {HEALTH_BAR_ASSET_KEYS} from "../../assets/asset-keys"
 interface Options {
     duration?: number
     callback?: () => void
+    skipBattleAnimations?: boolean
 }
 
 export class HealthBar {
@@ -69,6 +70,14 @@ export class HealthBar {
 
     public setMeterPercentageAnimated(percent: number = 1, options?: Options): void {
         const width = this.fullWidth * percent
+
+        if (options?.skipBattleAnimations) {
+            this.setMeterPercentage(percent)
+            if (options?.callback) {
+                options.callback()
+            }
+            return
+        }
 
         this.scene.tweens.add({
             targets: this.middle,

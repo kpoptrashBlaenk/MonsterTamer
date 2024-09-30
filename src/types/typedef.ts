@@ -9,7 +9,7 @@ export interface BattleMonsterConfig {
 }
 
 export interface Monster {
-    id: number
+    id: string // number but it's string? idk
     monsterId: number
     name: string
     assetKey: MonsterAssetKeys

@@ -2,12 +2,11 @@ import Phaser from "phaser"
 import {SCENE_KEYS} from "./scene-keys"
 import {TITLE_ASSET_KEYS, UI_ASSET_KEYS} from "../../assets/asset-keys"
 import {CUSTOM_FONTS} from "../../assets/font-keys"
-import {Controls} from "../../utils/controls"
 import {Direction, DIRECTION} from "../../common/direction"
 import {exhaustiveGuard} from "../../utils/guard"
 import {Coordinate} from "../../types/typedef"
 import {NineSlice} from "../../utils/nine-slice"
-import {dataManager} from "../../utils/data-manager"
+import {DATA_MANAGER_STORE_KEYS, dataManager} from "../../utils/data-manager"
 import {BaseScene} from "./base-scene";
 
 const MENU_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
@@ -119,6 +118,10 @@ export class MainGameScene extends BaseScene {
                     return
             }
         })
+
+        // Tell dataManager that the game started
+        // INFO: place this at the end of the first create scene that comes when starting a new game
+        dataManager.getStore.set(DATA_MANAGER_STORE_KEYS.GAME_STARTED, true)
     }
 
     update() {

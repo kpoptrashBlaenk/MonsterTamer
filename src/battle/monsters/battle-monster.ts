@@ -14,8 +14,14 @@ export class BattleMonster {
     protected monsterAttacks: Attack[]
     protected phaserHealthBarGameContainer: Phaser.GameObjects.Container
     protected skipBattleAnimations: boolean
+    protected monsterHealthBarLevelText: Phaser.GameObjects.Text
+    protected monsterNameText: Phaser.GameObjects.Text
 
     constructor(config: BattleMonsterConfig, position: Coordinate) {
+        if (this.constructor === BattleMonster) {
+            throw new Error('BattleMonster is an abstract class and cannot be instantiated.')
+        }
+
         this.scene = config.scene
         this.monsterDetails = config.monsterDetails
         this.currentHealth = this.monsterDetails.currentHp
@@ -31,7 +37,9 @@ export class BattleMonster {
         ).setAlpha(0)
 
         this.createHealthBarComponent(config.scaleHealthBarBackgroundImageByY)
-        this.healthBar.setMeterPercentage(this.currentHealth / this.maxHealth)
+        this.healthBar.setMeterPercentageAnimated(this.currentHealth / this.maxHealth, {
+            skipBattleAnimations: true
+        })
 
         this.monsterDetails.attackIds.forEach(attackId => {
             const monsterAttack = DataUtils.getMonsterAttack(this.scene, attackId)
@@ -39,6 +47,21 @@ export class BattleMonster {
                 this.monsterAttacks.push(monsterAttack)
             }
         })
+
+        this.monsterDetails.attackIds.forEach((attackId) => {
+            const monsterAttack = DataUtils.getMonsterAttack(this.scene, attackId)
+            if (monsterAttack !== undefined) {
+                this.monsterAttacks.push(monsterAttack)
+            }
+        })
+    }
+
+    public get currentHp(): number {
+        return this.currentHealth;
+    }
+
+    public get maxHp(): number {
+        return this.maxHealth;
     }
 
     public get isFainted(): boolean {
@@ -54,11 +77,31 @@ export class BattleMonster {
     }
 
     public get baseAttack(): number {
-        return this.monsterDetails.baseAttack
+        return this.monsterDetails.currentAttack
     }
 
     public get level(): number {
         return this.monsterDetails.currentLevel
+    }
+
+    switchMonster(monster: Monster): void {
+        this.monsterDetails = monster
+        this.currentHealth = this.monsterDetails.currentHp
+        this.maxHealth = this.monsterDetails.maxHp
+        this.healthBar.setMeterPercentageAnimated(this.currentHealth / this.maxHealth, {
+            skipBattleAnimations: true,
+        })
+        this.monsterAttacks = []
+        this.monsterDetails.attackIds.forEach((attackId) => {
+            const monsterAttack = DataUtils.getMonsterAttack(this.scene, attackId)
+            if (monsterAttack !== undefined) {
+                this.monsterAttacks.push(monsterAttack);
+            }
+        });
+        this.phaserGameObject.setTexture(this.monsterDetails.assetKey, this.monsterDetails.assetFrame || 0)
+        this.monsterNameText.setText(this.monsterDetails.name)
+        this.setMonsterLevelText()
+        this.monsterHealthBarLevelText.setX(this.monsterNameText.width + 35)
     }
 
     public takeDamage(damage: number, callback: () => void): void {
@@ -67,7 +110,10 @@ export class BattleMonster {
         if (this.currentHealth < 0) {
             this.currentHealth = 0
         }
-        this.healthBar.setMeterPercentageAnimated(this.currentHealth / this.maxHealth, {callback})
+        this.healthBar.setMeterPercentageAnimated(this.currentHealth / this.maxHealth, {
+            callback,
+            skipBattleAnimations: this.skipBattleAnimations
+        })
     }
 
     public playMonsterTakeDamageAnimation(callback: () => void): void {
@@ -90,16 +136,14 @@ export class BattleMonster {
         })
     }
 
-    public playMonsterDeathAnimation(callback: () => void): void {
-        // probably going to do a fade out
-        console.log(callback)
-        throw new Error('playMonsterDeathAnimation is not implemented.')
+    protected setMonsterLevelText(): void {
+        this.monsterHealthBarLevelText.setText(`${this.level}`)
     }
 
     private createHealthBarComponent(scaleHealthBarByBackgroundImageByY: number = 1): void {
         this.healthBar = new HealthBar(this.scene, 34, 34)
 
-        const monsterNameGameText = this.scene.add.text(30, 20, this.monsterDetails.name, {
+        this.monsterNameText = this.scene.add.text(30, 20, this.monsterDetails.name, {
             fontFamily: CUSTOM_FONTS.POKEROGUE,
             color: '#7E3D3F',
             fontSize: '32px'
@@ -109,11 +153,13 @@ export class BattleMonster {
             .setOrigin(0)
             .setScale(1, scaleHealthBarByBackgroundImageByY)
 
-        const monsterHealthBarLevelText = this.scene.add.text(monsterNameGameText.width + 35, 23, `L${this.level}`, {
+        this.monsterHealthBarLevelText = this.scene.add.text(this.monsterNameText.width + 35, 23, '', {
             fontFamily: CUSTOM_FONTS.POKEROGUE,
             color: '#ED474B',
             fontSize: '28px'
         })
+        this.setMonsterLevelText()
+
         const monsterHpText = this.scene.add.text(30, 54, 'HP', {
             fontFamily: CUSTOM_FONTS.POKEROGUE,
             color: '#FF6505',
@@ -123,9 +169,9 @@ export class BattleMonster {
 
         this.phaserHealthBarGameContainer = this.scene.add.container(0, 0, [
             healthBarBackgroundImage,
-            monsterNameGameText,
+            this.monsterNameText,
             this.healthBar.container,
-            monsterHealthBarLevelText,
+            this.monsterHealthBarLevelText,
             monsterHpText
         ]).setAlpha(0)
     }
