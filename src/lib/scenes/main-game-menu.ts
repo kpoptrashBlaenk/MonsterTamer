@@ -31,7 +31,6 @@ type MainGameOptions = keyof typeof MAIN_GAME_OPTIONS
 
 export class MainGameScene extends BaseScene {
     private mainMenuCursorPhaserImageGameObject: Phaser.GameObjects.Image
-    private controls: Controls
     private selectedMenuOption: MainGameOptions
     private nineSliceMenu: NineSlice
     private selectedMenuOptionIndex: number
@@ -50,6 +49,8 @@ export class MainGameScene extends BaseScene {
     }
 
     init() {
+        super.init()
+
         this.nineSliceMenu = new NineSlice({
             cornerCutSize: 32,
             textureManager: this.sys.textures,
@@ -58,6 +59,8 @@ export class MainGameScene extends BaseScene {
     }
 
     create() {
+        super.create()
+
         this.menuOptionsTextGameObjects = []
         this.selectedMenuOptionIndex = 0
         this.selectedMenuOption = this.availableMenuOptions[this.selectedMenuOptionIndex]
@@ -116,12 +119,11 @@ export class MainGameScene extends BaseScene {
                     return
             }
         })
-
-        // Create Controls
-        this.controls = new Controls(this)
     }
 
     update() {
+        super.update()
+
         if (this.controls.isInputLocked) {
             return
         }

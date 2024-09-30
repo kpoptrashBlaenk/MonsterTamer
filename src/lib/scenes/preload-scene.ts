@@ -1,11 +1,10 @@
-import Phaser from 'phaser'
 import {SCENE_KEYS} from "./scene-keys"
 import {
     ATTACK_ASSET_KEYS,
     BATTLE_ASSET_KEYS,
     BATTLE_BACKGROUND_ASSET_KEYS, DATA_ASSET_KEYS,
     HEALTH_BAR_ASSET_KEYS,
-    MONSTER_ASSET_KEYS, TITLE_ASSET_KEYS, UI_ASSET_KEYS
+    MONSTER_ASSET_KEYS, MONSTER_PARTY_ASSET_KEYS, TITLE_ASSET_KEYS, UI_ASSET_KEYS
 } from "../../assets/asset-keys"
 import {CUSTOM_FONTS} from "../../assets/font-keys"
 import {WebFontFileLoader} from "../../assets/web-font-file-loader"
@@ -22,16 +21,20 @@ export class PreloadScene extends BaseScene {
     }
 
     preload() {
+        super.preload()
+
         const monsterTamerAssetPath: string = '../assets/images/monster-tamer'
         const kenneysAssetPath: string = '../assets/images/kenneys-assets'
         const pimenAssetPath: string = '../assets/images/pimen'
 
         // Load UI Components
         this.load.image(TITLE_ASSET_KEYS.BACKGROUND, `${monsterTamerAssetPath}/ui/title/background.png`)
-
         this.load.image(TITLE_ASSET_KEYS.PANEL, `${monsterTamerAssetPath}/ui/title/title_background.png`)
-
         this.load.image(TITLE_ASSET_KEYS.TITLE, `${monsterTamerAssetPath}/ui/title/title_text.png`)
+
+        // Load UI Components
+        this.load.image(MONSTER_PARTY_ASSET_KEYS.PARTY_BACKGROUND, `${monsterTamerAssetPath}/ui/monster-party/background.png`)
+        this.load.image(MONSTER_PARTY_ASSET_KEYS.MONSTER_DETAILS_BACKGROUND, `${monsterTamerAssetPath}/ui/monster-party/monster-details-background.png`)
 
         // Battle Backgrounds
         this.load.image(BATTLE_BACKGROUND_ASSET_KEYS.FOREST, `${monsterTamerAssetPath}/battle-backgrounds/forest-background.png`)
@@ -57,6 +60,8 @@ export class PreloadScene extends BaseScene {
         this.load.image(UI_ASSET_KEYS.MENU_BACKGROUND, `${kenneysAssetPath}/ui-space-expansion/glassPanel.png`)
         this.load.image(UI_ASSET_KEYS.MENU_BACKGROUND_GREEN, `${kenneysAssetPath}/ui-space-expansion/glassPanel_green.png`)
         this.load.image(UI_ASSET_KEYS.MENU_BACKGROUND_PURPLE, `${kenneysAssetPath}/ui-space-expansion/glassPanel_purple.png`)
+        this.load.image(UI_ASSET_KEYS.BLUE_BUTTON, `${kenneysAssetPath}/ui-pack/blue_button01.png`)
+        this.load.image(UI_ASSET_KEYS.BLUE_BUTTON_SELECTED, `${kenneysAssetPath}/ui-pack/blue_button00.png`)
 
         // Load JSON Data
         this.load.json(DATA_ASSET_KEYS.ATTACKS, 'assets/data/attacks.json')
@@ -78,6 +83,8 @@ export class PreloadScene extends BaseScene {
     }
 
     create() {
+        super.create()
+
         this.createAnimations()
         // DEBUGGING: Choose what scene to start in (it should be TITLE_SCENE)
         dataManager.loadData()
