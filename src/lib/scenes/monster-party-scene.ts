@@ -273,7 +273,7 @@ export class MonsterPartyScene extends BaseScene {
 
         container.add([
             background,
-            healthBar.container,
+            healthBar.getContainer,
             monsterHpText,
             monsterHealthBarLevelText,
             monsterNameGameText,
