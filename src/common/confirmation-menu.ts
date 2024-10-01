@@ -4,7 +4,6 @@ export const CONFIRMATION_MENU_OPTIONS = Object.freeze({
     YES: 'YES',
     NO: 'NO',
 })
-type ConfirmationMenuOptions = keyof typeof CONFIRMATION_MENU_OPTIONS
 
 export class ConfirmationMenu extends Menu {
     constructor(scene: Phaser.Scene) {
