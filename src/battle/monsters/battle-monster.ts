@@ -21,7 +21,6 @@ export class BattleMonster {
     if (this.constructor === BattleMonster) {
       throw new Error('BattleMonster is an abstract class and cannot be instantiated.')
     }
-
     this.scene = config.scene
     this.monsterDetails = config.monsterDetails
     this.currentHealth = this.monsterDetails.currentHp
@@ -74,7 +73,7 @@ export class BattleMonster {
   }
 
   public get baseAttack(): number {
-    return this.monsterDetails.currentAttack
+    return this.monsterDetails.baseAttack
   }
 
   public get level(): number {

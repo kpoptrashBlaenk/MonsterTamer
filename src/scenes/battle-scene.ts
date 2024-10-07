@@ -26,6 +26,7 @@ import { sleep } from '../utils/time-utils'
 import { generateUuid } from '../utils/random'
 import { MonsterPartySceneData } from './monster-party-scene'
 import { GameMenu } from '../game-menu'
+import { DataUtils } from '../utils/data-utils'
 
 const BATTLE_STATES = Object.freeze({
   INTRO: 'INTRO',
@@ -91,12 +92,12 @@ export class BattleScene extends BaseScene {
     this.activePlayerMonsterPartyIndex = 0
 
     // For when loading this scene directly from PreloadScene for testing
-    // if (Object.keys(data).length === 0) {
-    //   this.sceneData = {
-    //     enemyMonster: [DataUtils.getMonsterById(this, 2)],
-    //     playerMonster: [...dataManager.getStore.get(DATA_MANAGER_STORE_KEYS.MONSTERS_IN_PARTY)],
-    //   }
-    // }
+    if (Object.keys(data).length === 0) {
+      this.sceneData = {
+        enemyMonsters: [DataUtils.getMonsterById(this, 2)],
+        playerMonsters: [DataUtils.getMonsterById(this, 1)],
+      }
+    }
 
     const chosenBattleSeenOption: BattleSceneOptions | undefined = dataManager.getStore.get(
       DATA_MANAGER_STORE_KEYS.OPTIONS_BATTLE_SCENE_ANIMATIONS
