@@ -8,6 +8,8 @@ import { Coordinate } from '../types/typedef'
 import { NineSlice } from '../utils/nine-slice'
 import { DATA_MANAGER_STORE_KEYS, dataManager } from '../utils/data-manager'
 import { BaseScene } from './base-scene'
+import { DataUtils } from '../utils/data-utils'
+import { weightedRandom } from '../utils/random'
 
 const MENU_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
   fontFamily: CUSTOM_FONTS.POKEROGUE,
@@ -121,10 +123,16 @@ export class MainGameScene extends BaseScene {
     this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
       switch (this.selectedMenuOption) {
         case MAIN_GAME_OPTIONS.BATTLE:
-          this.scene.start(SCENE_KEYS.BATTLE_SCENE)
+          const encounterAreaId = 1 // TODO: ENCOUNTERS
+          const possibleMonsters = DataUtils.getEncounterAreaDetails(this, encounterAreaId)
+          const randomMonsterId = weightedRandom(possibleMonsters)
+          const dataToPass = {
+            enemyMonsters: [DataUtils.getMonsterById(this, randomMonsterId)],
+            playerMonsters: dataManager.getStore.get(DATA_MANAGER_STORE_KEYS.MONSTERS_IN_PARTY),
+          }
+          this.scene.start(SCENE_KEYS.BATTLE_SCENE, dataToPass)
           return
         case MAIN_GAME_OPTIONS.TEAM:
-          // TODO: TEAM OPTIONS
           return
         case MAIN_GAME_OPTIONS.SAVE:
           return

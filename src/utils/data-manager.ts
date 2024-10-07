@@ -140,7 +140,7 @@ class DataManager extends Phaser.Events.EventEmitter {
     existingData.inventory = initialState.inventory
     existingData.itemsPickedUp = [...initialState.itemsPickedUp]
 
-    this.store.reset()
+    this.getStore.reset()
     this.updateDataManager(existingData)
     this.init(scene)
     this.saveData()
