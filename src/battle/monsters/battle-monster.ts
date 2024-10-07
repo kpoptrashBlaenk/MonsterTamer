@@ -169,7 +169,7 @@ export class BattleMonster {
       .container(0, 0, [
         healthBarBackgroundImage,
         this.monsterNameText,
-        this.healthBar.container,
+        this.healthBar.getContainer,
         this.monsterHealthBarLevelText,
         monsterHpText,
       ])
