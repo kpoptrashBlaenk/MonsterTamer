@@ -1,4 +1,4 @@
-import { HealthBar } from '../ui/health-bar'
+import { HealthBar } from '../../common/health-bar'
 import { BATTLE_ASSET_KEYS } from '../../assets/asset-keys'
 import { DataUtils } from '../../utils/data-utils'
 import { CUSTOM_FONTS } from '../../assets/font-keys'
