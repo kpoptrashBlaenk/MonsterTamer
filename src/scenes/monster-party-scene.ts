@@ -628,4 +628,11 @@ export class MonsterPartyScene extends BaseScene {
     })
     this.movePlayerInputCursor('UP')
   }
+
+  handleSceneResume(sys: Phaser.Scenes.Systems) {
+    super.handleSceneResume(sys)
+
+    this.menu.hide()
+    this.controls.lockInput = false
+  }
 }
