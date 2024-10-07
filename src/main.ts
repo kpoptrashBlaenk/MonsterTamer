@@ -6,7 +6,9 @@ import {BattleScene} from "./lib/scenes/battle-scene"
 import {OptionsScene} from "./lib/scenes/options-scene"
 import { TestScene } from './lib/scenes/test-scene'
 import { MainGameScene } from './lib/scenes/main-game-menu'
-import {MonsterPartyScene} from "./lib/scenes/monster-party-scene";
+import {MonsterPartyScene} from "./lib/scenes/monster-party-scene"
+import {MonsterDetailsScene} from "./lib/scenes/monster-details-scene"
+//import {InventoryScene} from "./lib/scenes/inventory-scene"
 
 // Launch game instance
 const game = new Phaser.Game({
@@ -28,5 +30,7 @@ game.scene.add(SCENE_KEYS.BATTLE_SCENE, MainGameScene)
 game.scene.add(SCENE_KEYS.BATTLE_SCENE, OptionsScene)
 game.scene.add(SCENE_KEYS.BATTLE_SCENE, BattleScene)
 game.scene.add(SCENE_KEYS.BATTLE_SCENE, MonsterPartyScene)
+game.scene.add(SCENE_KEYS.MONSTER_DETAILS_SCENE, MonsterDetailsScene)
+//game.scene.add(SCENE_KEYS.INVENTORY_SCENE, InventoryScene)
 game.scene.add(SCENE_KEYS.BATTLE_SCENE, TestScene)
 game.scene.start(SCENE_KEYS.PRELOAD_SCENE)
