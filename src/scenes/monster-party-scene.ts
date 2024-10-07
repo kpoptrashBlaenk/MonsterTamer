@@ -98,7 +98,7 @@ export class MonsterPartyScene extends BaseScene {
       .setOrigin(0)
       .setScale(0.7, 1)
       .setAlpha(0.7)
-    const cancelText = this.add.text(66.5, 20.6, 'cancel', UI_TEXT_STYLE).setOrigin(0.5)
+    const cancelText = this.add.text(66.5, 20.6, 'Cancel', UI_TEXT_STYLE).setOrigin(0.5)
     buttonContainer.add([this.cancelButton, cancelText])
 
     // Info Container
@@ -477,7 +477,7 @@ export class MonsterPartyScene extends BaseScene {
 
       if (this.menu.getSelectedMenuOption === MONSTER_PARTY_MENU_OPTIONS.RELEASE) {
         if (this.monsters.length <= 1) {
-          this.infoTextGameObject.setText('cannot release last monster in party.')
+          this.infoTextGameObject.setText('Cannot release last monster in party.')
           this.waitingForInput = true
           this.menu.hide()
           return

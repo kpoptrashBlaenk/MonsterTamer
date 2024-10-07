@@ -13,7 +13,9 @@ export class MonsterPartyMenu extends Menu {
   constructor(scene: Phaser.Scene, previousSceneName: string) {
     const availableOptions: MonsterPartyMenuOptions[] = [
       MONSTER_PARTY_MENU_OPTIONS.SELECT,
+      MONSTER_PARTY_MENU_OPTIONS.MOVE,
       MONSTER_PARTY_MENU_OPTIONS.SUMMARY,
+      MONSTER_PARTY_MENU_OPTIONS.RELEASE,
       MONSTER_PARTY_MENU_OPTIONS.CANCEL,
     ]
     super(scene, availableOptions)
