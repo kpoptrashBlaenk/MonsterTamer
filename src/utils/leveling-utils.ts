@@ -1,6 +1,6 @@
 import { Monster } from '../types/typedef'
 
-export interface StatChanges {
+export type StatChanges = {
   level: number
   health: number
   attack: number

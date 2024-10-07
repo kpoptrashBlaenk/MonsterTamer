@@ -1,4 +1,4 @@
-interface AnimatedBarConfig {
+type AnimatedBarConfig = {
   scene: Phaser.Scene
   x: number
   y: number
@@ -12,7 +12,7 @@ interface AnimatedBarConfig {
   rightShadowCapAssetKey: string
 }
 
-interface AnimationOptions {
+type AnimationOptions = {
   duration?: number
   callback?: () => void
   skipBattleAnimations?: boolean

@@ -16,11 +16,11 @@ import { DataUtils } from './data-utils'
 
 const LOCAL_STORAGE_KEY = 'MONSTER_TAMER_DATA'
 
-interface MonsterData {
+type MonsterData = {
   inParty: Monster[]
 }
 
-interface GlobalState {
+type GlobalState = {
   options: {
     textSpeed: TextSpeedOptions
     battleScene: BattleSceneOptions

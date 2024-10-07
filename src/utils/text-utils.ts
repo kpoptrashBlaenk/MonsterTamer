@@ -1,4 +1,4 @@
-interface AnimateTextConfig {
+type AnimateTextConfig = {
   callback?: () => void
   delay?: number
 }

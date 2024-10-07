@@ -45,12 +45,12 @@ const BATTLE_STATES = Object.freeze({
   CAUGHT_MONSTER: 'CAUGHT_MONSTER',
 })
 
-interface BattleSceneData {
+type BattleSceneData = {
   playerMonster: Monster[]
   enemyMonster: Monster[]
 }
 
-export interface BattleSceneWasResumedData {
+export type BattleSceneWasResumedData = {
   wasMonsterSelected: boolean
   selectedMonsterIndex?: number
   wasItemUsed: boolean

@@ -14,7 +14,7 @@ const ASSET_CUT_FRAMES = Object.freeze({
 
 const ASSET_CUT_FRAME_DATA_MANAGER_NAME = 'assetCutFrame'
 
-interface NineSliceConfig {
+type NineSliceConfig = {
   cornerCutSize: number
   textureManager: Phaser.Textures.TextureManager
   assetKeys: UIAssetKeys[]

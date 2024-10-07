@@ -1,4 +1,4 @@
-interface BallConfig {
+type BallConfig = {
   scene: Phaser.Scene
   assetKey: string
   assetFrame?: number

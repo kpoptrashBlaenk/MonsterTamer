@@ -1,4 +1,4 @@
-interface Options {
+type Options = {
   callback?: () => void
   skipSceneTransition?: boolean
 }

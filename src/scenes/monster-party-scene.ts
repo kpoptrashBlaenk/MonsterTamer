@@ -33,7 +33,7 @@ const MONSTER_PARTY_POSITIONS = Object.freeze({
   increment: 150,
 })
 
-export interface MonsterPartySceneData {
+export type MonsterPartySceneData = {
   previousSceneName: string
   itemSelected?: Item
   activeBattleMonsterPartyIndex?: number

@@ -1,4 +1,4 @@
-interface State {
+type State = {
   name: string
   onEnter?: () => void
 }

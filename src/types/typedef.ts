@@ -1,14 +1,14 @@
 import { MonsterAssetKeys, AttackAssetKey } from '../assets/asset-keys'
 import { AttackKeys } from '../battle/attacks/attack-keys'
 
-export interface BattleMonsterConfig {
+export type BattleMonsterConfig = {
   scene: Phaser.Scene
   monsterDetails: Monster
   scaleHealthBarBackgroundImageByY?: number
   skipBattleAnimations?: boolean
 }
 
-export interface Monster {
+export type Monster = {
   id: string // number but it's string? idk
   monsterId: number
   name: string
@@ -24,19 +24,19 @@ export interface Monster {
   currentExp: number
 }
 
-export interface Coordinate {
+export type Coordinate = {
   x: number
   y: number
 }
 
-export interface Attack {
+export type Attack = {
   id: number
   name: string
   animationName: AttackKeys
   audioKey: string
 }
 
-export interface Animations {
+export type Animations = {
   key: AttackAssetKey
   frameRate: number
   frames?: number[]
@@ -60,7 +60,7 @@ export const ITEM_EFFECT = Object.freeze({
 
 export type ItemEffect = keyof typeof ITEM_EFFECT
 
-export interface Item {
+export type Item = {
   id: number
   name: string
   effect: ItemEffect
@@ -68,14 +68,14 @@ export interface Item {
   category: ItemCategory
 }
 
-export interface BaseInventoryItem {
+export type BaseInventoryItem = {
   item: { id: number }
   quantity: number
 }
 
 export type Inventory = BaseInventoryItem[]
 
-export interface InventoryItem {
+export type InventoryItem = {
   item: Item
   quantity: number
 }

@@ -1,6 +1,6 @@
 import { BattleMonster } from '../battle/monsters/battle-monster'
 
-interface CaptureMonsterResults {
+type CaptureMonsterResults = {
   requiredCaptureValue: number
   actualCaptureValue: number
   wasCaptured: boolean
