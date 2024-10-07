@@ -67,7 +67,7 @@ export class BattleMonster {
   }
 
   public get baseAttack(): number {
-    return this.monsterDetails.baseAttack
+    return this.monsterDetails.currentAttack
   }
 
   public get level(): number {
