@@ -655,9 +655,10 @@ export class BattleMenu {
   }
 
   private handleSceneResume(data: BattleSceneWasResumedData) {
-    console.log(
-      `[${BattleMenu.name}:handleSceneResume] scene has been resumed, data provided: ${JSON.stringify(data)}`
-    )
+    if (data) {
+      console.log(`[${BattleMenu.name}:handleSceneResume] scene has been resumed, data provided: ${data}`) // ${JSON.stringify(data)}
+    }
+    console.log(`[${BattleMenu.name}:handleSceneResume] scene has been resumed`)
 
     if (data && data.wasMonsterSelected) {
       return
