@@ -37,12 +37,6 @@ export class BattleMonster {
       skipBattleAnimations: true,
     })
 
-    this.monsterDetails.attackIds.forEach((attackId) => {
-      const monsterAttack = DataUtils.getMonsterAttack(this.scene, attackId)
-      if (monsterAttack !== undefined) {
-        this.monsterAttacks.push(monsterAttack)
-      }
-    })
 
     this.monsterDetails.attackIds.forEach((attackId) => {
       const monsterAttack = DataUtils.getMonsterAttack(this.scene, attackId)
