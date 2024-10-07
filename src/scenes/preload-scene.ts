@@ -138,7 +138,7 @@ export class PreloadScene extends BaseScene {
 
     // Fonts
     this.load.addFile(new WebFontFileLoader(this.load, [CUSTOM_FONTS.POKEROGUE]))
-    this.load.addFile(new WebFontFileLoader(this.load, [CUSTOM_FONTS.KENNEY]))
+    //this.load.addFile(new WebFontFileLoader(this.load, [CUSTOM_FONTS.KENNEY]))
 
     // Attack Animations
     this.load.spritesheet(ATTACK_ASSET_KEYS.ICE_SHARD, `${pimenAssetPath}/ice-attack/active.png`, {
