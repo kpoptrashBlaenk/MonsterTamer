@@ -1,4 +1,4 @@
-import { Menu } from './common/menu/menu.js'
+import { Menu } from './common/menu/menu'
 
 export const MENU_OPTIONS = Object.freeze({
   MONSTERDEX: 'MONSTERDEX',
