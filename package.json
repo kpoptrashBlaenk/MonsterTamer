@@ -19,6 +19,8 @@
     "webpack-dev-server": "^5.1.0"
   },
   "prettier": {
-    "semi": false
+    "semi": false,
+    "printWidth": 110,
+    "singleQuote": true
   }
 }
