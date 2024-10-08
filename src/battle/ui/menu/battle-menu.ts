@@ -220,6 +220,7 @@ export class BattleMenu {
 
   public updateInfoPaneMessagesNoInputRequired(message: string, callback?: () => void): void {
     this.battleTextGameObjectLine1.setText('').setAlpha(1)
+    this.battleTextGameObjectLine2.setAlpha(0)
 
     if (this.skipAnimations) {
       this.battleTextGameObjectLine1.setText(message)
