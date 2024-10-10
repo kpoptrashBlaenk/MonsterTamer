@@ -10,6 +10,7 @@ import { DATA_MANAGER_STORE_KEYS, dataManager } from '../utils/data-manager'
 import { BaseScene } from './base-scene'
 import { DataUtils } from '../utils/data-utils'
 import { weightedRandom } from '../utils/random'
+import { MonsterPartySceneData } from './monster-party-scene'
 
 const MENU_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
   fontFamily: CUSTOM_FONTS.POKEROGUE,
@@ -133,8 +134,15 @@ export class MainGameScene extends BaseScene {
           this.scene.start(SCENE_KEYS.BATTLE_SCENE, dataToPass)
           return
         case MAIN_GAME_OPTIONS.TEAM:
+          const sceneDataToPass: MonsterPartySceneData = {
+            previousSceneName: SCENE_KEYS.MAIN_GAME_SCENE,
+            activeBattleMonsterPartyIndex: 0,
+            activeMonsterKnockedOut: false,
+          }
+          this.scene.start(SCENE_KEYS.MONSTER_PARTY_SCENE, sceneDataToPass)
           return
         case MAIN_GAME_OPTIONS.SAVE:
+          dataManager.saveData()
           return
         case MAIN_GAME_OPTIONS.EXIT:
           this.scene.start(SCENE_KEYS.TITLE_SCENE)
@@ -203,5 +211,13 @@ export class MainGameScene extends BaseScene {
     const y = PLAYER_INPUT_CURSOR_POSITION.y + this.selectedMenuOptionIndex * 50
 
     this.mainMenuCursorPhaserImageGameObject.setY(y)
+  }
+
+  public handleSceneResume(sys: Phaser.Scenes.Systems) {
+    super.handleSceneResume(sys)
+
+    this.controls.lockInput = false
+
+    this.cameras.main.resetFX()
   }
 }

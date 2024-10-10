@@ -10,4 +10,4 @@ ctrl+k v
 - [x] Switching Pokemon is bugging
 - [x] Ingame Menu during Battle Scene is not working
 - [x] Items used in Battle Scene doesn't work
-- [ ] Main Game Menu Options are still not doing anything
+- [x] Main Game Menu Options are still not doing anything
