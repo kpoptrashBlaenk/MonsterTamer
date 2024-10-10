@@ -4,7 +4,7 @@ ctrl+k v
 - [x] Enemy Monster Data not passing
 - [x] Base Attack
 - [x] Monsters not in array
-- [ ] Input locked when back from Monster Party Scene
+- [x] Input locked when back from Monster Party Scene
 - [x] Attacks generated twice
 - [x] Resume Battle Scene Bug
 - [x] Switching Pokemon is bugging
