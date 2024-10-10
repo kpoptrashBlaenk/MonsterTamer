@@ -12,3 +12,6 @@ ctrl+k v
 - [x] Items used in Battle Scene doesn't work
 - [x] Main Game Menu Options are still not doing anything
 - [x] Using an item throws back into main game menu
+- [ ] When whole team is dead and I try to battle: ERROR (get thrown back into title screen)
+- [x] Monsters from the same ID share stats
+- [ ] I can input while message is animating (maybe unlock input as callback) (do same thing for when i save the game)
