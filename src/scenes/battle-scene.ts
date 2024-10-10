@@ -12,7 +12,7 @@ import { sceneTransition } from '../utils/scene-transition'
 import { DATA_MANAGER_STORE_KEYS, dataManager } from '../utils/data-manager'
 import { BATTLE_SCENE_OPTIONS, BattleSceneOptions } from '../common/options'
 import { BaseScene } from './base-scene'
-import { Item, Monster } from '../types/typedef'
+import { Item, ITEM_CATEGORY, Monster } from '../types/typedef'
 import { Ball } from '../battle/ball'
 import { playBackgroundMusic, playSoundFx } from '../utils/audio-utils'
 import {
@@ -26,6 +26,7 @@ import { generateUuid } from '../utils/random'
 import { MonsterPartySceneData } from './monster-party-scene'
 import { GameMenu } from '../game-menu'
 import { DataUtils } from '../utils/data-utils'
+import { exhaustiveGuard } from '../utils/guard'
 
 const BATTLE_STATES = Object.freeze({
   INTRO: 'INTRO',
@@ -695,6 +696,22 @@ export class BattleScene extends BaseScene {
     })
 
     this.battleStateMachine.addState({
+      name: BATTLE_STATES.USED_ITEM,
+      onEnter: () => {
+        switch (this.battleMenu.itemUsed?.category) {
+          case ITEM_CATEGORY.CAPTURE:
+            this.battleStateMachine.setState(BATTLE_STATES.CAPTURE_ITEM_USED)
+            break
+          case ITEM_CATEGORY.HEAL:
+            this.battleStateMachine.setState(BATTLE_STATES.HEAL_ITEM_USED)
+            break
+          default:
+            exhaustiveGuard(this.battleMenu.itemUsed?.category as never)
+        }
+      },
+    })
+
+    this.battleStateMachine.addState({
       name: BATTLE_STATES.HEAL_ITEM_USED,
       onEnter: () => {
         this.activePlayerMonster.updateMonsterHealth(
@@ -746,7 +763,6 @@ export class BattleScene extends BaseScene {
         this.ball.hide()
         await this.activeEnemyMonster.playCatchAnimationFailed()
 
-        // TODO: refactor to use async/await
         this.battleMenu.updateInfoPaneMessagesAndWaitForInput(['The wild monster breaks free!'], () => {
           this.time.delayedCall(500, () => {
             this.enemyAttack(() => {
