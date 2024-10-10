@@ -11,7 +11,6 @@ import { ATTACK_TARGET, AttackManager } from '../battle/attacks/attack-manager'
 import { sceneTransition } from '../utils/scene-transition'
 import { DATA_MANAGER_STORE_KEYS, dataManager } from '../utils/data-manager'
 import { BATTLE_SCENE_OPTIONS, BattleSceneOptions } from '../common/options'
-import { Menu } from '../common/menu/menu'
 import { BaseScene } from './base-scene'
 import { Item, Monster } from '../types/typedef'
 import { Ball } from '../battle/ball'
@@ -75,7 +74,7 @@ export class BattleScene extends BaseScene {
   private availableMonstersUiContainer: Phaser.GameObjects.Container
   private monsterCaptured: boolean
   private ball: Ball
-  private menu: Menu
+  private menu: GameMenu
 
   constructor() {
     super({
@@ -175,16 +174,23 @@ export class BattleScene extends BaseScene {
 
     const wasSpaceKeyPressed: boolean = this.controls.wasSpaceKeyPressed()
 
+    // Ingame Menu
     if (wasSpaceKeyPressed && this.menu.getIsVisible) {
       this.menu.handlePlayerInput('OK')
 
       if (this.menu.getSelectedMenuOption === 'SAVE') {
         dataManager.saveData()
-        // TODO: show message showing that game progress have been saved and actually save stuff because dataManager is not far enough for now
+        this.battleMenu.hideMainBattleMenu()
+        this.battleMenu.updateInfoPaneMessagesNoInputRequired('Game saved', () => {
+          this.time.delayedCall(1200, () => {
+            this.battleMenu.showMainBattleMenu()
+          })
+        })
         return
       }
       if (this.menu.getSelectedMenuOption === 'EXIT') {
         this.menu.hide()
+        this.battleStateMachine.setState(BATTLE_STATES.FINISHED)
         return
       }
     }
