@@ -313,12 +313,13 @@ export class MonsterPartyScene extends BaseScene {
 
     this.controls.lockInput = true
     this.scene.stop(SCENE_KEYS.MONSTER_PARTY_SCENE)
-    if(this.sceneData.previousSceneName !== SCENE_KEYS.MAIN_GAME_SCENE) {
+    if (this.sceneData.previousSceneName !== SCENE_KEYS.MAIN_GAME_SCENE) {
       this.scene.resume(this.sceneData.previousSceneName, {
         wasItemUsed,
         selectedMonsterIndex: wasMonsterSelected ? this.selectedPartyMonsterIndex : undefined,
         wasMonsterSelected,
       })
+      return
     }
     this.scene.start(SCENE_KEYS.MAIN_GAME_SCENE)
   }

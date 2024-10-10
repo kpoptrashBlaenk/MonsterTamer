@@ -11,3 +11,4 @@ ctrl+k v
 - [x] Ingame Menu during Battle Scene is not working
 - [x] Items used in Battle Scene doesn't work
 - [x] Main Game Menu Options are still not doing anything
+- [x] Using an item throws back into main game menu
