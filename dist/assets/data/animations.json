@@ -1,0 +1,26 @@
+[
+  {
+    "key": "ICE_SHARD_START",
+    "frameRate": 16,
+    "repeat": 0,
+    "delay": 0,
+    "yoyo": false,
+    "assetKey": "ICE_SHARD_START"
+  },
+  {
+    "key": "ICE_SHARD",
+    "frameRate": 16,
+    "repeat": 0,
+    "delay": 0,
+    "yoyo": false,
+    "assetKey": "ICE_SHARD"
+  },
+  {
+    "key": "SLASH",
+    "frameRate": 8,
+    "repeat": 0,
+    "delay": 0,
+    "yoyo": false,
+    "assetKey": "SLASH"
+  }
+]
