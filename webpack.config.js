@@ -1,22 +1,22 @@
-const path = require('path');
-const CopyPlugin = require('copy-webpack-plugin');
+const path = require('path')
+const CopyPlugin = require('copy-webpack-plugin')
 
 module.exports = {
-  mode: 'development', // Change to 'production' for production builds
-  entry: './src/main.ts', // Entry point is now in the public folder
+  mode: 'development',
+  entry: './src/main.ts', // Entry point
   output: {
-    filename: 'bundle.min.js', // Output file will be bundle.min.js
-    path: path.resolve(__dirname, 'dist'), // Output will go into the dist folder
+    filename: 'bundle.min.js', // Output file
+    path: path.resolve(__dirname, 'dist'), // Output folder
   },
   devServer: {
     static: {
-      directory: path.join(__dirname, 'public'), // Serve the public folder
+      directory: path.join(__dirname, 'public'), // Serve public folder
     },
     compress: true,
-    port: 9000, // Localhost port for development
+    port: 9000, // Localhost port
   },
   resolve: {
-    extensions: ['.ts', '.js'], // Resolve .ts and .js files
+    extensions: ['.ts', '.js'],
   },
   module: {
     rules: [
@@ -31,8 +31,8 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         { from: 'public/index.html', to: 'index.html' },
-        { from: 'public/assets', to: 'assets' },// Copy index.html to dist
+        { from: 'public/assets', to: 'assets' }, // Copy index.html to dist
       ],
     }),
   ],
-};
+}
