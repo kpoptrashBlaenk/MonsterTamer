@@ -98,7 +98,7 @@ export class MonsterPartyScene extends BaseScene {
       .setOrigin(0)
       .setScale(0.7, 1)
       .setAlpha(0.7)
-    const cancelText = this.add.text(66.5, 20.6, 'cancel', UI_TEXT_STYLE).setOrigin(0.5)
+    const cancelText = this.add.text(66.5, 20.6, 'Cancel', UI_TEXT_STYLE).setOrigin(0.5)
     buttonContainer.add([this.cancelButton, cancelText])
 
     // Info Container
@@ -313,11 +313,15 @@ export class MonsterPartyScene extends BaseScene {
 
     this.controls.lockInput = true
     this.scene.stop(SCENE_KEYS.MONSTER_PARTY_SCENE)
-    this.scene.resume(this.sceneData.previousSceneName, {
-      wasItemUsed,
-      selectedMonsterIndex: wasMonsterSelected ? this.selectedPartyMonsterIndex : undefined,
-      wasMonsterSelected,
-    })
+    if (this.sceneData.previousSceneName !== SCENE_KEYS.MAIN_GAME_SCENE) {
+      this.scene.resume(this.sceneData.previousSceneName, {
+        wasItemUsed,
+        selectedMonsterIndex: wasMonsterSelected ? this.selectedPartyMonsterIndex : undefined,
+        wasMonsterSelected,
+      })
+      return
+    }
+    this.scene.start(SCENE_KEYS.MAIN_GAME_SCENE)
   }
 
   private movePlayerInputCursor(direction: Direction): void {
@@ -477,7 +481,7 @@ export class MonsterPartyScene extends BaseScene {
 
       if (this.menu.getSelectedMenuOption === MONSTER_PARTY_MENU_OPTIONS.RELEASE) {
         if (this.monsters.length <= 1) {
-          this.infoTextGameObject.setText('cannot release last monster in party.')
+          this.infoTextGameObject.setText('Cannot release last monster in party.')
           this.waitingForInput = true
           this.menu.hide()
           return
@@ -627,5 +631,13 @@ export class MonsterPartyScene extends BaseScene {
       prevContainerPos = tempPosition
     })
     this.movePlayerInputCursor('UP')
+  }
+
+  handleSceneResume(sys: Phaser.Scenes.Systems) {
+    super.handleSceneResume(sys)
+
+    this.menu.hide()
+    this.controls.lockInput = false
+    this.cameras.main.resetFX()
   }
 }

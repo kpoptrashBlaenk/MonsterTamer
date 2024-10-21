@@ -42,7 +42,7 @@ export class DataUtils {
     if (!monster) {
       throw new Error(`Monster with id ${monsterId} not found`)
     }
-    return monster
+    return JSON.parse(JSON.stringify(monster))
   }
 
   static getEncounterAreaDetails(scene: Phaser.Scene, areaId: number): number[][] {

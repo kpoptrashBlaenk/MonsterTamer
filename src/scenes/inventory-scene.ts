@@ -255,6 +255,8 @@ export class InventoryScene extends BaseScene {
   public handleSceneResume(sys: Phaser.Scenes.Systems,data?: InventorySceneWasResumedData | undefined): void {
     super.handleSceneResume(sys, data)
 
+    this.controls.lockInput = false
+
     if (!data || !data.wasItemUsed) {
       return
     }

@@ -140,7 +140,7 @@ class DataManager extends Phaser.Events.EventEmitter {
     existingData.inventory = initialState.inventory
     existingData.itemsPickedUp = [...initialState.itemsPickedUp]
 
-    this.store.reset()
+    this.getStore.reset()
     this.updateDataManager(existingData)
     this.init(scene)
     this.saveData()
@@ -241,7 +241,7 @@ class DataManager extends Phaser.Events.EventEmitter {
       },
       gameStarted: this.getStore.get(DATA_MANAGER_STORE_KEYS.GAME_STARTED),
       monsters: {
-        inParty: { ...this.getStore.get(DATA_MANAGER_STORE_KEYS.MONSTERS_IN_PARTY) },
+        inParty: [...this.getStore.get(DATA_MANAGER_STORE_KEYS.MONSTERS_IN_PARTY)],
       },
       inventory: this.store.get(DATA_MANAGER_STORE_KEYS.INVENTORY),
       itemsPickedUp: [...(this.store.get(DATA_MANAGER_STORE_KEYS.ITEMS_PICKED_UP) || [])],

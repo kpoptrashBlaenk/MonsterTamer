@@ -82,7 +82,11 @@ export class BattleMenu {
     this.createMonsterAttackSubMenu()
     this.createPlayerInputCursor()
 
-    this.scene.events.on(Phaser.Scenes.Events.RESUME, this.handleSceneResume, this)
+    this.scene.events.on(
+      Phaser.Scenes.Events.RESUME,
+      (scene: Phaser.Scene, data: BattleSceneWasResumedData) => this.handleSceneResume(data),
+      this
+    )
     this.scene.events.once(
       Phaser.Scenes.Events.SHUTDOWN,
       () => {
@@ -220,6 +224,7 @@ export class BattleMenu {
 
   public updateInfoPaneMessagesNoInputRequired(message: string, callback?: () => void): void {
     this.battleTextGameObjectLine1.setText('').setAlpha(1)
+    this.battleTextGameObjectLine2.setAlpha(0)
 
     if (this.skipAnimations) {
       this.battleTextGameObjectLine1.setText(message)
@@ -655,9 +660,9 @@ export class BattleMenu {
   }
 
   private handleSceneResume(data: BattleSceneWasResumedData) {
-    console.log(
-      `[${BattleMenu.name}:handleSceneResume] scene has been resumed, data provided: ${JSON.stringify(data)}`
-    )
+    // console.log(
+    //   `[${BattleMenu.name}:handleSceneResume] scene has been resumed, data provided: ${JSON.stringify(data)}`
+    // )
 
     if (data && data.wasMonsterSelected) {
       return

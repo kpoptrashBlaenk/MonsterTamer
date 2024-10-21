@@ -74,7 +74,7 @@ export class PlayerBattleMonster extends BattleMonster {
 
   public playMonsterHealthBarAppearAnimation(callback: () => void): void {
     const startXPosition: number = 800 // 1024
-    const endXPosition: number = this.phaserHealthBarGameContainer.x
+    const endXPosition: number = 556
     this.phaserHealthBarGameContainer.setPosition(startXPosition, this.phaserHealthBarGameContainer.y)
     this.phaserHealthBarGameContainer.setAlpha(1)
 

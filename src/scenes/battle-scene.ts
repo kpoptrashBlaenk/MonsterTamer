@@ -11,9 +11,8 @@ import { ATTACK_TARGET, AttackManager } from '../battle/attacks/attack-manager'
 import { sceneTransition } from '../utils/scene-transition'
 import { DATA_MANAGER_STORE_KEYS, dataManager } from '../utils/data-manager'
 import { BATTLE_SCENE_OPTIONS, BattleSceneOptions } from '../common/options'
-import { Menu } from '../common/menu/menu'
 import { BaseScene } from './base-scene'
-import { Item, Monster } from '../types/typedef'
+import { Item, ITEM_CATEGORY, Monster } from '../types/typedef'
 import { Ball } from '../battle/ball'
 import { playBackgroundMusic, playSoundFx } from '../utils/audio-utils'
 import {
@@ -26,6 +25,8 @@ import { sleep } from '../utils/time-utils'
 import { generateUuid } from '../utils/random'
 import { MonsterPartySceneData } from './monster-party-scene'
 import { GameMenu } from '../game-menu'
+import { DataUtils } from '../utils/data-utils'
+import { exhaustiveGuard } from '../utils/guard'
 
 const BATTLE_STATES = Object.freeze({
   INTRO: 'INTRO',
@@ -46,8 +47,8 @@ const BATTLE_STATES = Object.freeze({
 })
 
 type BattleSceneData = {
-  playerMonster: Monster[]
-  enemyMonster: Monster[]
+  playerMonsters: Monster[]
+  enemyMonsters: Monster[]
 }
 
 export type BattleSceneWasResumedData = {
@@ -74,7 +75,7 @@ export class BattleScene extends BaseScene {
   private availableMonstersUiContainer: Phaser.GameObjects.Container
   private monsterCaptured: boolean
   private ball: Ball
-  private menu: Menu
+  private menu: GameMenu
 
   constructor() {
     super({
@@ -89,6 +90,14 @@ export class BattleScene extends BaseScene {
     this.activePlayerAttackIndex = -1
     this.activeEnemyAttackIndex = -1
     this.activePlayerMonsterPartyIndex = 0
+
+    // For when loading this scene directly from PreloadScene for testing
+    if (Object.keys(data).length === 0) {
+      this.sceneData = {
+        enemyMonsters: [DataUtils.getMonsterById(this, 2)],
+        playerMonsters: [DataUtils.getMonsterById(this, 1)],
+      }
+    }
 
     const chosenBattleSeenOption: BattleSceneOptions | undefined = dataManager.getStore.get(
       DATA_MANAGER_STORE_KEYS.OPTIONS_BATTLE_SCENE_ANIMATIONS
@@ -112,17 +121,19 @@ export class BattleScene extends BaseScene {
     background.showForest()
 
     // Create Monsters
+    this.sceneData
     this.activeEnemyMonster = new EnemyBattleMonster({
       scene: this,
-      monsterDetails: this.sceneData.enemyMonster[0],
+      monsterDetails: this.sceneData.enemyMonsters[0],
       skipBattleAnimations: this.skipAnimations,
     })
-    this.activePlayerMonsterPartyIndex = this.sceneData.playerMonster.findIndex(
+
+    this.activePlayerMonsterPartyIndex = this.sceneData.playerMonsters.findIndex(
       (monster) => monster.currentHp > 0
     )
     this.activePlayerMonster = new PlayerBattleMonster({
       scene: this,
-      monsterDetails: this.sceneData.playerMonster[this.activePlayerMonsterPartyIndex],
+      monsterDetails: this.sceneData.playerMonsters[this.activePlayerMonsterPartyIndex],
       skipBattleAnimations: this.skipAnimations,
     })
 
@@ -164,16 +175,23 @@ export class BattleScene extends BaseScene {
 
     const wasSpaceKeyPressed: boolean = this.controls.wasSpaceKeyPressed()
 
+    // Ingame Menu
     if (wasSpaceKeyPressed && this.menu.getIsVisible) {
       this.menu.handlePlayerInput('OK')
 
       if (this.menu.getSelectedMenuOption === 'SAVE') {
         dataManager.saveData()
-        // TODO: show message showing that game progress have been saved and actually save stuff because dataManager is not far enough for now
+        this.battleMenu.hideMainBattleMenu()
+        this.battleMenu.updateInfoPaneMessagesNoInputRequired('Game saved', () => {
+          this.time.delayedCall(1200, () => {
+            this.battleMenu.showMainBattleMenu()
+          })
+        })
         return
       }
       if (this.menu.getSelectedMenuOption === 'EXIT') {
         this.menu.hide()
+        this.battleStateMachine.setState(BATTLE_STATES.FINISHED)
         return
       }
     }
@@ -320,9 +338,9 @@ export class BattleScene extends BaseScene {
 
   private postBattleSequenceCheck(): void {
     // Update Data Manager and Scene Data to synchronize with battle
-    this.sceneData.playerMonster[this.activePlayerMonsterPartyIndex].currentHp =
+    this.sceneData.playerMonsters[this.activePlayerMonsterPartyIndex].currentHp =
       this.activePlayerMonster.currentHp
-    dataManager.getStore.set(DATA_MANAGER_STORE_KEYS.MONSTERS_IN_PARTY, this.sceneData.playerMonster)
+    dataManager.getStore.set(DATA_MANAGER_STORE_KEYS.MONSTERS_IN_PARTY, this.sceneData.playerMonsters)
 
     if (this.monsterCaptured) {
       this.activeEnemyMonster.playMonsterDeathAnimation(() => {
@@ -358,9 +376,9 @@ export class BattleScene extends BaseScene {
           monsterUi.setAlpha(0.4)
         }
 
-        const hasOtherActiveMonsters = this.sceneData.playerMonster.some((monster) => {
+        const hasOtherActiveMonsters = this.sceneData.playerMonsters.some((monster) => {
           return (
-            monster.id !== this.sceneData.playerMonster[this.activePlayerMonsterPartyIndex].id &&
+            monster.id !== this.sceneData.playerMonsters[this.activePlayerMonsterPartyIndex].id &&
             monster.currentHp > 0
           )
         })
@@ -549,7 +567,7 @@ export class BattleScene extends BaseScene {
     this.battleStateMachine.addState({
       name: BATTLE_STATES.FINISHED,
       onEnter: () => {
-        dataManager.getStore.set(DATA_MANAGER_STORE_KEYS.MONSTERS_IN_PARTY, this.sceneData.playerMonster)
+        dataManager.getStore.set(DATA_MANAGER_STORE_KEYS.MONSTERS_IN_PARTY, this.sceneData.playerMonsters)
         this.transitionToNextScene()
       },
     })
@@ -593,9 +611,9 @@ export class BattleScene extends BaseScene {
 
         const messages: string[] = []
         let didActiveMonsterLevelUp = false
-        this.sceneData.playerMonster.forEach((monster, index) => {
+        this.sceneData.playerMonsters.forEach((monster, index) => {
           // Knocked out monsters don't gain Exp
-          if (this.sceneData.playerMonster[index].currentHp <= 0) {
+          if (this.sceneData.playerMonsters[index].currentHp <= 0) {
             return
           }
 
@@ -604,24 +622,24 @@ export class BattleScene extends BaseScene {
           if (index === this.activePlayerMonsterPartyIndex) {
             statChanges = this.activePlayerMonster.updateMonsterExp(gainedExpForActiveMonster)
             monsterMessages.push(
-              `${this.sceneData.playerMonster[index].name} gained ${gainedExpForActiveMonster} exp.`
+              `${this.sceneData.playerMonsters[index].name} gained ${gainedExpForActiveMonster} exp.`
             )
             if (statChanges?.level !== 0) {
               didActiveMonsterLevelUp = true
             }
           } else {
             statChanges = handleMonsterGainingExperience(
-              this.sceneData.playerMonster[index],
+              this.sceneData.playerMonsters[index],
               gainedExpForInactiveMonster
             )
             monsterMessages.push(
-              `${this.sceneData.playerMonster[index].name} gained ${gainedExpForInactiveMonster} exp`
+              `${this.sceneData.playerMonsters[index].name} gained ${gainedExpForInactiveMonster} exp`
             )
           }
           if (statChanges !== undefined && statChanges.level !== 0) {
             monsterMessages.push(
-              `${this.sceneData.playerMonster[index].name} level increased to ${this.sceneData.playerMonster[index].currentLevel}!`,
-              `${this.sceneData.playerMonster[index].name} attack increased by ${statChanges.attack} and health increased by ${statChanges.health}`
+              `${this.sceneData.playerMonsters[index].name} level increased to ${this.sceneData.playerMonsters[index].currentLevel}!`,
+              `${this.sceneData.playerMonsters[index].name} attack increased by ${statChanges.attack} and health increased by ${statChanges.health}`
             )
           }
 
@@ -651,9 +669,9 @@ export class BattleScene extends BaseScene {
     this.battleStateMachine.addState({
       name: BATTLE_STATES.SWITCH_MONSTER,
       onEnter: () => {
-        const hasOtherActiveMonsters = this.sceneData.playerMonster.some((monster) => {
+        const hasOtherActiveMonsters = this.sceneData.playerMonsters.some((monster) => {
           return (
-            monster.id !== this.sceneData.playerMonster[this.activePlayerMonsterPartyIndex].id &&
+            monster.id !== this.sceneData.playerMonsters[this.activePlayerMonsterPartyIndex].id &&
             monster.currentHp > 0
           )
         })
@@ -674,6 +692,22 @@ export class BattleScene extends BaseScene {
         }
         this.scene.launch(SCENE_KEYS.MONSTER_PARTY_SCENE, sceneDataToPass)
         this.scene.pause(SCENE_KEYS.BATTLE_SCENE)
+      },
+    })
+
+    this.battleStateMachine.addState({
+      name: BATTLE_STATES.USED_ITEM,
+      onEnter: () => {
+        switch (this.battleMenu.itemUsed?.category) {
+          case ITEM_CATEGORY.CAPTURE:
+            this.battleStateMachine.setState(BATTLE_STATES.CAPTURE_ITEM_USED)
+            break
+          case ITEM_CATEGORY.HEAL:
+            this.battleStateMachine.setState(BATTLE_STATES.HEAL_ITEM_USED)
+            break
+          default:
+            exhaustiveGuard(this.battleMenu.itemUsed?.category as never)
+        }
       },
     })
 
@@ -729,7 +763,6 @@ export class BattleScene extends BaseScene {
         this.ball.hide()
         await this.activeEnemyMonster.playCatchAnimationFailed()
 
-        // TODO: refactor to use async/await
         this.battleMenu.updateInfoPaneMessagesAndWaitForInput(['The wild monster breaks free!'], () => {
           this.time.delayedCall(500, () => {
             this.enemyAttack(() => {
@@ -745,11 +778,11 @@ export class BattleScene extends BaseScene {
       onEnter: () => {
         // Add monster to party
         const updatedMonster: Monster = {
-          ...this.sceneData.enemyMonster[0],
+          ...this.sceneData.enemyMonsters[0],
           id: generateUuid(),
           currentHp: this.activeEnemyMonster.currentHp,
         }
-        this.sceneData.playerMonster.push(updatedMonster)
+        this.sceneData.playerMonsters.push(updatedMonster)
 
         this.battleStateMachine.setState(BATTLE_STATES.FINISHED)
       },
@@ -773,7 +806,7 @@ export class BattleScene extends BaseScene {
     this.activePlayerMonster.playMonsterDeathAnimation(() => {
       this.activePlayerMonsterPartyIndex = data.selectedMonsterIndex as number
       this.activePlayerMonster.switchMonster(
-        this.sceneData.playerMonster[data.selectedMonsterIndex as number]
+        this.sceneData.playerMonsters[data.selectedMonsterIndex as number]
       )
       this.battleMenu.updateMonsterAttackSubMenu()
       this.controls.lockInput = false
@@ -783,7 +816,7 @@ export class BattleScene extends BaseScene {
 
   private createAvailableMonstersUi(): void {
     this.availableMonstersUiContainer = this.add.container(this.scale.width - 24, 304, [])
-    this.sceneData.playerMonster.forEach((monster, index) => {
+    this.sceneData.playerMonsters.forEach((monster, index) => {
       const alpha = monster.currentHp > 0 ? 1 : 0.4
       const ball = this.add
         .image(30 * -index, 0, BATTLE_ASSET_KEYS.BALL_THUMBNAIL, 0)
